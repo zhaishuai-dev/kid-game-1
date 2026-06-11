@@ -103,8 +103,8 @@
 const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 let seed=20260610;const srnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
 
-// 剧情位:aluo/mini/boss=第一章;ch2/wind/lakeIntro/dragon=第二章
-const flags={aluo:false,mini:false,boss:false,ch2:false,wind:false,lakeIntro:false,dragon:false};
+// 剧情位:aluo/mini/boss=第一章;ch2/wind/lakeIntro/dragon=第二章;ch3/abyssIntro/demon=第三章
+const flags={aluo:false,mini:false,boss:false,ch2:false,wind:false,lakeIntro:false,dragon:false,ch3:false,abyssIntro:false,demon:false};
 const S={hp:70,maxHp:70,mp:36,maxMp:36,lvl:1,exp:0,gold:80};
 const INV={dan:3,dadan:0,qing:1};
 const EQ={wpn:0,arm:0};
@@ -116,11 +116,18 @@ const SKILLS=[
   {n:'火灵咒',el:'火',mp:14,mult:2.2,lvl:3},
   {n:'水灵咒',el:'水',mp:14,mult:2.2,lvl:5},
   {n:'雷灵咒',el:'雷',mp:22,mult:2.7,lvl:7},
-  // 风灵咒:第二章由阿萝传授(flag 解锁,不按等级),风克水,专破湖底水妖
-  {n:'风灵咒',el:'风',mp:18,mult:2.4,lvl:99,flag:'wind'}
+  // 风灵咒:第二章由阿萝传授(flag 解锁),风克水
+  {n:'风灵咒',el:'风',mp:18,mult:2.4,lvl:1,flag:'wind'},
+  // 第三章 · 五灵术升级链:勤修到高阶,基础咒法臻至大成(高等级解锁,自动领悟)
+  {n:'烈焰咒',el:'火',mp:26,mult:3.2,lvl:16},
+  {n:'玄冰咒',el:'水',mp:26,mult:3.2,lvl:18},
+  {n:'罡风咒',el:'风',mp:30,mult:3.6,lvl:20,flag:'wind'},
+  {n:'紫雷咒',el:'雷',mp:38,mult:4.0,lvl:22}
 ];
-// 是否已习得某仙术:够等级,或剧情 flag 解锁
-function skillKnown(s){return S.lvl>=s.lvl||(s.flag&&flags[s.flag]);}
+// 升级链:基础咒 → 大成咒(状态面板里用「↑」标注已进阶)
+const SKILL_UP={'火灵咒':'烈焰咒','水灵咒':'玄冰咒','风灵咒':'罡风咒','雷灵咒':'紫雷咒'};
+// 是否已习得某仙术:够等级 且(无 flag 要求或该 flag 已解锁)
+function skillKnown(s){return S.lvl>=(s.lvl||1)&&(!s.flag||flags[s.flag]);}
 const ELC={'水':'#56b9ff','火':'#ff7a45','雷':'#ffe24a','风':'#9fe7a0','土':'#d2a86a','无':'#cdd6e0'};
 const CK={'水':'火','火':'雷','雷':'土','土':'风','风':'水'};
 function atkP(){return 10+S.lvl*4+WPNS[EQ.wpn].a;}
@@ -153,7 +160,13 @@ const ENM={
   clam:{n:'蚌壳精',el:'水',hp:120,atk:14,exp:86,gold:66,draw:'clam',s:6},
   squid:{n:'墨鱼妖',el:'水',hp:88,atk:20,exp:80,gold:58,draw:'squid',s:6},
   turtle:{n:'龟将军',el:'土',hp:160,atk:18,exp:120,gold:96,draw:'turtle',s:6},
-  dragon:{n:'墨蛟龙王',el:'水',hp:560,atk:27,exp:880,gold:1100,draw:'dragon',s:6,gw:24,caster:true}
+  dragon:{n:'墨蛟龙王',el:'水',hp:560,atk:27,exp:880,gold:1100,draw:'dragon',s:6,gw:24,caster:true},
+  // 第三章 · 妖界魔渊:各属性齐备,逼玩家用全套升级咒(火→玄冰、水→罡风、土→紫雷、雷→烈焰)
+  yanmo:{n:'焰魔',el:'火',hp:150,atk:24,exp:140,gold:90,draw:'yanmo',s:6},
+  yin:{n:'玄阴鬼',el:'水',hp:140,atk:26,exp:150,gold:96,draw:'yin',s:6},
+  mojiang:{n:'魔将',el:'土',hp:230,atk:25,exp:200,gold:140,draw:'mojiang',s:6},
+  leiyu:{n:'雷狱卒',el:'雷',hp:165,atk:28,exp:175,gold:112,draw:'leiyu',s:6},
+  demon:{n:'混沌魔尊',el:'雷',hp:820,atk:36,exp:1500,gold:2000,draw:'demon',s:6,gw:24,caster:true}
 };
 
 'use strict';
@@ -229,11 +242,33 @@ function drawDragon(x,y,s){pix('dragon',x,y,s);}
 Object.assign(SPR,{yaksha:drawYaksha,clam:drawClam,squid:drawSquid,turtle:drawTurtle,dragon:drawDragon});
 Object.assign(SPRM,{yaksha:{w:20,h:20,s:6},clam:{w:20,h:16,s:6},squid:{w:20,h:20,s:6},turtle:{w:20,h:18,s:6},dragon:{w:24,h:24,s:6}});
 
+// ===== 第三章 · 妖界魔渊:魔类像素图 + 旧图改色复用 =====
+PALS.yanmo={"K": "#1a0808", "F": "#ff8a2a", "f": "#ffe24a", "R": "#c0382a", "E": "#fff0a0", "W": "#ffe8c0", "B": "#5a1414"};
+PALS.leiyu={"K": "#0e0a18", "D": "#2f2a44", "d": "#1a1626", "Y": "#ffe24a", "y": "#c9a227", "B": "#3a4a72", "E": "#fff0a0"};
+PALS.demon={"K": "#0a0612", "H": "#d9c0a0", "h": "#a08858", "P": "#4a2a6e", "p": "#2a1640", "R": "#c43a2f", "E": "#ff4040", "W": "#ffd0d0"};
+Object.assign(PIX,{
+  yanmo:[".........ff.........","......fFf..fFf......",".....fFFf..fFFf.....","....KFFFFFFFFFFK....","...KFRRRRRRRRRRFK...","...KFRRRRRRRRRRFK...","..KFRREEKRRKEERRFK..","..KFRREEKRRKEERRFK..","..KFRRRRRRRRRRRRFK..",".KFRRRWWWWWWRRRRFK..","..KFRRWKWKWKWRRRFK..","..KFRRRRRRRRRRRRFK..","..KKFRRRRRRRRRRFKK..","...KFBRRRRRRRRBFK...","...KFBBRRRRRRBBFK...","...KBBBRRRRRRBBBK...","...KBBBRRRRRRBBBK...","...KBBRRRRRRRRBBK...","....KKBBRRRRBBKK....","......KKBBBBKK......"],
+  leiyu:["...K....K..K....K...","..KYK..KY..YK..KYK..","..KDK..KD..DK..KDK..",".KDDDDDDDKKDDDDDDDK.","KDDDDDDDDDDDDDDDDDDK","KDDEEKDDDDDDDDKEEDDK","KDDEEKDDDDDDDDKEEDDK","KDDDDKDDDDDDDDKDDDDK","KDYDDDDYDDDDYDDDDYDK","KDDYDDYDDDDDDYDDYDDK",".KDDDDDDDKKDDDDDDDK.",".KBDDDDDBKKBDDDDDBK.","KBBDYYDBBBBBBDYYDBBK","KBDDYYDDBBBBDDYYDDBK","KBDDDDDDBBBBDDDDDDBK",".KBDDDDDBKKBDDDDDBK.",".KKBDDBKK..KKBDDBKK.","...KDDK......KDDK...","..KDKKDK....KDKKDK..",".KDK..KDK..KDK..KDK."],
+  demon:[".H.........HH.........H.",".HH.......HHHH.......HH.","KHhK.....KHhhHK.....KhHK","KHhPK...KPHhhHPK...KPhHK",".KPPPK.KPPPKKPPPK.KPPPK.",".KPPPPKPPPPPPPPPPKPPPPK.","..KPPPPPPPPPPPPPPPPPPK..","..KPPEEKPPPPPPPPKEEPPK..","..KPEEEKPPPPPPPPKEEEPK..","..KPPPPKPPPPPPPPKPPPPK..","..KPPPPPPPPPPPPPPPPPPK..","..KPPWWWWWPPPPWWWWWPPK..","..KPWRKRKRWPPWRKRKRWPK..","...KWRRRRRWPPWRRRRRWK...","...KKPWWWPPPPPPWWWPKK...","....KPPPPPPPPPPPPPPK....","...KpPPPPPPPPPPPPPPpK...","..KpPPPPPPpPPpPPPPPPpK..","..KpPPRRPPpPPpPPRRPPpK..","..KpPRRRRPpPPpPRRRRPpK..","..KpPPRRPPpPPpPPRRPPpK..","...KpPPPPpPKKPpPPPPpK...","....KKPPpKK..KKpPPKK....","......KKK......KKK......"],
+});
+Object.assign(PIXPAL,{yanmo:'yanmo',leiyu:'leiyu',demon:'demon'});
+// 玄阴鬼:借鬼火帧改寒蓝调;魔将:借石傀改暗血调
+const YINPAL={K:'#0a1422',B:'#1c3a6e',b:'#12284a',L:'#5a8fd0',W:'#cfe0ff',E:'#9fd6ff'};
+const MOJPAL=Object.assign({},PALS.golem,{G:'#6a2a3a',g:'#481c28',L:'#9a4a5a',M:'#7a2430',R:'#ff5a5a',r:'#c43a3a',E:'#ff5a5a'});
+function drawYanmo(x,y,s){pix('yanmo',x,y,s);}
+function drawLeiyu(x,y,s){pix('leiyu',x,y,s);}
+function drawDemon(x,y,s){pix('demon',x,y,s);}
+function drawYin(x,y,s){pix((frame>>3)%2?'flame1':'flame0',x,y,s,YINPAL);}
+function drawMojiang(x,y,s){pix('golem',x,y,s,MOJPAL);}
+Object.assign(SPR,{yanmo:drawYanmo,leiyu:drawLeiyu,demon:drawDemon,yin:drawYin,mojiang:drawMojiang});
+Object.assign(SPRM,{yanmo:{w:20,h:20,s:6},leiyu:{w:20,h:20,s:6},demon:{w:24,h:24,s:6},yin:{w:16,h:20,s:8},mojiang:{w:20,h:20,s:7}});
+
 'use strict';
 // ===== 地图层:瓦片地图生成 + MAPS 注册表 + NPC 配置 =====
 // 瓦片字符:G 草 t 深草 T 树 W 水 P 路 b 桥 R 屋顶 H 墙 X 石墙 F 石地
 //          e 符纹遇敌地 D 门(锁妖塔/水府) d 木门(进屋) O 出口 S 灵泉 B 封印
 //          第二章:V 漩涡(湖面入口) a 湖水 c 水草(遇敌) Z 蛟龙王座
+//          第三章:v 魔土 m 魔纹(遇敌) M 魔尊王座(鬼门复用锁妖塔封印 B)
 function blank(w,h,f){const m=[];for(let y=0;y<h;y++)m.push(new Array(w).fill(f));return m;}
 function fillR(m,x,y,w,h,c){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++){if(m[j]&&m[j][i]!==undefined)m[j][i]=c;}}
 function house(m,x,y){fillR(m,x,y,5,2,'R');fillR(m,x,y+2,5,2,'H');}
@@ -285,6 +320,32 @@ function makePalace(){
   m[13][11]='O';
   return m;
 }
+// 第三章 · 妖界魔渊:可探索的魔域大图(28×24,竖向卷轴)
+// v 魔土(安全) m 魔纹(遇敌带) R 岩浆(阻挡) X 黑石(阻挡) S 邪泉(回满) D 魔殿门 O 回锁妖塔
+function makeAbyss(){
+  const w=28,h=24,m=blank(w,h,'v');
+  fillR(m,0,0,w,1,'X');fillR(m,0,h-1,w,1,'X');fillR(m,0,0,1,h,'X');fillR(m,w-1,0,1,h,'X');
+  fillR(m,5,6,4,2,'R');fillR(m,19,6,4,2,'R');
+  fillR(m,11,10,6,2,'R');
+  fillR(m,3,14,3,3,'X');fillR(m,22,14,3,3,'X');
+  fillR(m,3,3,8,3,'m');fillR(m,17,3,8,3,'m');
+  fillR(m,2,17,10,3,'m');fillR(m,16,17,10,3,'m');
+  fillR(m,10,12,8,4,'m');
+  m[15][14]='S';
+  m[1][14]='D';
+  m[22][14]='O';
+  return m;
+}
+// 第三章 · 混沌魔殿:终章 Boss 殿堂(22×16)
+// X 魔墙/骨柱(阻挡) F 殿地 M 魔尊王座(踏上即战) O 回魔渊
+function makeHell(){
+  const w=22,h=16,m=blank(w,h,'X');
+  fillR(m,3,3,16,11,'F');
+  [[5,5],[16,5],[5,11],[16,11]].forEach(c=>{m[c[1]][c[0]]='X';});
+  m[3][11]='M';
+  m[13][11]='O';
+  return m;
+}
 // Phase 1:室内小图(12×10),f 木地板、H 墙、O 出口,家具走 POI 层
 function makeHouse(){
   const w=12,h=10,m=blank(w,h,'f');
@@ -310,7 +371,9 @@ const MAPS={
   house3:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
   house4:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
   lake:{m:makeLake(),w:28,h:24,bg:'lake',rate:0.18,pool:()=>S.lvl>=12?['yaksha','clam','squid','turtle']:['yaksha','clam','squid']},
-  palace:{m:makePalace(),w:22,h:16,bg:'palace',rate:0,pool:()=>[]}
+  palace:{m:makePalace(),w:22,h:16,bg:'palace',rate:0,pool:()=>[]},
+  abyss:{m:makeAbyss(),w:28,h:24,bg:'abyss',rate:0.20,pool:()=>['yanmo','yin','mojiang','leiyu']},
+  hell:{m:makeHell(),w:22,h:16,bg:'hell',rate:0,pool:()=>[]}
 };
 // 双向传送门:'地图:x,y' → 目的地(d 木门进屋,O 出口回村)
 const DOORS={
@@ -325,7 +388,11 @@ const DOORS={
   // 第二章:湖底 O 回水面、湖底 D 进水府、水府 O 回湖底(漩涡入口与蛟龙王座为特判,见 onStep)
   'lake:14,22':{map:'world',x:24,y:15},
   'lake:14,1':{map:'palace',x:11,y:12},
-  'palace:11,13':{map:'lake',x:14,y:2}
+  'palace:11,13':{map:'lake',x:14,y:2},
+  // 第三章:魔渊 O 回锁妖塔、魔渊 D 进魔殿、魔殿 O 回魔渊(鬼门入口与魔尊王座为特判,见 onStep)
+  'abyss:14,22':{map:'tower',x:11,y:5},
+  'abyss:14,1':{map:'hell',x:11,y:12},
+  'hell:11,13':{map:'abyss',x:14,y:2}
 };
 // 可调查点:撞上家具即翻找。loot: gold 银两 / item 物品 / note 纸条 / none 空手
 const POIS={
@@ -356,6 +423,11 @@ const POIS={
     {id:'lk_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:120}},
     {id:'lk_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:1}},
     {id:'lk_chest3',x:9,y:20,kind:'chest',loot:{t:'note',text:'沉箱里一卷油布包着块龟甲,刻着:「蛟龙性属水,畏风;御风可破其鳞。」'}}
+  ],
+  abyss:[ // 第三章:魔渊魔焰宝匣
+    {id:'ab_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:300}},
+    {id:'ab_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:2}},
+    {id:'ab_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'焦黑的石匣里一片残碑:「五灵大成,可破混沌。魔尊性属雷,烈焰咒克之。」'}}
   ]
 };
 // 翻第二件东西时主人的吐槽(致敬经典:进屋翻箱倒柜,主人毫无意见)
@@ -381,7 +453,10 @@ const NPCS={
   house4:[{x:7,y:4,draw:'vill',c:'#4a6b2a',n:'猎户',talk:()=>showDialog([{n:'猎户',t:'北边林子最近不太平,妖气重。进塔之前,把皮甲穿厚实些!'}])}],
   // 第二章:阿萝在湖底剧情同行(战斗仍由主角单打)
   lake:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoLake()}],
-  palace:[]
+  palace:[],
+  // 第三章:阿萝随你闯魔渊
+  abyss:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoAbyss()}],
+  hell:[]
 };
 
 'use strict';
@@ -485,7 +560,7 @@ function winB(){
   while(S.exp>=S.lvl*45){
     S.exp-=S.lvl*45;S.lvl++;lv=true;
     S.maxHp+=16;S.maxMp+=10;S.hp=S.maxHp;S.mp=S.maxMp;
-    const ns=SKILLS.find(s=>s.lvl===S.lvl);
+    const ns=SKILLS.find(s=>s.lvl===S.lvl&&(!s.flag||flags[s.flag]));
     if(ns)learned.push(ns.n);
   }
   if(lv){setTimeout(sLvl,500);pop(660,220,'升级!Lv'+S.lvl,'#ffd23f');}
@@ -501,6 +576,9 @@ function winB(){
     }else if(key==='dragon'){
       flags.dragon=true;
       showEnding2();
+    }else if(key==='demon'){
+      flags.demon=true;
+      showEnding3();
     }else if(learned.length){
       showDialog(['你领悟了新仙术:'+learned.join('、')+'!']);
     }
@@ -558,7 +636,18 @@ function updBattle(dt){
 function drawBattle(){
   const towerBg=cur.bg==='tower'||B.key==='king';
   const waterBg=cur.bg==='lake'||cur.bg==='palace'||B.key==='dragon';
-  if(waterBg){
+  const hellBg=cur.bg==='abyss'||cur.bg==='hell'||B.key==='demon';
+  if(hellBg){
+    // 魔渊战场:暗红夜空 + 翻涌岩浆 + 飞散余烬
+    r(0,0,SW,430,'#1c0810');r(0,430,SW,210,'#2a0c08');
+    g.fillStyle='#3a0e0a';
+    g.beginPath();g.moveTo(0,430);g.lineTo(240,330);g.lineTo(480,430);g.closePath();g.fill();
+    g.beginPath();g.moveTo(420,430);g.lineTo(700,340);g.lineTo(960,430);g.closePath();g.fill();
+    r(0,560,SW,80,'#6a1810'); // 岩浆河
+    g.fillStyle='rgba(255,120,40,0.5)';for(let k=0;k<6;k++)r((k*170+(frame*2)%170),566+((frame>>2)+k)%6,40,5,'rgba(255,150,50,0.5)');
+    g.fillStyle='#ffb030';for(let k=0;k<16;k++){const ex=(k*131+frame)%960,ey=560-((frame*2+k*70)%460);g.fillRect(ex,ey,3,3);}
+    if(B.key==='demon'){r(360,40,240,400,'#1a0610');r(450,110,60,130,'#3a0e1a');r(462,122,36,16,'#ff4040');}
+  }else if(waterBg){
     // 水下战场:深蓝水体 + 焦散光柱 + 上浮气泡
     r(0,0,SW,420,'#0f3a48');r(0,420,SW,220,'#0a2a34');
     g.fillStyle='rgba(120,220,230,0.10)';
@@ -669,16 +758,39 @@ const sCast=()=>tone(280,0.3,'triangle',0.05,1300);
 const sWin=()=>[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,0.18,'square',0.04),i*110));
 const sDing=()=>[784,1175,1568].forEach((f,i)=>setTimeout(()=>tone(f,0.09,'square',0.05),i*70));
 const sLvl=()=>[440,554,659,880].forEach((f,i)=>setTimeout(()=>tone(f,0.14,'triangle',0.05),i*90));
-let musicOn=false,mi=0,mTimer=null;
-const MEL=[392,440,523,0,587,523,440,392,330,392,440,523,587,0,659,587,523,440,392,330,392,0,440,523,440,392,330,294,330,392,440,0];
+let musicOn=false,mi=0,mTimer=null,melKey='field';
+// BGM 变奏:每个篇章一段主题(村野明快 / 塔内幽暗 / 水府流动 / 魔渊压抑)
+const MELS={
+  field:[392,440,523,0,587,523,440,392,330,392,440,523,587,0,659,587,523,440,392,330,392,0,440,523,440,392,330,294,330,392,440,0],
+  tower:[294,0,349,392,294,0,262,294,220,0,262,294,349,0,330,294,262,0,294,349,392,0,349,294,262,247,220,0,247,262,294,0],
+  lake:[330,392,440,523,440,392,0,440,494,587,494,440,0,392,440,494,392,330,294,330,392,0,440,392,330,294,262,0,294,330,392,0],
+  abyss:[247,0,262,233,196,0,233,196,175,0,208,247,262,0,233,208,196,175,165,0,196,208,233,0,220,196,175,165,0,185,208,0]
+};
+const MUSCFG={
+  field:{wave:'triangle',rest:250,bv:0.018},
+  tower:{wave:'square',rest:280,bv:0.020},
+  lake:{wave:'sine',rest:235,bv:0.016},
+  abyss:{wave:'sawtooth',rest:300,bv:0.024}
+};
+function melForBg(bg){return bg==='tower'?'tower':(bg==='lake'||bg==='palace')?'lake':(bg==='abyss'||bg==='hell')?'abyss':'field';}
+function startMusicLoop(){
+  if(mTimer){clearInterval(mTimer);mTimer=null;}
+  const cfg=MUSCFG[melKey],mel=MELS[melKey];
+  mTimer=setInterval(()=>{
+    const f=mel[mi%mel.length];mi++;
+    if(f)tone(f,cfg.rest/1000*0.88,cfg.wave,0.025);
+    if(mi%4===0)tone(f?f/2:98,cfg.rest/1000*1.2,'sine',cfg.bv);
+  },cfg.rest);
+}
 function setMusic(on){
   musicOn=on;$('btnMus').textContent='音乐:'+(on?'开':'关');
-  if(mTimer){clearInterval(mTimer);mTimer=null;}
-  if(on){au();mTimer=setInterval(()=>{
-    const f=MEL[mi%MEL.length];mi++;
-    if(f)tone(f,0.22,'triangle',0.025);
-    if(mi%4===0)tone(f?f/2:98,0.3,'sine',0.018);
-  },250);}
+  if(!on){if(mTimer){clearInterval(mTimer);mTimer=null;}return;}
+  au();mi=0;startMusicLoop();
+}
+// 切图时按场景切换 BGM 主题(变奏);音乐开着才即时重启
+function setMelodyForMap(){
+  const k=melForBg(cur.bg);
+  if(k!==melKey){melKey=k;mi=0;if(musicOn)startMusicLoop();}
 }
 
 function r(x,y,w,h,c){g.fillStyle=c;g.fillRect(x,y,w,h);}
@@ -692,7 +804,7 @@ function canWalk(x,y){
   if(tileAt(x,y)==='V'&&!flags.ch2)return false; // 漩涡未显现前如同湖水,不可入
   return !('TWXHR'.includes(tileAt(x,y)));
 }
-function switchMap(name,x,y){curName=name;cur=MAPS[name];p.tx=x;p.ty=y;p.x=x*T;p.y=y*T;p.mv=null;}
+function switchMap(name,x,y){curName=name;cur=MAPS[name];p.tx=x;p.ty=y;p.x=x*T;p.y=y*T;p.mv=null;setMelodyForMap();}
 
 function drawTile(i,j,sx,sy){
   const c=cur.m[j][i];
@@ -729,13 +841,39 @@ function drawTile(i,j,sx,sy){
     else if(c==='Z'){const gl=flags.dragon?'#9fe1cb':'#ffd76a';r(sx+6,sy+2,20,28,'#10333d');r(sx+9,sy+5,14,22,'#1d4a57');r(sx+8,sy+4,4,6,gl);r(sx+20,sy+4,4,6,gl);r(sx+13,sy+12,6,10,gl);r(sx+10,sy+24,12,4,'#0a2229');}
     return;
   }
+  if(cur.bg==='abyss'){
+    if(c==='X'){r(sx,sy,T,T,'#1a1018');r(sx+2,sy+2,12,12,'#2a1622');r(sx+18,sy+18,12,12,'#2a1622');r(sx+18,sy+3,10,10,'#140a12');r(sx+3,sy+18,10,10,'#140a12');return;}
+    if(c==='R'){ // 岩浆:暗红熔流 + 翻涌亮斑
+      r(sx,sy,T,T,'#5a1410');const o=(frame>>3)%3;r(sx+4+o*5,sy+8,8,3,'#ff6a20');r(sx+16-o*4,sy+20,7,3,'#ffb030');r(sx+10,sy+4,4,2,'#ffd23f');return;}
+    r(sx,sy,T,T,'#241420');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.10)');
+    const e=(frame>>4)%2;
+    r(sx+22,sy+6,2,2,'rgba(255,120,80,0.45)');r(sx+6+e*4,sy+22,2,2,'rgba(200,80,140,0.4)'); // 余烬
+    if(c==='m'){r(sx,sy,T,T,'#321826');[[8,8],[20,18],[12,22],[22,7],[5,16]].forEach(b=>{r(sx+b[0],sy+b[1],3,3,'#a8324f');r(sx+b[0]+1,sy+b[1]+1,1,1,'#ff5a7a');});}
+    else if(c==='S'){r(sx+4,sy+4,24,24,'#7a2a4a');r(sx+8,sy+8,16,16,'#c45a7a');const k=(frame>>3)%4;r(sx+10+k*3,sy+6+(k*4)%16,3,3,'#ffd0e0');}
+    else if(c==='O'){r(sx+3,sy+3,26,26,'#3a1822');r(sx+8,sy+8,16,16,'#7a2a3a');r(sx+11,sy+12,10,8,'#ffb0a0');g.fillStyle='#1a0a0e';g.font='12px monospace';g.fillText('↑',sx+13,sy+22);}
+    else if(c==='D'){r(sx,sy,T,T,'#160a12');r(sx+3,sy+2,26,30,'#3a1428');r(sx+6,sy+5,20,27,'#1a0810');r(sx+10,sy+8,12,24,'#7a1c3a');r(sx+13,sy+3,6,5,'#ff4040');r(sx+8,sy+14,3,3,'#ff6a8a');r(sx+21,sy+14,3,3,'#ff6a8a');}
+    return;
+  }
+  if(cur.bg==='hell'){
+    if(c==='X'){r(sx,sy,T,T,'#1a0c14');r(sx+3,sy+2,26,28,'#34121f');r(sx+6,sy+5,20,22,'#220a14');r(sx+13,sy+2,6,28,'#7a1c2e');r(sx+14,sy+6,4,6,'#ff4040');r(sx+14,sy+18,4,6,'#ff4040');return;}
+    r(sx,sy,T,T,'#180810');if((i+j)%2)r(sx,sy,T,T,'rgba(255,60,60,0.05)');
+    r(sx,sy,T,1,'#3a121e');r(sx,sy,1,T,'#3a121e');
+    if(c==='O'){r(sx+3,sy+3,26,26,'#2a0e16');r(sx+8,sy+8,16,16,'#5a1a26');r(sx+11,sy+12,10,8,'#ffb0a0');g.fillStyle='#1a0a0e';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='M'){const gl=flags.demon?'#9a9aa8':'#ff4040';r(sx+6,sy+2,20,28,'#1e0a14');r(sx+9,sy+5,14,22,'#34121f');r(sx+7,sy+3,4,7,gl);r(sx+21,sy+3,4,7,gl);r(sx+13,sy+11,6,12,gl);r(sx+10,sy+25,12,4,'#0e0610');}
+    return;
+  }
   if(curName==='tower'){
     if(c==='X'){r(sx,sy,T,T,'#2c2638');r(sx+2,sy+2,12,12,'#241f30');r(sx+18,sy+18,12,12,'#241f30');r(sx+18,sy+2,12,12,'#332b42');r(sx+2,sy+18,12,12,'#332b42');return;}
     r(sx,sy,T,T,'#4a4356');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.07)');
     r(sx,sy,T,1,'#3d374a');r(sx,sy,1,T,'#3d374a');
     if(c==='e'){r(sx,sy,T,T,'#423a52');r(sx+8,sy+8,4,4,'#6e5a9e');r(sx+20,sy+18,4,4,'#6e5a9e');r(sx+12,sy+22,4,4,'#6e5a9e');r(sx+22,sy+6,3,3,'#8a74c4');}
     else if(c==='O'){r(sx+4,sy+4,24,24,'#1c1726');r(sx+8,sy+14,16,4,'#6a6f78');r(sx+8,sy+22,16,4,'#6a6f78');}
-    else if(c==='B'){const gl=flags.boss?'#ffd76a':'#e24b4a';r(sx+4,sy+14,24,4,gl);r(sx+14,sy+4,4,24,gl);r(sx+8,sy+8,4,4,gl);r(sx+20,sy+20,4,4,gl);}
+    else if(c==='B'){
+      if(flags.ch3&&!flags.demon){ // 鬼门:封印裂开,腥红雾气翻涌
+        r(sx+4,sy+3,24,26,'#1a0810');r(sx+7,sy+6,18,20,'#3a1424');
+        const o=(frame>>3)%3;r(sx+10+o*2,sy+10,5,3,'#ff4a4a');r(sx+16-o*2,sy+18,5,3,'#c43a5a');r(sx+13,sy+14,4,4,'#ff8080');
+      }else{const gl=flags.boss?'#ffd76a':'#e24b4a';r(sx+4,sy+14,24,4,gl);r(sx+14,sy+4,4,24,gl);r(sx+8,sy+8,4,4,gl);r(sx+20,sy+20,4,4,gl);}
+    }
     return;
   }
   r(sx,sy,T,T,'#7ab648');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.04)');
@@ -782,7 +920,7 @@ function drawHUD(){
   g.fillText(S.hp+'/'+S.maxHp,224,58);g.fillText(S.mp+'/'+S.maxMp,224,76);
 }
 function drawWorld(){
-  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':'#234d1e');
+  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':cur.bg==='abyss'?'#1a0c14':cur.bg==='hell'?'#140610':'#234d1e');
   const mw=cur.w*T,mh=cur.h*T;
   const camX=mw<=SW?(mw-SW)/2:Math.max(0,Math.min(mw-SW,p.x-SW/2+16));
   const camY=mh<=SH?(mh-SH)/2:Math.max(0,Math.min(mh-SH,p.y-SH/2+16));
@@ -860,7 +998,19 @@ function onStep(){
         '封印法阵的中央,黑雾凝成一道高大的影子。',
         {n:'千年妖王',t:'千年了……终于等到开锁的血食。小辈,纳命来!'}
       ],()=>startBattle('king',true));
+    }else if(flags.ch3&&!flags.demon){ // 第三章:封印之下竟藏着通往妖界的鬼门
+      enterAbyss();
     }else wpop('封印安然无恙','#ffd76a');
+    return;
+  }
+  if(c==='M'){ // 第三章:魔尊王座
+    if(!flags.demon){
+      showDialog([
+        '殿堂尽头,一尊巨影自骨座上缓缓睁眼,雷光在它角间游走。',
+        {n:'阿萝',t:'师兄,它就是操纵妖王和蛟龙的混沌魔尊!它属雷——用烈焰咒,火克雷!'},
+        {n:'混沌魔尊',t:'蝼蚁也敢登我殿堂?连同你这一身五灵,我一并吞了!'}
+      ],()=>startBattle('demon',true));
+    }else wpop('魔殿一片死寂','#9a9aa8');
     return;
   }
   if(curName==='world'&&!flags.mini&&p.ty===14&&(p.tx===31||p.tx===32)){
@@ -870,7 +1020,7 @@ function onStep(){
     ],()=>startBattle('snakeKing',true));
     return;
   }
-  if(c==='t'||c==='e'||c==='c'){ // 深草 / 符纹地 / 水草:遇敌地形
+  if(c==='t'||c==='e'||c==='c'||c==='m'){ // 深草 / 符纹地 / 水草 / 魔纹:遇敌地形
     if(grace>0){grace--;return;}
     if(Math.random()<cur.rate){
       const pool=cur.pool();
@@ -888,6 +1038,18 @@ function diveLake(){
       '(水草丛中会遇上水妖;气泡灵泉可回满状态。北边的水府门后,便是蛟龙的巢穴。)'
     ],()=>switchMap('lake',14,21));
   }else switchMap('lake',14,21);
+}
+// 第三章:踏入封印之下的鬼门,坠入妖界魔渊(首次有旁白)
+function enterAbyss(){
+  if(!flags.abyssIntro){
+    flags.abyssIntro=true;
+    showDialog([
+      '封印的金光裂开一道缝隙,缝里翻涌着腥红的雾——那是一道鬼门。',
+      {n:'阿萝',t:'妖王和蛟龙,都不过是它的爪牙……师兄,这一关,我们一起闯过去!'},
+      '你与阿萝并肩跨入鬼门,脚下是望不见底的魔渊。',
+      '(魔纹地会遇上魔物;邪泉可回满状态。北面的魔殿,便是混沌魔尊的所在。)'
+    ],()=>switchMap('abyss',14,21));
+  }else switchMap('abyss',14,21);
 }
 
 // Phase 1:翻找家具。首次有宝物("叮"+金色飘字),重复调查按种类给不同文案
@@ -930,7 +1092,18 @@ function talkAluo(){
     save();
   }
   else if(!flags.dragon)showDialog([{n:'阿萝',t:'湖中漩涡通往水府。记住——水府里的妖物都属水,风灵咒打它们最疼!'}]);
-  else showDialog([{n:'阿萝',t:'蛟龙也降了,师兄真是顶天立地的大英雄!下一程,我还要跟着你。'}]);
+  else if(!flags.ch3){ // 第三章开篇:揭示幕后魔尊,指向锁妖塔鬼门
+    flags.ch3=true;
+    showDialog([
+      {n:'阿萝',t:'师兄,我查过古卷……妖王和蛟龙,都是被同一个东西驱使的爪牙。'},
+      {n:'阿萝',t:'锁妖塔的封印之下,藏着一道通往妖界的鬼门。幕后真凶——混沌魔尊,就困在里头。'},
+      {n:'阿萝',t:'它属雷,凶得很。你把五灵术修到大成,火灵咒会化作烈焰咒,火克雷,正好克它!'},
+      {n:'阿萝',t:'回锁妖塔,踏上塔心那道裂开的封印。这一回,我陪你闯妖界!'}
+    ]);
+    save();
+  }
+  else if(!flags.demon)showDialog([{n:'阿萝',t:'鬼门就在锁妖塔塔心的封印处。魔渊里魔物属性各异,记得换着咒法打——魔尊属雷,烈焰咒最克它!'}]);
+  else showDialog([{n:'阿萝',t:'三界又得安宁了。师兄,往后不管多远的路,我都陪你走。'}]);
 }
 // 第二章:阿萝在湖底剧情同行(随进度变化的台词)
 function talkAluoLake(){
@@ -939,6 +1112,14 @@ function talkAluoLake(){
     {n:'阿萝',t:'那只龟将军壳硬属土——对它改用雷灵咒,事半功倍。'}
   ]);
   else showDialog([{n:'阿萝',t:'湖水退下去了,水府也安静了。师兄,我们回村报喜吧!'}]);
+}
+// 第三章:阿萝随你闯魔渊(战前提点全套克制打法)
+function talkAluoAbyss(){
+  if(!flags.demon)showDialog([
+    {n:'阿萝',t:'顺着魔纹往北就是魔殿。焰魔属火、玄阴鬼属水、魔将属土、雷狱卒属雷——挨个用克它的咒最省力!'},
+    {n:'阿萝',t:'撑不住就退回邪泉边回气。魔尊属雷,灵力留着给烈焰咒!'}
+  ]);
+  else showDialog([{n:'阿萝',t:'魔渊的腥气散尽了。师兄,我们回家吧。'}]);
 }
 function inn(){
   const c=Math.min(10,S.gold);S.gold-=c;S.hp=S.maxHp;S.mp=S.maxMp;sHeal();save();
@@ -996,7 +1177,8 @@ function buyArm(i){
   S.gold-=ARMS[i].p;EQ.arm=i;sLvl();toast('已装备 '+ARMS[i].n);openShop('gear');
 }
 function openStatus(){
-  const known=SKILLS.filter(skillKnown).map(s=>s.n+'·'+s.el).join('  ');
+  const ups=Object.values(SKILL_UP);
+  const known=SKILLS.filter(skillKnown).map(s=>(ups.includes(s.n)?'↑':'')+s.n+'·'+s.el).join('  ');
   openPanel('<h3>云无衣</h3>'+
     '<div class="srow"><div><b>等级 '+S.lvl+'</b><span>经验 '+S.exp+' / '+(S.lvl*45)+'</span></div></div>'+
     '<div class="srow"><div><b>气血 '+S.hp+'/'+S.maxHp+'</b><span>灵力 '+S.mp+'/'+S.maxMp+'</span></div></div>'+
@@ -1027,6 +1209,7 @@ function resetState(){
   EQ.wpn=0;EQ.arm=0;
   flags.aluo=false;flags.mini=false;flags.boss=false;
   flags.ch2=false;flags.wind=false;flags.lakeIntro=false;flags.dragon=false;
+  flags.ch3=false;flags.abyssIntro=false;flags.demon=false;
   for(const k in looted)delete looted[k];
   switchMap('world',31,44);
 }
@@ -1039,7 +1222,13 @@ function showEnding(){
 }
 function showEnding2(){
   if($('endTitle'))$('endTitle').textContent='第二章 · 完';
-  $('endText').textContent='墨蛟龙王化作一池清水,湖面重归平静,月影粼粼。阿萝挽住你的衣袖,笑着说还要陪你走更远的路——灵山的传说,仍未完待续。想要第三章?回到 Claude 的对话里喊一声就行。';
+  $('endText').textContent='墨蛟龙王化作一池清水,湖面重归平静,月影粼粼。阿萝挽住你的衣袖,笑着说还要陪你走更远的路——灵山的传说,仍未完待续。';
+  $('endov').style.display='flex';
+  sWin();
+}
+function showEnding3(){
+  if($('endTitle'))$('endTitle').textContent='终章 · 完';
+  $('endText').textContent='混沌魔尊在五灵齐轰下崩散成漫天流光,鬼门轰然闭合。云无衣与阿萝并肩走出锁妖塔,晨曦铺满灵山——妖王、蛟龙、魔尊皆已伏诛,三界重归太平。这一程的传说,到此圆满。多谢你陪云无衣和阿萝走到了最后。';
   $('endov').style.display='flex';
   sWin();
 }

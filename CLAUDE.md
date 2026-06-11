@@ -28,9 +28,13 @@
 - 切图用 `switchMap(name,x,y)`;`cur`/`curName` 指向当前地图;新室内图直接往 `MAPS` 里加
 - 进屋找宝贝(Phase 1):`DOORS` 双向传送表(键 `'地图:x,y'`)、`POIS[mapName]` 可调查家具/沉箱(撞击触发 `investigate()`)、`POI_KINDS` 种类与重复文案、`SNARK` 主人吐槽、`looted` 已翻过的点(随 `save()` 持久)。家具是 POI 层贴图,不占瓦片层
 - **NPC 不能站在房门正下方**(x,40 的下一格),会堵死进屋通路,冒烟测试有可达性校验
-- 第二章 · 水月湖底(Phase 3):地图 `lake`(湖底,水草 `c` 遇敌)+ `palace`(水府,王座 `Z` 触发蛟龙战);世界图 `V` 漩涡为入口(`flags.ch2` 前如水不可入);新敌 yaksha/clam/squid/turtle/dragon;`风灵咒` 是 flag 解锁技(`{lvl:99,flag:'wind'}`,用 `skillKnown(s)` 判定,不要再写 `S.lvl>=s.lvl`)
-- 章节流程靠 `flags`:ch2(开启)→ wind(习得风灵咒)→ lakeIntro(首次潜入)→ dragon(降蛟龙);`winB` 里按 `B.key` 分支结局(king→`showEnding`,dragon→`showEnding2`),`#endTitle` 动态改章节名
+- 第二章 · 水月湖底:地图 `lake`(水草 `c` 遇敌)+ `palace`(王座 `Z` 触发蛟龙战);世界图 `V` 漩涡为入口(`flags.ch2` 前如水不可入);新敌 yaksha/clam/squid/turtle/dragon
+- 第三章 · 妖界魔渊:地图 `abyss`(魔纹 `m` 遇敌)+ `hell`(王座 `M` 触发魔尊战);入口复用锁妖塔封印 `B`(ch3 后渲染为鬼门、踏上即坠魔渊);新敌 yanmo/yin(改色鬼火)/mojiang(改色石傀)/leiyu/demon
+- **技能解锁**:`skillKnown(s)` = 够等级 **且**(无 flag 或 flag 已解锁)。风灵咒 `{lvl:1,flag:'wind'}`(阿萝传授);升级链 `烈焰/玄冰/罡风/紫雷` 高等级自动领悟(`SKILL_UP` 是基础→大成映射)。不要再写 `S.lvl>=s.lvl`;`winB` 升级播报也要带 `(!s.flag||flags[s.flag])`
+- **BGM 变奏**:`MELS`/`MUSCFG` 按场景分 field/tower/lake/abyss 四套;`melForBg(cur.bg)` 选曲,`switchMap` 末尾调 `setMelodyForMap()` 即时切换
+- 章节流程靠 `flags`:ch2→wind→lakeIntro→dragon→ch3→abyssIntro→demon;`winB` 按 `B.key` 分支结局(king→`showEnding`,dragon→`showEnding2`,demon→`showEnding3`),`#endTitle` 动态改章节名
 - 新增剧情 flag 必须同步改 `resetState()`(否则重开游戏残留);存档已整体序列化 `flags`,无需逐个加
+- 加新妖怪精灵:对称的用 `python3` 镜像左半生成(见 git 历史),**单脸生物别整块镜像**(会变双脸),改用「居中段」式或直接写整行;`tests/smoke.js` 会校验每行等宽
 - 像素角色:`PIX` 里加字符串像素图(每行等宽,冒烟测试会校验),调色板放 `PALS`,映射放 `PIXPAL`
 - 交互模式:撞击触发(同 `npcAt()`),走向目标按方向键即可
 - 存档:localStorage key `lingshan1`;新增持久字段要同时改 `save()`/`loadSave()`/`resetState()`

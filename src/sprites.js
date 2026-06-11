@@ -70,3 +70,24 @@ function drawTurtle(x,y,s){pix('turtle',x,y,s);}
 function drawDragon(x,y,s){pix('dragon',x,y,s);}
 Object.assign(SPR,{yaksha:drawYaksha,clam:drawClam,squid:drawSquid,turtle:drawTurtle,dragon:drawDragon});
 Object.assign(SPRM,{yaksha:{w:20,h:20,s:6},clam:{w:20,h:16,s:6},squid:{w:20,h:20,s:6},turtle:{w:20,h:18,s:6},dragon:{w:24,h:24,s:6}});
+
+// ===== 第三章 · 妖界魔渊:魔类像素图 + 旧图改色复用 =====
+PALS.yanmo={"K": "#1a0808", "F": "#ff8a2a", "f": "#ffe24a", "R": "#c0382a", "E": "#fff0a0", "W": "#ffe8c0", "B": "#5a1414"};
+PALS.leiyu={"K": "#0e0a18", "D": "#2f2a44", "d": "#1a1626", "Y": "#ffe24a", "y": "#c9a227", "B": "#3a4a72", "E": "#fff0a0"};
+PALS.demon={"K": "#0a0612", "H": "#d9c0a0", "h": "#a08858", "P": "#4a2a6e", "p": "#2a1640", "R": "#c43a2f", "E": "#ff4040", "W": "#ffd0d0"};
+Object.assign(PIX,{
+  yanmo:[".........ff.........","......fFf..fFf......",".....fFFf..fFFf.....","....KFFFFFFFFFFK....","...KFRRRRRRRRRRFK...","...KFRRRRRRRRRRFK...","..KFRREEKRRKEERRFK..","..KFRREEKRRKEERRFK..","..KFRRRRRRRRRRRRFK..",".KFRRRWWWWWWRRRRFK..","..KFRRWKWKWKWRRRFK..","..KFRRRRRRRRRRRRFK..","..KKFRRRRRRRRRRFKK..","...KFBRRRRRRRRBFK...","...KFBBRRRRRRBBFK...","...KBBBRRRRRRBBBK...","...KBBBRRRRRRBBBK...","...KBBRRRRRRRRBBK...","....KKBBRRRRBBKK....","......KKBBBBKK......"],
+  leiyu:["...K....K..K....K...","..KYK..KY..YK..KYK..","..KDK..KD..DK..KDK..",".KDDDDDDDKKDDDDDDDK.","KDDDDDDDDDDDDDDDDDDK","KDDEEKDDDDDDDDKEEDDK","KDDEEKDDDDDDDDKEEDDK","KDDDDKDDDDDDDDKDDDDK","KDYDDDDYDDDDYDDDDYDK","KDDYDDYDDDDDDYDDYDDK",".KDDDDDDDKKDDDDDDDK.",".KBDDDDDBKKBDDDDDBK.","KBBDYYDBBBBBBDYYDBBK","KBDDYYDDBBBBDDYYDDBK","KBDDDDDDBBBBDDDDDDBK",".KBDDDDDBKKBDDDDDBK.",".KKBDDBKK..KKBDDBKK.","...KDDK......KDDK...","..KDKKDK....KDKKDK..",".KDK..KDK..KDK..KDK."],
+  demon:[".H.........HH.........H.",".HH.......HHHH.......HH.","KHhK.....KHhhHK.....KhHK","KHhPK...KPHhhHPK...KPhHK",".KPPPK.KPPPKKPPPK.KPPPK.",".KPPPPKPPPPPPPPPPKPPPPK.","..KPPPPPPPPPPPPPPPPPPK..","..KPPEEKPPPPPPPPKEEPPK..","..KPEEEKPPPPPPPPKEEEPK..","..KPPPPKPPPPPPPPKPPPPK..","..KPPPPPPPPPPPPPPPPPPK..","..KPPWWWWWPPPPWWWWWPPK..","..KPWRKRKRWPPWRKRKRWPK..","...KWRRRRRWPPWRRRRRWK...","...KKPWWWPPPPPPWWWPKK...","....KPPPPPPPPPPPPPPK....","...KpPPPPPPPPPPPPPPpK...","..KpPPPPPPpPPpPPPPPPpK..","..KpPPRRPPpPPpPPRRPPpK..","..KpPRRRRPpPPpPRRRRPpK..","..KpPPRRPPpPPpPPRRPPpK..","...KpPPPPpPKKPpPPPPpK...","....KKPPpKK..KKpPPKK....","......KKK......KKK......"],
+});
+Object.assign(PIXPAL,{yanmo:'yanmo',leiyu:'leiyu',demon:'demon'});
+// 玄阴鬼:借鬼火帧改寒蓝调;魔将:借石傀改暗血调
+const YINPAL={K:'#0a1422',B:'#1c3a6e',b:'#12284a',L:'#5a8fd0',W:'#cfe0ff',E:'#9fd6ff'};
+const MOJPAL=Object.assign({},PALS.golem,{G:'#6a2a3a',g:'#481c28',L:'#9a4a5a',M:'#7a2430',R:'#ff5a5a',r:'#c43a3a',E:'#ff5a5a'});
+function drawYanmo(x,y,s){pix('yanmo',x,y,s);}
+function drawLeiyu(x,y,s){pix('leiyu',x,y,s);}
+function drawDemon(x,y,s){pix('demon',x,y,s);}
+function drawYin(x,y,s){pix((frame>>3)%2?'flame1':'flame0',x,y,s,YINPAL);}
+function drawMojiang(x,y,s){pix('golem',x,y,s,MOJPAL);}
+Object.assign(SPR,{yanmo:drawYanmo,leiyu:drawLeiyu,demon:drawDemon,yin:drawYin,mojiang:drawMojiang});
+Object.assign(SPRM,{yanmo:{w:20,h:20,s:6},leiyu:{w:20,h:20,s:6},demon:{w:24,h:24,s:6},yin:{w:16,h:20,s:8},mojiang:{w:20,h:20,s:7}});

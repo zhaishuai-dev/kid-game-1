@@ -3,6 +3,7 @@
 // 瓦片字符:G 草 t 深草 T 树 W 水 P 路 b 桥 R 屋顶 H 墙 X 石墙 F 石地
 //          e 符纹遇敌地 D 门(锁妖塔/水府) d 木门(进屋) O 出口 S 灵泉 B 封印
 //          第二章:V 漩涡(湖面入口) a 湖水 c 水草(遇敌) Z 蛟龙王座
+//          第三章:v 魔土 m 魔纹(遇敌) M 魔尊王座(鬼门复用锁妖塔封印 B)
 function blank(w,h,f){const m=[];for(let y=0;y<h;y++)m.push(new Array(w).fill(f));return m;}
 function fillR(m,x,y,w,h,c){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++){if(m[j]&&m[j][i]!==undefined)m[j][i]=c;}}
 function house(m,x,y){fillR(m,x,y,5,2,'R');fillR(m,x,y+2,5,2,'H');}
@@ -54,6 +55,32 @@ function makePalace(){
   m[13][11]='O';
   return m;
 }
+// 第三章 · 妖界魔渊:可探索的魔域大图(28×24,竖向卷轴)
+// v 魔土(安全) m 魔纹(遇敌带) R 岩浆(阻挡) X 黑石(阻挡) S 邪泉(回满) D 魔殿门 O 回锁妖塔
+function makeAbyss(){
+  const w=28,h=24,m=blank(w,h,'v');
+  fillR(m,0,0,w,1,'X');fillR(m,0,h-1,w,1,'X');fillR(m,0,0,1,h,'X');fillR(m,w-1,0,1,h,'X');
+  fillR(m,5,6,4,2,'R');fillR(m,19,6,4,2,'R');
+  fillR(m,11,10,6,2,'R');
+  fillR(m,3,14,3,3,'X');fillR(m,22,14,3,3,'X');
+  fillR(m,3,3,8,3,'m');fillR(m,17,3,8,3,'m');
+  fillR(m,2,17,10,3,'m');fillR(m,16,17,10,3,'m');
+  fillR(m,10,12,8,4,'m');
+  m[15][14]='S';
+  m[1][14]='D';
+  m[22][14]='O';
+  return m;
+}
+// 第三章 · 混沌魔殿:终章 Boss 殿堂(22×16)
+// X 魔墙/骨柱(阻挡) F 殿地 M 魔尊王座(踏上即战) O 回魔渊
+function makeHell(){
+  const w=22,h=16,m=blank(w,h,'X');
+  fillR(m,3,3,16,11,'F');
+  [[5,5],[16,5],[5,11],[16,11]].forEach(c=>{m[c[1]][c[0]]='X';});
+  m[3][11]='M';
+  m[13][11]='O';
+  return m;
+}
 // Phase 1:室内小图(12×10),f 木地板、H 墙、O 出口,家具走 POI 层
 function makeHouse(){
   const w=12,h=10,m=blank(w,h,'f');
@@ -79,7 +106,9 @@ const MAPS={
   house3:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
   house4:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
   lake:{m:makeLake(),w:28,h:24,bg:'lake',rate:0.18,pool:()=>S.lvl>=12?['yaksha','clam','squid','turtle']:['yaksha','clam','squid']},
-  palace:{m:makePalace(),w:22,h:16,bg:'palace',rate:0,pool:()=>[]}
+  palace:{m:makePalace(),w:22,h:16,bg:'palace',rate:0,pool:()=>[]},
+  abyss:{m:makeAbyss(),w:28,h:24,bg:'abyss',rate:0.20,pool:()=>['yanmo','yin','mojiang','leiyu']},
+  hell:{m:makeHell(),w:22,h:16,bg:'hell',rate:0,pool:()=>[]}
 };
 // 双向传送门:'地图:x,y' → 目的地(d 木门进屋,O 出口回村)
 const DOORS={
@@ -94,7 +123,11 @@ const DOORS={
   // 第二章:湖底 O 回水面、湖底 D 进水府、水府 O 回湖底(漩涡入口与蛟龙王座为特判,见 onStep)
   'lake:14,22':{map:'world',x:24,y:15},
   'lake:14,1':{map:'palace',x:11,y:12},
-  'palace:11,13':{map:'lake',x:14,y:2}
+  'palace:11,13':{map:'lake',x:14,y:2},
+  // 第三章:魔渊 O 回锁妖塔、魔渊 D 进魔殿、魔殿 O 回魔渊(鬼门入口与魔尊王座为特判,见 onStep)
+  'abyss:14,22':{map:'tower',x:11,y:5},
+  'abyss:14,1':{map:'hell',x:11,y:12},
+  'hell:11,13':{map:'abyss',x:14,y:2}
 };
 // 可调查点:撞上家具即翻找。loot: gold 银两 / item 物品 / note 纸条 / none 空手
 const POIS={
@@ -125,6 +158,11 @@ const POIS={
     {id:'lk_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:120}},
     {id:'lk_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:1}},
     {id:'lk_chest3',x:9,y:20,kind:'chest',loot:{t:'note',text:'沉箱里一卷油布包着块龟甲,刻着:「蛟龙性属水,畏风;御风可破其鳞。」'}}
+  ],
+  abyss:[ // 第三章:魔渊魔焰宝匣
+    {id:'ab_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:300}},
+    {id:'ab_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:2}},
+    {id:'ab_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'焦黑的石匣里一片残碑:「五灵大成,可破混沌。魔尊性属雷,烈焰咒克之。」'}}
   ]
 };
 // 翻第二件东西时主人的吐槽(致敬经典:进屋翻箱倒柜,主人毫无意见)
@@ -150,5 +188,8 @@ const NPCS={
   house4:[{x:7,y:4,draw:'vill',c:'#4a6b2a',n:'猎户',talk:()=>showDialog([{n:'猎户',t:'北边林子最近不太平,妖气重。进塔之前,把皮甲穿厚实些!'}])}],
   // 第二章:阿萝在湖底剧情同行(战斗仍由主角单打)
   lake:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoLake()}],
-  palace:[]
+  palace:[],
+  // 第三章:阿萝随你闯魔渊
+  abyss:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoAbyss()}],
+  hell:[]
 };

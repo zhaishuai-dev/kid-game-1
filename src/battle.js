@@ -99,7 +99,7 @@ function winB(){
   while(S.exp>=S.lvl*45){
     S.exp-=S.lvl*45;S.lvl++;lv=true;
     S.maxHp+=16;S.maxMp+=10;S.hp=S.maxHp;S.mp=S.maxMp;
-    const ns=SKILLS.find(s=>s.lvl===S.lvl);
+    const ns=SKILLS.find(s=>s.lvl===S.lvl&&(!s.flag||flags[s.flag]));
     if(ns)learned.push(ns.n);
   }
   if(lv){setTimeout(sLvl,500);pop(660,220,'升级!Lv'+S.lvl,'#ffd23f');}
@@ -115,6 +115,9 @@ function winB(){
     }else if(key==='dragon'){
       flags.dragon=true;
       showEnding2();
+    }else if(key==='demon'){
+      flags.demon=true;
+      showEnding3();
     }else if(learned.length){
       showDialog(['你领悟了新仙术:'+learned.join('、')+'!']);
     }
@@ -172,7 +175,18 @@ function updBattle(dt){
 function drawBattle(){
   const towerBg=cur.bg==='tower'||B.key==='king';
   const waterBg=cur.bg==='lake'||cur.bg==='palace'||B.key==='dragon';
-  if(waterBg){
+  const hellBg=cur.bg==='abyss'||cur.bg==='hell'||B.key==='demon';
+  if(hellBg){
+    // 魔渊战场:暗红夜空 + 翻涌岩浆 + 飞散余烬
+    r(0,0,SW,430,'#1c0810');r(0,430,SW,210,'#2a0c08');
+    g.fillStyle='#3a0e0a';
+    g.beginPath();g.moveTo(0,430);g.lineTo(240,330);g.lineTo(480,430);g.closePath();g.fill();
+    g.beginPath();g.moveTo(420,430);g.lineTo(700,340);g.lineTo(960,430);g.closePath();g.fill();
+    r(0,560,SW,80,'#6a1810'); // 岩浆河
+    g.fillStyle='rgba(255,120,40,0.5)';for(let k=0;k<6;k++)r((k*170+(frame*2)%170),566+((frame>>2)+k)%6,40,5,'rgba(255,150,50,0.5)');
+    g.fillStyle='#ffb030';for(let k=0;k<16;k++){const ex=(k*131+frame)%960,ey=560-((frame*2+k*70)%460);g.fillRect(ex,ey,3,3);}
+    if(B.key==='demon'){r(360,40,240,400,'#1a0610');r(450,110,60,130,'#3a0e1a');r(462,122,36,16,'#ff4040');}
+  }else if(waterBg){
     // 水下战场:深蓝水体 + 焦散光柱 + 上浮气泡
     r(0,0,SW,420,'#0f3a48');r(0,420,SW,220,'#0a2a34');
     g.fillStyle='rgba(120,220,230,0.10)';

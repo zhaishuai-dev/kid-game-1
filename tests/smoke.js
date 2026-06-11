@@ -334,6 +334,118 @@ t('湖底/水府/水下战斗各渲染一帧不崩溃',()=>{
   E(`mode='world';B=null;battleUI(false);switchMap('world',31,44)`);
 });
 
+console.log('— 第三章:妖界魔渊 —');
+t('魔类与魔尊 Boss 数据齐备,精灵可绘',()=>{
+  for(const k of ['yanmo','yin','mojiang','leiyu','demon']){
+    ok(E(`ENM['${k}']`),'缺敌人 '+k);
+    const draw=E(`ENM['${k}'].draw`);
+    ok(E(`SPR['${draw}']`),draw+' 缺绘制函数');
+    ok(E(`SPRM['${draw}']`),draw+' 缺尺寸');
+  }
+  ok(E(`PIX.yanmo&&PIX.leiyu&&PIX.demon`),'新增魔类像素图齐备');
+  eq(E(`ENM.demon.el`),'雷');
+});
+t('魔渊四魔属性齐备:火/水/土/雷,逼用全套升级咒',()=>{
+  eq(E(`ENM.yanmo.el`),'火');eq(E(`ENM.yin.el`),'水');
+  eq(E(`ENM.mojiang.el`),'土');eq(E(`ENM.leiyu.el`),'雷');
+});
+t('五灵术升级链:四系大成咒都更强,且为升级关系',()=>{
+  const base={'火灵咒':'烈焰咒','水灵咒':'玄冰咒','风灵咒':'罡风咒','雷灵咒':'紫雷咒'};
+  for(const [b,u] of Object.entries(base)){
+    eq(E(`SKILL_UP['${b}']`),u,b+' 应升级为 '+u);
+    const bm=E(`SKILLS.find(s=>s.n==='${b}').mult`),um=E(`SKILLS.find(s=>s.n==='${u}').mult`);
+    ok(um>bm,u+' 威力应高于 '+b);
+    eq(E(`SKILLS.find(s=>s.n==='${b}').el`),E(`SKILLS.find(s=>s.n==='${u}').el`),u+' 应与 '+b+' 同系');
+  }
+});
+t('升级咒按等级解锁,烈焰咒克雷(魔尊)',()=>{
+  E('resetState();flags.wind=true');
+  ok(!E(`skillKnown(SKILLS.find(s=>s.n==='烈焰咒'))`),'低级时不会烈焰咒');
+  E('S.lvl=16');
+  ok(E(`skillKnown(SKILLS.find(s=>s.n==='烈焰咒'))`),'16 级应会烈焰咒');
+  ok(!E(`skillKnown(SKILLS.find(s=>s.n==='紫雷咒'))`),'16 级还不会紫雷咒(22 级)');
+  eq(E(`advMult('火','雷')`),1.5,'烈焰咒(火)应拔群于魔尊(雷)');
+});
+t('罡风咒需同时满足等级与风之 flag',()=>{
+  E('resetState();S.lvl=30');
+  ok(!E(`skillKnown(SKILLS.find(s=>s.n==='罡风咒'))`),'未传风灵咒时,纵然高级也不会罡风咒');
+  E('flags.wind=true');
+  ok(E(`skillKnown(SKILLS.find(s=>s.n==='罡风咒'))`),'习风且够级方得罡风咒');
+});
+t('第三章开篇:降蛟龙后与阿萝对话开启 ch3',()=>{
+  E('resetState();flags.aluo=true;flags.mini=true;flags.boss=true;flags.ch2=true;flags.wind=true;flags.dragon=true');
+  E(`switchMap('world',34,44)`);
+  E('K.up=1;updWorld(0.05);K.up=0');
+  ok(E('flags.ch3'),'对话应开启第三章');
+  E('while(dq.length||dcb)nextDlg()');
+});
+t('鬼门复用锁妖塔封印:ch3 后踏封印坠入魔渊',()=>{
+  E(`switchMap('tower',11,5);p.tx=11;p.ty=4;onStep()`); // 站上封印 B
+  ok(E('flags.abyssIntro'),'首次入魔渊应有旁白');
+  E('while(dq.length||dcb)nextDlg()');
+  eq(E('curName'),'abyss','应进入妖界魔渊');
+});
+t('魔渊↔锁妖塔↔魔殿互通,魔殿无随机遇敌',()=>{
+  E('p.tx=14;p.ty=22;onStep()');                 // 魔渊出口 → 锁妖塔
+  eq(E('curName'),'tower');eq(E('p.tx'),11);
+  E(`switchMap('abyss',14,2);p.tx=14;p.ty=1;onStep()`); // 魔殿门 → 魔殿
+  eq(E('curName'),'hell');
+  E('p.tx=11;p.ty=13;onStep()');                 // 魔殿出口 → 魔渊
+  eq(E('curName'),'abyss');
+  eq(E('MAPS.hell.rate'),0);eq(E('MAPS.abyss.rate>0'),true);
+});
+t('魔渊宝匣配置合法、可撞开',()=>{
+  ok(E('POIS.abyss.length>=2'));
+  for(const q of E('POIS.abyss'))eq(E(`MAPS.abyss.m[${q.y}][${q.x}]`),'v',q.id+' 应在魔土上');
+  E(`for(const k in looted)delete looted[k];switchMap('abyss',4,9)`);
+  const gold=E('S.gold');
+  E('K.up=1;updWorld(0.05);K.up=0');
+  eq(E('S.gold'),gold+300,'魔焰宝匣应给 300 两');
+  E('while(dq.length||dcb)nextDlg()');
+});
+t('魔尊 Boss:烈焰咒拔群,击败后终章结局',()=>{
+  E('resetState();flags.ch3=true;flags.wind=true;flags.abyssIntro=true;S.lvl=24;S.maxMp=300;S.mp=300;S.maxHp=500;S.hp=500;EQ.wpn=2;EQ.arm=2');
+  E(`switchMap('hell',11,4);p.tx=11;p.ty=3;onStep()`); // 踏魔尊王座
+  E('while(dq.length||dcb)nextDlg()');
+  eq(E('mode'),'battle');eq(E('B.key'),'demon');
+  const lie=E(`SKILLS.findIndex(s=>s.n==='烈焰咒')`);
+  ok(E(`skillKnown(SKILLS[${lie}])`),'24 级应会烈焰咒');
+  E(`castSkill(${lie})`);
+  for(let i=0;i<60&&E('B.anim');i++)E('updBattle(0.02)');
+  ok(E(`B.pops.some(p=>p.txt==='效果拔群!')`),'烈焰咒应对魔尊拔群');
+  E('B.e.hp=1;B.phase="cmd"');
+  E(`act('atk')`);
+  for(let i=0;i<20&&E('B&&B.anim');i++)E('updBattle(0.05)');
+  G.flushTimers();
+  ok(E('flags.demon'),'击败魔尊应置 flags.demon');
+  eq(E(`document.getElementById('endTitle').textContent`),'终章 · 完');
+  E(`document.getElementById('endov').style.display='none'`);
+});
+t('第三章进度随存档持久(ch3/demon + 所在魔殿)',()=>{
+  E(`switchMap('hell',8,8);flags.ch3=true;flags.demon=true;save()`);
+  E('resetState()');
+  ok(E('loadSave()'));
+  eq(E('curName'),'hell');
+  ok(E('flags.ch3&&flags.demon'),'第三章 flag 应恢复');
+});
+t('BGM 变奏:每场景挑对应主题、切图即换',()=>{
+  ok(E(`MELS.field&&MELS.tower&&MELS.lake&&MELS.abyss`),'四段主题齐备');
+  eq(E(`melForBg('field')`),'field');eq(E(`melForBg('house')`),'field');
+  eq(E(`melForBg('tower')`),'tower');
+  eq(E(`melForBg('lake')`),'lake');eq(E(`melForBg('palace')`),'lake');
+  eq(E(`melForBg('abyss')`),'abyss');eq(E(`melForBg('hell')`),'abyss');
+  E(`switchMap('world',31,44)`);eq(E('melKey'),'field','回村应切村野主题');
+  E(`switchMap('abyss',14,12)`);eq(E('melKey'),'abyss','入魔渊应切魔渊主题');
+  E(`switchMap('lake',14,12)`);eq(E('melKey'),'lake','入水府区应切水府主题');
+  ok(E(`MELS.field.join()!==MELS.abyss.join()`),'各主题旋律确实不同');
+});
+t('魔渊/魔殿/魔渊战斗各渲染一帧不崩溃',()=>{
+  E(`mode='world';B=null;switchMap('abyss',14,12)`);G.frame();
+  E(`switchMap('hell',11,8)`);G.frame();
+  E(`switchMap('abyss',14,12);startBattle('demon',true)`);G.frame();
+  E(`mode='world';B=null;battleUI(false);switchMap('world',31,44)`);
+});
+
 console.log('— dist 单文件 —');
 t('dist/lingshan-rpg.html 内联脚本可独立启动',()=>{
   const D=createGame(loadDistSource());
