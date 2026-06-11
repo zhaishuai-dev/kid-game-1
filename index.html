@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>灵山剑侠录 · 第一章</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: #14121c; color: #e8e2d5; font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+         display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 12px; }
+  #wrap { position: relative; width: min(960px, 100%); }
+  canvas { width: 100%; display: block; image-rendering: pixelated; image-rendering: crisp-edges;
+           border: 2px solid #3a3148; border-radius: 6px; background: #0d0b14; touch-action: none; }
+  .ovl { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+         justify-content: center; gap: 14px; }
+  #title { background: rgba(13,11,20,0.35); border-radius: 6px; }
+  #title h1 { font-family: "KaiTi", "STKaiti", "DFKai-SB", serif; font-size: clamp(40px, 9vw, 76px);
+              color: #f3e6c8; letter-spacing: 0.18em; text-shadow: 0 3px 0 #5a2c1d, 0 0 24px rgba(255,210,106,0.35); }
+  #title .sub { font-size: 14px; color: #c9b98f; letter-spacing: 0.5em; margin-top: -6px; }
+  .gbtn { font-family: inherit; font-size: 16px; padding: 10px 34px; cursor: pointer;
+          background: #241e33; color: #f3e6c8; border: 1px solid #8a6d3b; border-radius: 4px; letter-spacing: 0.3em; }
+  .gbtn:hover { background: #322a47; }
+  .gbtn:disabled { opacity: 0.4; cursor: default; }
+  #dlg { position: absolute; left: 3%; right: 3%; bottom: 4%; background: rgba(16,13,26,0.92);
+         border: 1px solid #8a6d3b; border-radius: 6px; padding: 12px 16px; cursor: pointer;
+         font-size: clamp(14px, 2.4vw, 17px); line-height: 1.7; display: none; }
+  #dlgName { display: none; background: #8a6d3b; color: #16121f; font-size: 12px; padding: 1px 10px;
+             border-radius: 3px; margin-right: 8px; vertical-align: 2px; }
+  #dlg .cue { color: #8d8470; font-size: 12px; float: right; margin-top: 6px; }
+  #panel { position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+           background: rgba(8,6,12,0.55); }
+  #panelBody { background: #1c1729; border: 1px solid #8a6d3b; border-radius: 8px; padding: 18px 20px;
+               width: min(420px, 92%); max-height: 88%; overflow-y: auto; }
+  #panelBody h3 { font-family: "KaiTi", "STKaiti", serif; color: #ffd76a; font-size: 20px; margin-bottom: 10px; letter-spacing: 0.2em; }
+  #panelBody .gold { color: #c9b98f; font-size: 13px; margin-bottom: 10px; }
+  .srow { display: flex; justify-content: space-between; align-items: center; gap: 10px;
+          border-bottom: 1px solid #322a47; padding: 9px 2px; font-size: 14px; }
+  .srow span { display: block; color: #9a917e; font-size: 12px; margin-top: 2px; }
+  .pbtn { font-family: inherit; font-size: 13px; padding: 7px 14px; cursor: pointer; white-space: nowrap;
+          background: #241e33; color: #f3e6c8; border: 1px solid #8a6d3b; border-radius: 4px; margin-top: 8px; }
+  .pbtn:hover { background: #322a47; }
+  #toast { position: absolute; top: 8%; left: 50%; transform: translateX(-50%); background: rgba(16,13,26,0.92);
+           border: 1px solid #8a6d3b; border-radius: 4px; padding: 6px 18px; font-size: 14px; display: none; }
+  #endov { background: rgba(10,8,16,0.88); display: none; text-align: center; padding: 20px; }
+  #endov h2 { font-family: "KaiTi", "STKaiti", serif; font-size: clamp(28px, 6vw, 48px); color: #ffd76a; letter-spacing: 0.2em; }
+  #endov p { color: #c9b98f; font-size: 15px; line-height: 1.9; max-width: 480px; }
+  #ctl { display: flex; width: min(960px, 100%); justify-content: space-between; align-items: center;
+         margin-top: 10px; gap: 10px; flex-wrap: wrap; }
+  #dpad { display: grid; grid-template-columns: repeat(3, 54px); grid-template-rows: repeat(2, 46px); gap: 5px; }
+  #dpad button, #btl button { font-family: inherit; font-size: 15px; cursor: pointer; background: #241e33;
+         color: #f3e6c8; border: 1px solid #574a73; border-radius: 6px; }
+  #dpad button:active, #btl button:active { background: #3d3357; }
+  #btl { display: none; gap: 8px; flex: 1; flex-wrap: wrap; }
+  #btl button { flex: 1; min-width: 76px; padding: 12px 6px; border-color: #8a6d3b; }
+  #btl button:disabled { opacity: 0.4; }
+  #menubar { display: flex; gap: 8px; }
+  #menubar button { font-family: inherit; font-size: 13px; padding: 10px 14px; cursor: pointer;
+         background: #1c1729; color: #c9b98f; border: 1px solid #574a73; border-radius: 6px; }
+  #hint { width: min(960px, 100%); color: #6e6655; font-size: 12px; margin-top: 10px; line-height: 1.8; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="cv" width="960" height="640"></canvas>
+  <div id="title" class="ovl">
+    <h1>灵山剑侠录</h1>
+    <div class="sub">第一章 · 锁妖塔</div>
+    <button id="btnNew" class="gbtn">开始新游戏</button>
+    <button id="btnCont" class="gbtn">继续游戏</button>
+  </div>
+  <div id="dlg"><span id="dlgName"></span><span id="dlgText"></span><span class="cue">▾ 点击 / 回车</span></div>
+  <div id="panel"><div id="panelBody"></div></div>
+  <div id="endov" class="ovl">
+    <h2>第一章 · 完</h2>
+    <p id="endText"></p>
+    <div style="display:flex;gap:12px;">
+      <button id="btnRoam" class="gbtn">继续游历</button>
+      <button id="btnRestart" class="gbtn">重新开始</button>
+    </div>
+  </div>
+  <div id="toast"></div>
+</div>
+<div id="ctl">
+  <div id="dpad">
+    <span></span><button data-d="up" aria-label="上">▲</button><span></span>
+    <button data-d="left" aria-label="左">◀</button><button data-d="down" aria-label="下">▼</button><button data-d="right" aria-label="右">▶</button>
+  </div>
+  <div id="btl">
+    <button id="batk">攻击</button>
+    <button id="bskl">仙术</button>
+    <button id="bitm">物品</button>
+    <button id="bfle">逃跑</button>
+  </div>
+  <div id="menubar">
+    <button id="btnBag">背包 · 状态</button>
+    <button id="btnMus">音乐:关</button>
+  </div>
+</div>
+<div id="hint">电脑:方向键 / WASD 移动,回车推进对话 · 手机:屏幕按键 · 撞上村民即对话 · 深色草丛与塔内符纹地面会遇敌 · 五灵相克:水克火、火克雷、雷克土、土克风、风克水</div>
+<script src="src/data.js"></script>
+<script src="src/sprites.js"></script>
+<script src="src/maps.js"></script>
+<script src="src/battle.js"></script>
+<script src="src/engine.js"></script>
+</body>
+</html>

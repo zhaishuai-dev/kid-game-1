@@ -1,0 +1,12 @@
+{
+  "name": "lingshan-rpg",
+  "version": "1.0.0",
+  "private": true,
+  "description": "灵山剑侠录 · 童年回忆版(零依赖 2D 仙剑致敬)",
+  "scripts": {
+    "build": "node build.js",
+    "test": "node build.js && node tests/smoke.js",
+    "shots": "node build.js && node tests/shots.js",
+    "shots:accept": "rm -rf tests/shots-baseline && cp -r tests/shots-current tests/shots-baseline"
+  }
+}
