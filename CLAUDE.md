@@ -30,9 +30,13 @@
 - **NPC 不能站在房门正下方**(x,40 的下一格),会堵死进屋通路,冒烟测试有可达性校验
 - 第二章 · 水月湖底:地图 `lake`(水草 `c` 遇敌)+ `palace`(王座 `Z` 触发蛟龙战);世界图 `V` 漩涡为入口(`flags.ch2` 前如水不可入);新敌 yaksha/clam/squid/turtle/dragon
 - 第三章 · 妖界魔渊:地图 `abyss`(魔纹 `m` 遇敌)+ `hell`(王座 `M` 触发魔尊战);入口复用锁妖塔封印 `B`(ch3 后渲染为鬼门、踏上即坠魔渊);新敌 yanmo/yin(改色鬼火)/mojiang(改色石傀)/leiyu/demon
+- 第四章 · 九霄云海:地图 `sky`(罡风带 `c` 遇敌)+ `shrine`(王座 `N` 触发大鹏战);入口世界图风口 `Y`(ch4 后成旋风);新敌 gangfeng(改色鬼火)/yunpeng(新绘鸟)/pili(改色云鹏)/fengli(改色风狸)/peng;阿萝传授**土灵咒**补全五灵
+- 第五章(终章)· 黄泉地心:地图 `cavern`(矿脉 `m` 遇敌)+ `core`(王座 `U` 触发后土战);入口世界图地缝 `q`(ch5 后裂开);新敌 shankui(改色山魈)/shisha(改色石傀)/rongyan(改色焰魔)/dilie(新绘)/sovereign;`showEnding5` 是全剧终
+- **章节入口约定**:每章一个世界图特殊瓦片(V漩涡/B鬼门/Y风口/q地缝),`flagsX` 开启前如常地形(canWalk/render/onStep 三处都按 flag 判定);进新区的过场函数 `diveLake/enterAbyss/ascendSky/descendCave`(首次播旁白再 switchMap)
+- 子图复用瓦片字符:lake 与 sky 共用 a/c/R/S/D/O,abyss 与 cavern 共用 v/m/R/S/D/O,靠 `cur.bg` 分流渲染与战斗背景(`drawTile`/`drawBattle` 都按 bg 分支)
 - **技能解锁**:`skillKnown(s)` = 够等级 **且**(无 flag 或 flag 已解锁)。风灵咒 `{lvl:1,flag:'wind'}`(阿萝传授);升级链 `烈焰/玄冰/罡风/紫雷` 高等级自动领悟(`SKILL_UP` 是基础→大成映射)。不要再写 `S.lvl>=s.lvl`;`winB` 升级播报也要带 `(!s.flag||flags[s.flag])`
 - **BGM 变奏**:`MELS`/`MUSCFG` 按场景分 field/tower/lake/abyss 四套;`melForBg(cur.bg)` 选曲,`switchMap` 末尾调 `setMelodyForMap()` 即时切换
-- 章节流程靠 `flags`:ch2→wind→lakeIntro→dragon→ch3→abyssIntro→demon;`winB` 按 `B.key` 分支结局(king→`showEnding`,dragon→`showEnding2`,demon→`showEnding3`),`#endTitle` 动态改章节名
+- 章节流程靠 `flags`:ch2→wind→lakeIntro→dragon→ch3→abyssIntro→demon→ch4→earth→skyIntro→peng→ch5→caveIntro→sovereign;`winB` 按 `B.key` 分支结局(king→`showEnding`…sovereign→`showEnding5`=全剧终),`#endTitle` 动态改章节名
 - 新增剧情 flag 必须同步改 `resetState()`(否则重开游戏残留);存档已整体序列化 `flags`,无需逐个加
 - 加新妖怪精灵:对称的用 `python3` 镜像左半生成(见 git 历史),**单脸生物别整块镜像**(会变双脸),改用「居中段」式或直接写整行;`tests/smoke.js` 会校验每行等宽
 - 像素角色:`PIX` 里加字符串像素图(每行等宽,冒烟测试会校验),调色板放 `PALS`,映射放 `PIXPAL`

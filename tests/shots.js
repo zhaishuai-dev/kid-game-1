@@ -69,6 +69,11 @@ async function diffRatio(fileA,fileB){
     E(`switchMap('shrine',11,8)`);G.frame(16);shots.push(snap('14-shrine'));
     E(`switchMap('sky',14,12);startBattle('peng',true)`);G.frame(16);shots.push(snap('15-peng'));
   }
+  if(E(`typeof MAPS.cavern!=='undefined'`)){
+    E(`flags.ch5=true;flags.caveIntro=true;mode='world';B=null;battleUI(false);switchMap('cavern',14,12)`);G.frame(16);shots.push(snap('16-cavern'));
+    E(`switchMap('core',11,8)`);G.frame(16);shots.push(snap('17-core'));
+    E(`switchMap('cavern',14,12);startBattle('sovereign',true)`);G.frame(16);shots.push(snap('18-sovereign'));
+  }
   let fail=0;
   for(const s of shots){
     if(s.baseline){

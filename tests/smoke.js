@@ -526,6 +526,87 @@ t('云海/天风殿/云端战斗各渲染一帧不崩溃',()=>{
   E(`mode='world';B=null;battleUI(false);switchMap('world',31,44)`);
 });
 
+console.log('— 第五章:黄泉地心(终章)—');
+t('土族与后土 Boss 数据齐备,精灵可绘',()=>{
+  for(const k of ['shankui','shisha','rongyan','dilie','sovereign']){
+    ok(E(`ENM['${k}']`),'缺敌人 '+k);
+    const d=E(`ENM['${k}'].draw`);
+    ok(E(`SPR['${d}']`),d+' 缺绘制');ok(E(`SPRM['${d}']`),d+' 缺尺寸');
+  }
+  eq(E('ENM.sovereign.el'),'土');eq(E('ENM.rongyan.el'),'火');
+});
+t('紫雷克土(后土)、玄冰克熔岩兽(火)',()=>{
+  eq(E(`advMult('雷','土')`),1.5,'紫雷应拔群于后土');
+  eq(E(`advMult('水','火')`),1.5,'玄冰应拔群于熔岩兽');
+});
+t('地缝瓦片存在、开篇前如常草地',()=>{
+  E('resetState()');
+  eq(E(`MAPS.world.m[40][6]`),'q');
+  ok(E('canWalk(6,40)'),'地缝处为草地,一直可走');
+});
+t('第五章开篇:降大鹏后与阿萝对话开启 ch5',()=>{
+  E('resetState();Object.assign(flags,{aluo:true,mini:true,boss:true,ch2:true,wind:true,dragon:true,ch3:true,demon:true,ch4:true,earth:true,peng:true})');
+  E(`switchMap('world',34,44)`);
+  E('K.up=1;updWorld(0.05);K.up=0');
+  ok(E('flags.ch5'),'应开启第五章');
+  E('while(dq.length||dcb)nextDlg()');
+});
+t('坠地缝入地心(首次旁白),地心↔村西↔后土殿互通',()=>{
+  E(`switchMap('world',6,41);p.tx=6;p.ty=41`);
+  E('K.up=1');for(let i=0;i<10&&!E('flags.caveIntro');i++)E('updWorld(0.05)');E('K.up=0');
+  ok(E('flags.caveIntro'),'首次入地心应有旁白');
+  E('while(dq.length||dcb)nextDlg()');
+  eq(E('curName'),'cavern');
+  E('p.tx=14;p.ty=22;onStep()');eq(E('curName'),'world');eq(E('p.tx'),6);
+  E(`switchMap('cavern',14,2);p.tx=14;p.ty=1;onStep()`);eq(E('curName'),'core');
+  E('p.tx=11;p.ty=13;onStep()');eq(E('curName'),'cavern');
+});
+t('地心矿脉遇敌、后土殿无随机遇敌、晶匣合法',()=>{
+  eq(E('MAPS.cavern.rate>0'),true);eq(E('MAPS.core.rate'),0);
+  ok(E('POIS.cavern.length>=2'));
+  for(const q of E('POIS.cavern'))eq(E(`MAPS.cavern.m[${q.y}][${q.x}]`),'v',q.id+' 应在地脉上');
+});
+t('后土魔君:紫雷拔群,击败后全剧终',()=>{
+  E('resetState();Object.assign(flags,{ch5:true,caveIntro:true,wind:true,earth:true});S.lvl=30;S.maxMp=400;S.mp=400;S.maxHp=640;S.hp=640;EQ.wpn=2;EQ.arm=2');
+  E(`switchMap('core',11,4);p.tx=11;p.ty=3;onStep()`);
+  E('while(dq.length||dcb)nextDlg()');
+  eq(E('mode'),'battle');eq(E('B.key'),'sovereign');
+  const zi=E(`SKILLS.findIndex(s=>s.n==='紫雷咒')`);
+  ok(E(`skillKnown(SKILLS[${zi}])`),'30 级应会紫雷咒');
+  E(`castSkill(${zi})`);
+  for(let i=0;i<60&&E('B.anim');i++)E('updBattle(0.02)');
+  ok(E(`B.pops.some(p=>p.txt==='效果拔群!')`),'紫雷咒应对后土拔群');
+  E('B.e.hp=1;B.phase="cmd"');E(`act('atk')`);
+  for(let i=0;i<20&&E('B&&B.anim');i++)E('updBattle(0.05)');
+  G.flushTimers();
+  ok(E('flags.sovereign'),'击败后土应置 flags.sovereign');
+  eq(E(`document.getElementById('endTitle').textContent`),'全 剧 终');
+  E(`document.getElementById('endov').style.display='none'`);
+});
+t('五灵圆满:火水雷风土,基础咒 + 大成咒各一,全部克制成立',()=>{
+  const elems=['火','水','雷','风','土'];
+  elems.forEach(e=>{
+    ok(E(`SKILLS.filter(s=>s.el==='${e}'&&!Object.values(SKILL_UP).includes(s.n)).length>=1`),e+' 应有基础咒');
+    ok(E(`Object.values(SKILL_UP).some(u=>SKILLS.find(s=>s.n===u).el==='${e}')`),e+' 应有大成咒');
+  });
+  // 每个元素都能克到某物(五灵相生相克闭环)
+  eq(E(`advMult('水','火')`),1.5);eq(E(`advMult('火','雷')`),1.5);
+  eq(E(`advMult('雷','土')`),1.5);eq(E(`advMult('土','风')`),1.5);eq(E(`advMult('风','水')`),1.5);
+});
+t('第五章进度随存档持久 + BGM 地心主题',()=>{
+  E(`switchMap('cavern',8,8);Object.assign(flags,{ch5:true,sovereign:true});save()`);
+  E('resetState()');ok(E('loadSave()'));
+  eq(E('curName'),'cavern');ok(E('flags.ch5&&flags.sovereign'));
+  eq(E(`melForBg('cavern')`),'earth');eq(E(`melForBg('core')`),'earth');
+  ok(E(`MELS.earth&&MELS.earth.join()!==MELS.sky.join()`),'地心主题应独立');
+});
+t('地心/后土殿/地心战斗各渲染一帧不崩溃',()=>{
+  E(`mode='world';B=null;switchMap('cavern',14,12)`);G.frame();
+  E(`switchMap('core',11,8)`);G.frame();
+  E(`switchMap('cavern',14,12);startBattle('sovereign',true)`);G.frame();
+  E(`mode='world';B=null;battleUI(false);switchMap('world',31,44)`);
+});
+
 console.log('— dist 单文件 —');
 t('dist/lingshan-rpg.html 内联脚本可独立启动',()=>{
   const D=createGame(loadDistSource());

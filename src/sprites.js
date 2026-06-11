@@ -111,3 +111,23 @@ function drawPili(x,y,s){pix('yunpeng',x,y,s,PILIPAL);}
 function drawFengli(x,y,s){pix('fox',x,y,s,FENGLIPAL);}
 Object.assign(SPR,{yunpeng:drawYunpeng,peng:drawPeng,gangfeng:drawGangfeng,pili:drawPili,fengli:drawFengli});
 Object.assign(SPRM,{yunpeng:{w:20,h:20,s:6},peng:{w:24,h:24,s:6},gangfeng:{w:16,h:20,s:8},pili:{w:20,h:20,s:6},fengli:{w:20,h:20,s:6}});
+
+// ===== 第五章 · 黄泉地心:土族像素图 + 改色复用 =====
+PALS.dilie={"K": "#1a0e06", "R": "#6a4a30", "r": "#3e2818", "L": "#a07a50", "M": "#ff6a20", "m": "#ffd23f", "E": "#ff5a20"};
+PALS.sovereign={"K": "#140a04", "R": "#6a4a30", "r": "#3e2818", "L": "#9a7648", "M": "#ff7a2a", "m": "#ffe24a", "E": "#ff4040", "G": "#ffd23f", "C": "#a07a50"};
+Object.assign(PIX,{
+  dilie:["....................","......KKKKKK........",".....KRRRRRRK.......","....KRRLLLLRRK......","....KRRRRRRRRK......","...KRREERRRREERRK...","...KRREERRRREERRK...","...KRRRRMMMMRRRRK...","..KRRMMMMMMMMMMRRK..","..KRmMMMMMMMMMMmRK..","..KRRRRRRRRRRRRRRK..","..KRRMRRRRRRRRMRRK..",".KLRRRRRRRRRRRRRRLK.",".KKRRRRRRRRRRRRRRKK.","..KKRRRRRRRRRRRRKK..","...KRRRK....KRRRK...","..KRRRK......KRRRK..",".KRRRK........KRRRK.",".KRK............KRK.","...................."],
+  sovereign:["........................",".....GG..........GG.....","....GGGG........GGGG....","....GGRGG......GGRGG....","....KKRRKKKKKKKKRRKK....","....KRRRRRRRRRRRRRRK....","....KRRREEKRRKEERRRK....","....KRRREEKRRKEERRRK....","....KRRRRRKRRKRRRRRK....","....KRRRRRRRRRRRRRRK....","....KRRRMMMMMMMMRRRK....","....KKRMMmMMMMmMMRKK....","....CKRRMMMMMMMMRRKC....","....CCKRRRRRRRRRRKCC....","....CCKRRRMMMMRRRKCC....","....CKRRRRRRRRRRRRKC....","....KRRRRRKRRKRRRRRK....","....KRRRRKRRRRKRRRRK....","....KKRRKRRRRRRKRRKK....",".....KRRKRRRRRRKRRK.....",".....KKRKKRRRRKKRKK.....","......KRRK....KRRK......",".....KRRK......KRRK.....","........................"],
+});
+Object.assign(PIXPAL,{dilie:'dilie',sovereign:'sovereign'});
+// 山魈圣:借山魈改金土;石煞:借石傀改岩石;熔岩兽:借焰魔改熔岩
+const SHANKPAL=Object.assign({},PALS.shan,{G:'#b08838',g:'#7a5a22',L:'#d9b04a',M:'#6a4a20',B:'#caa46a',b:'#8a6a3a',Y:'#ffe24a'});
+const SHISHAPAL=Object.assign({},PALS.golem,{G:'#8a7256',g:'#5e4a32',L:'#b09a76',M:'#caa46a',R:'#ff8a3a',r:'#c4602a',E:'#ffd23f'});
+const RONGPAL=Object.assign({},PALS.yanmo,{R:'#4a2a14',F:'#ff8a2a',f:'#ffe24a',B:'#2a1408',W:'#ffd0a0'});
+function drawDilie(x,y,s){pix('dilie',x,y,s);}
+function drawSovereign(x,y,s){pix('sovereign',x,y,s);}
+function drawShankui(x,y,s){pix('shan',x,y,s,SHANKPAL);}
+function drawShisha(x,y,s){pix('golem',x,y,s,SHISHAPAL);}
+function drawRongyan(x,y,s){pix('yanmo',x,y,s,RONGPAL);}
+Object.assign(SPR,{dilie:drawDilie,sovereign:drawSovereign,shankui:drawShankui,shisha:drawShisha,rongyan:drawRongyan});
+Object.assign(SPRM,{dilie:{w:20,h:20,s:6},sovereign:{w:24,h:24,s:6},shankui:{w:20,h:20,s:6},shisha:{w:20,h:20,s:7},rongyan:{w:20,h:20,s:6}});

@@ -121,6 +121,9 @@ function winB(){
     }else if(key==='peng'){
       flags.peng=true;
       showEnding4();
+    }else if(key==='sovereign'){
+      flags.sovereign=true;
+      showEnding5();
     }else if(learned.length){
       showDialog(['你领悟了新仙术:'+learned.join('、')+'!']);
     }
@@ -180,7 +183,18 @@ function drawBattle(){
   const waterBg=cur.bg==='lake'||cur.bg==='palace'||B.key==='dragon';
   const hellBg=cur.bg==='abyss'||cur.bg==='hell'||B.key==='demon';
   const skyBg=cur.bg==='sky'||cur.bg==='shrine'||B.key==='peng';
-  if(skyBg){
+  const caveBg=cur.bg==='cavern'||cur.bg==='core'||B.key==='sovereign';
+  if(caveBg){
+    // 地心战场:深褐岩窟 + 矿脉微光 + 地火裂隙
+    r(0,0,SW,430,'#241608');r(0,430,SW,210,'#1a0e06');
+    g.fillStyle='#3a2410';
+    g.beginPath();g.moveTo(0,430);g.lineTo(240,330);g.lineTo(480,430);g.closePath();g.fill();
+    g.beginPath();g.moveTo(440,430);g.lineTo(700,340);g.lineTo(960,430);g.closePath();g.fill();
+    r(0,470,SW,40,'#5a2a10'); // 地火裂隙
+    g.fillStyle='rgba(255,150,50,0.45)';for(let k=0;k<6;k++)r((k*170+(frame)%170),474+((frame>>2)+k)%4,44,4,'rgba(255,170,60,0.45)');
+    g.fillStyle='#c47a30';for(let k=0;k<12;k++){const ex=(k*151+frame)%960,ey=430-((frame+k*80)%440);g.fillRect(ex,ey,2,2);}
+    if(B.key==='sovereign'){r(360,50,240,390,'#1a0e06');r(450,110,60,120,'#3a2410');r(462,122,36,14,'#ffae40');}
+  }else if(skyBg){
     // 云端战场:高空蓝 + 远山云峰 + 飘流云絮
     r(0,0,SW,360,'#8ec0e6');r(0,360,SW,280,'#cfe2f2');
     g.fillStyle='#a8cae8';

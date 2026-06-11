@@ -162,6 +162,26 @@ function drawTile(i,j,sx,sy){
     else if(c==='N'){const gl=flags.peng?'#b9c2cc':'#ffd23f';r(sx+6,sy+2,20,28,'#8aa8cc');r(sx+9,sy+5,14,22,'#aac4e0');r(sx+8,sy+4,4,6,gl);r(sx+20,sy+4,4,6,gl);r(sx+13,sy+12,6,10,gl);r(sx+10,sy+24,12,4,'#6a82a0');}
     return;
   }
+  if(cur.bg==='cavern'){
+    if(c==='R'){r(sx,sy,T,T,'#241608');r(sx+3,sy+4,12,12,'#3e2814');r(sx+16,sy+14,12,12,'#3e2814');r(sx+18,sy+3,9,9,'#1a0e06');r(sx+4,sy+19,9,9,'#1a0e06');return;}
+    // 地脉:深褐岩地 + 矿脉微光
+    r(sx,sy,T,T,'#332010');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.10)');
+    const e=(frame>>4)%2;
+    r(sx+22,sy+6,2,2,'rgba(255,160,60,0.4)');r(sx+6+e*4,sy+22,2,2,'rgba(255,200,90,0.35)');
+    if(c==='m'){r(sx,sy,T,T,'#3e2810');[[8,8],[20,18],[12,22],[22,7],[5,16]].forEach(b=>{r(sx+b[0],sy+b[1],3,3,'#c47a30');r(sx+b[0]+1,sy+b[1]+1,1,1,'#ffd23f');});}
+    else if(c==='S'){r(sx+4,sy+4,24,24,'#6a4a20');r(sx+8,sy+8,16,16,'#caa44a');const k=(frame>>3)%4;r(sx+10+k*3,sy+6+(k*4)%16,3,3,'#ffe8a0');}
+    else if(c==='O'){r(sx+3,sy+3,26,26,'#3a2410');r(sx+8,sy+8,16,16,'#7a5a28');r(sx+11,sy+12,10,8,'#ffe0a0');g.fillStyle='#1a0e06';g.font='12px monospace';g.fillText('↑',sx+13,sy+22);}
+    else if(c==='D'){r(sx,sy,T,T,'#160c04');r(sx+3,sy+2,26,30,'#3a2410');r(sx+6,sy+5,20,27,'#1a0e06');r(sx+10,sy+8,12,24,'#7a4a1c');r(sx+13,sy+3,6,5,'#ffae40');r(sx+8,sy+14,3,3,'#ffd23f');r(sx+21,sy+14,3,3,'#ffd23f');}
+    return;
+  }
+  if(cur.bg==='core'){
+    if(c==='X'){r(sx,sy,T,T,'#1a0e06');r(sx+3,sy+2,26,28,'#3a2410');r(sx+6,sy+5,20,22,'#241608');r(sx+13,sy+2,6,28,'#7a4a1c');r(sx+14,sy+6,4,6,'#ffae40');r(sx+14,sy+18,4,6,'#ffae40');return;}
+    r(sx,sy,T,T,'#221408');if((i+j)%2)r(sx,sy,T,T,'rgba(255,150,50,0.05)');
+    r(sx,sy,T,1,'#3a2410');r(sx,sy,1,T,'#3a2410');
+    if(c==='O'){r(sx+3,sy+3,26,26,'#2a1808');r(sx+8,sy+8,16,16,'#5a3a18');r(sx+11,sy+12,10,8,'#ffe0a0');g.fillStyle='#1a0e06';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='U'){const gl=flags.sovereign?'#9a8a6a':'#ffd23f';r(sx+6,sy+2,20,28,'#1e1206');r(sx+9,sy+5,14,22,'#3a2410');r(sx+7,sy+3,4,7,gl);r(sx+21,sy+3,4,7,gl);r(sx+13,sy+11,6,12,gl);r(sx+10,sy+25,12,4,'#0e0804');}
+    return;
+  }
   if(curName==='tower'){
     if(c==='X'){r(sx,sy,T,T,'#2c2638');r(sx+2,sy+2,12,12,'#241f30');r(sx+18,sy+18,12,12,'#241f30');r(sx+18,sy+2,12,12,'#332b42');r(sx+2,sy+18,12,12,'#332b42');return;}
     r(sx,sy,T,T,'#4a4356');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.07)');
@@ -236,7 +256,7 @@ function drawHUD(){
   g.fillText(S.hp+'/'+S.maxHp,224,58);g.fillText(S.mp+'/'+S.maxMp,224,76);
 }
 function drawWorld(){
-  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':cur.bg==='abyss'?'#1a0c14':cur.bg==='hell'?'#140610':cur.bg==='sky'?'#7fa8d0':cur.bg==='shrine'?'#6a8ab0':'#234d1e');
+  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':cur.bg==='abyss'?'#1a0c14':cur.bg==='hell'?'#140610':cur.bg==='sky'?'#7fa8d0':cur.bg==='shrine'?'#6a8ab0':cur.bg==='cavern'?'#1a0e06':cur.bg==='core'?'#140a04':'#234d1e');
   const mw=cur.w*T,mh=cur.h*T;
   const camX=mw<=SW?(mw-SW)/2:Math.max(0,Math.min(mw-SW,p.x-SW/2+16));
   const camY=mh<=SH?(mh-SH)/2:Math.max(0,Math.min(mh-SH,p.y-SH/2+16));
@@ -294,6 +314,7 @@ function onStep(){
   }
   if(c==='V'&&flags.ch2){diveLake();return;}
   if(c==='Y'&&flags.ch4){ascendSky();return;}
+  if(c==='q'&&flags.ch5){descendCave();return;}
   if(c==='d'||c==='D'||c==='O'){ // 通用传送门:木门、水府门、各类出口
     const door=DOORS[curName+':'+p.tx+','+p.ty];
     if(door){switchMap(door.map,door.x,door.y);return;}
@@ -338,6 +359,17 @@ function onStep(){
         {n:'大鹏妖王',t:'区区地行之辈,也敢登我九霄?随风去吧!'}
       ],()=>startBattle('peng',true));
     }else wpop('云殿风平浪静','#cdddf0');
+    return;
+  }
+  if(c==='U'){ // 第五章:后土王座(全剧终 Boss)
+    if(!flags.sovereign){
+      showDialog([
+        '地心深处,一尊以山岩为甲的巨君自王座上起身,熔岩顺着它的躯壳流淌。',
+        {n:'阿萝',t:'就是它……乱源之根,后土魔君!它属土,镇压万物——用紫雷咒,雷克土,这是最后一战了!'},
+        {n:'后土魔君',t:'妖王、蛟龙、魔尊、大鹏……皆是我之指爪。如今你也将归于尘土。'},
+        {n:'阿萝',t:'师兄,五灵在你手中圆满。我陪着你——一起,了结它!'}
+      ],()=>startBattle('sovereign',true));
+    }else wpop('地心归于沉寂','#9a8a6a');
     return;
   }
   if(curName==='world'&&!flags.mini&&p.ty===14&&(p.tx===31||p.tx===32)){
@@ -388,6 +420,17 @@ function ascendSky(){
       '(罡风带里会遇上风妖;风眼灵泉可回满状态。云海北端的风窟,便是大鹏妖王的巢。)'
     ],()=>switchMap('sky',14,21));
   }else switchMap('sky',14,21);
+}
+// 第五章:坠入村西地缝,深入黄泉地心(首次有旁白)
+function descendCave(){
+  if(!flags.caveIntro){
+    flags.caveIntro=true;
+    showDialog([
+      '地缝裂开,一股灼热的地气扑面而来。你与阿萝顺着嶙峋的岩壁,一路下到黄泉地心。',
+      {n:'阿萝',t:'越往下,这股镇压万物的气息越重……乱源,就在这底下。'},
+      '(矿脉地会遇上土妖;地泉可回满状态。地心尽头的后土殿,藏着这一切的根源。)'
+    ],()=>switchMap('cavern',14,21));
+  }else switchMap('cavern',14,21);
 }
 
 // Phase 1:翻找家具。首次有宝物("叮"+金色飘字),重复调查按种类给不同文案
@@ -453,8 +496,18 @@ function talkAluo(){
     save();
   }
   else if(!flags.peng)showDialog([{n:'阿萝',t:'风口在湖畔东边。云海里风妖都属风——土灵咒一出,个个现形!大鹏妖王也一样。'}]);
-  else if(!flags.ch5)showDialog([{n:'阿萝',t:'大鹏也降了。可我总觉着……地底下还有什么在动。师兄,再陪我留个心。'}]);
-  else showDialog([{n:'阿萝',t:'五灵归位,天地重宁。师兄,这一路,有你真好。'}]);
+  else if(!flags.ch5){ // 第五章开篇:乱源之根在地心,村西地缝裂开
+    flags.ch5=true;
+    showDialog([
+      {n:'阿萝',t:'师兄,我把古卷翻到了最后一页……妖王、蛟龙、魔尊、大鹏,全是同一个根上长出的爪牙。'},
+      {n:'阿萝',t:'乱源之根,叫「后土魔君」,镇在黄泉地心。它一动,五灵就乱。要彻底了结,只能下去拔掉这根。'},
+      {n:'阿萝',t:'它属土,雷克土——你那道紫雷咒,正是为它备的。村西的地,刚裂开一道地缝。'},
+      {n:'阿萝',t:'这是最后一程了。师兄……我们一起,走到底。'}
+    ]);
+    save();
+  }
+  else if(!flags.sovereign)showDialog([{n:'阿萝',t:'地缝在村子西边。地心里土妖成群,紫雷咒最克它们;那只熔岩兽属火,玄冰咒伺候。后土魔君,也属土!'}]);
+  else showDialog([{n:'阿萝',t:'五灵归位,天地重宁,再没有什么乱源了。师兄……这一路,有你真好。'}]);
 }
 // 第四章:阿萝随你闯云海
 function talkAluoSky(){
@@ -463,6 +516,14 @@ function talkAluoSky(){
     {n:'阿萝',t:'只有霹雳鸟属雷,留着烈焰咒招呼它。撑不住就回风眼灵泉歇口气。'}
   ]);
   else showDialog([{n:'阿萝',t:'风停了,云海也静了。师兄,我们下去吧。'}]);
+}
+// 第五章:阿萝随你下黄泉
+function talkAluoCave(){
+  if(!flags.sovereign)showDialog([
+    {n:'阿萝',t:'顺着矿脉往北就是后土殿。山魈圣、石煞、地裂魔都属土——紫雷咒一道道劈下去最痛快!'},
+    {n:'阿萝',t:'熔岩兽属火,改用玄冰咒。后土魔君属土,留足灵力给紫雷咒。师兄,我就在你身边。'}
+  ]);
+  else showDialog([{n:'阿萝',t:'地心静了,腥气也散了。师兄,我们回家——回灵山。'}]);
 }
 // 第二章:阿萝在湖底剧情同行(随进度变化的台词)
 function talkAluoLake(){
@@ -596,6 +657,12 @@ function showEnding3(){
 function showEnding4(){
   if($('endTitle'))$('endTitle').textContent='第四章 · 完';
   $('endText').textContent='大鹏妖王折翼坠落,化作一缕清风消散,云海重归澄澈。云无衣与阿萝乘风而下、脚踏实地——可阿萝总望着脚下的土地出神,仿佛深处还有什么,正在低低地轰鸣。';
+  $('endov').style.display='flex';
+  sWin();
+}
+function showEnding5(){
+  if($('endTitle'))$('endTitle').textContent='全 剧 终';
+  $('endText').textContent='后土魔君在五灵齐鸣中崩解为漫天尘光,地心的轰鸣终于止息,黄泉重归沉寂——乱源之根,断了。云无衣与阿萝一路升回地面,灵山的春风迎面而来。火、水、雷、风、土,五灵归位,天地太平。从锁妖塔到黄泉地心,这一整段传说,在此圆满落幕。多谢你,陪云无衣和阿萝走完了整条路。';
   $('endov').style.display='flex';
   sWin();
 }

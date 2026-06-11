@@ -110,6 +110,31 @@ function makeShrine(){
   m[13][11]='O';
   return m;
 }
+// 第五章 · 黄泉地心:地脉大图(28×24);沿用 v/m/R/S/D/O,按 bg='cavern' 渲染
+// v 地脉 m 矿脉(遇敌) R 巨岩(阻挡) S 地泉 D 后土殿门 O 回村西
+function makeCavern(){
+  const w=28,h=24,m=blank(w,h,'v');
+  fillR(m,0,0,w,1,'R');fillR(m,0,h-1,w,1,'R');fillR(m,0,0,1,h,'R');fillR(m,w-1,0,1,h,'R');
+  fillR(m,5,6,4,2,'R');fillR(m,19,6,4,2,'R');
+  fillR(m,12,10,4,2,'R');
+  fillR(m,3,14,3,3,'R');fillR(m,22,14,3,3,'R');
+  fillR(m,3,3,8,3,'m');fillR(m,17,3,8,3,'m');
+  fillR(m,2,17,10,3,'m');fillR(m,16,17,10,3,'m');
+  fillR(m,10,12,8,4,'m');
+  m[15][14]='S';
+  m[1][14]='D';
+  m[22][14]='O';
+  return m;
+}
+// 第五章 · 后土魔殿:全剧终 Boss 殿堂(22×16),U 后土王座
+function makeCore(){
+  const w=22,h=16,m=blank(w,h,'X');
+  fillR(m,3,3,16,11,'F');
+  [[5,5],[16,5],[5,11],[16,11]].forEach(c=>{m[c[1]][c[0]]='X';});
+  m[3][11]='U';
+  m[13][11]='O';
+  return m;
+}
 // Phase 1:室内小图(12×10),f 木地板、H 墙、O 出口,家具走 POI 层
 function makeHouse(){
   const w=12,h=10,m=blank(w,h,'f');
@@ -139,7 +164,9 @@ const MAPS={
   abyss:{m:makeAbyss(),w:28,h:24,bg:'abyss',rate:0.20,pool:()=>['yanmo','yin','mojiang','leiyu']},
   hell:{m:makeHell(),w:22,h:16,bg:'hell',rate:0,pool:()=>[]},
   sky:{m:makeSky(),w:28,h:24,bg:'sky',rate:0.19,pool:()=>['gangfeng','yunpeng','pili','fengli']},
-  shrine:{m:makeShrine(),w:22,h:16,bg:'shrine',rate:0,pool:()=>[]}
+  shrine:{m:makeShrine(),w:22,h:16,bg:'shrine',rate:0,pool:()=>[]},
+  cavern:{m:makeCavern(),w:28,h:24,bg:'cavern',rate:0.21,pool:()=>['shankui','shisha','rongyan','dilie']},
+  core:{m:makeCore(),w:22,h:16,bg:'core',rate:0,pool:()=>[]}
 };
 // 双向传送门:'地图:x,y' → 目的地(d 木门进屋,O 出口回村)
 const DOORS={
@@ -162,7 +189,11 @@ const DOORS={
   // 第四章:云海 O 回湖畔、云海 D 进天风殿、天风殿 O 回云海(风口入口与大鹏王座为特判)
   'sky:14,22':{map:'world',x:50,y:17},
   'sky:14,1':{map:'shrine',x:11,y:12},
-  'shrine:11,13':{map:'sky',x:14,y:2}
+  'shrine:11,13':{map:'sky',x:14,y:2},
+  // 第五章:地心 O 回村西、地心 D 进后土殿、后土殿 O 回地心(地缝入口与后土王座为特判)
+  'cavern:14,22':{map:'world',x:6,y:41},
+  'cavern:14,1':{map:'core',x:11,y:12},
+  'core:11,13':{map:'cavern',x:14,y:2}
 };
 // 可调查点:撞上家具即翻找。loot: gold 银两 / item 物品 / note 纸条 / none 空手
 const POIS={
@@ -203,6 +234,11 @@ const POIS={
     {id:'sk_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:500}},
     {id:'sk_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:2}},
     {id:'sk_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'云中飘来一片羽书:「大鹏振翅九万里,性属风,唯厚土可镇其翼。」'}}
+  ],
+  cavern:[ // 第五章:地心晶匣
+    {id:'cv_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:800}},
+    {id:'cv_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:3}},
+    {id:'cv_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'晶匣里一卷地脉图,末尾朱批:「后土魔君乃乱源之根,性属土。雷克土,紫雷可灭。」'}}
   ]
 };
 // 翻第二件东西时主人的吐槽(致敬经典:进屋翻箱倒柜,主人毫无意见)
@@ -234,5 +270,8 @@ const NPCS={
   hell:[],
   // 第四章:阿萝随你上九霄
   sky:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoSky()}],
-  shrine:[]
+  shrine:[],
+  // 第五章:阿萝随你下黄泉
+  cavern:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoCave()}],
+  core:[]
 };
