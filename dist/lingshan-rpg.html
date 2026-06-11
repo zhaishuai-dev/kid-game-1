@@ -96,7 +96,7 @@
     <button id="btnMus">音乐:关</button>
   </div>
 </div>
-<div id="hint">电脑:方向键 / WASD 移动,回车推进对话 · 手机:屏幕按键 · 撞上村民即对话 · 深色草丛与塔内符纹地面会遇敌 · 五灵相克:水克火、火克雷、雷克土、土克风、风克水</div>
+<div id="hint">电脑:方向键 / WASD 移动,回车推进对话 · 手机:屏幕按键 · 撞上村民即对话 · 村里的屋子都能进,撞一撞柜子水缸说不定有宝贝 · 深色草丛与塔内符纹地面会遇敌 · 五灵相克:水克火、火克雷、雷克土、土克风、风克水</div>
 <script>
 'use strict';
 // ===== 数值与数据层:随机数、角色、背包、装备、技能、五灵、敌人 =====
@@ -120,6 +120,19 @@ const ELC={'水':'#56b9ff','火':'#ff7a45','雷':'#ffe24a','风':'#9fe7a0','土'
 const CK={'水':'火','火':'雷','雷':'土','土':'风','风':'水'};
 function atkP(){return 10+S.lvl*4+WPNS[EQ.wpn].a;}
 function defP(){return ARMS[EQ.arm].d;}
+
+// Phase 1:进屋找宝贝 —— 已翻过的调查点(跨存档持久,见 save/loadSave)
+const looted={};
+// 可调查点种类:名称 + 家具贴图 + 重复调查文案(每种不同,情怀所在)
+const POI_KINDS={
+  cab:{n:'柜子',again:'柜子已经被你翻得乱七八糟,再没有别的了。'},
+  vat:{n:'水缸',again:'水缸里只剩下清亮亮的水,照得见你的脸。'},
+  rice:{n:'米缸',again:'米缸里只有白米。再掏下去要被骂了。'},
+  shelf:{n:'书架',again:'书架上的书都翻过一遍了,没夹着别的东西。'},
+  bed:{n:'床底',again:'床底下连灰都被你摸干净了。'},
+  jar:{n:'坛子',again:'坛子已经空空如也,嗡嗡作响。'},
+  stove:{n:'灶台',again:'灶台冷冰冰的,什么也没有。'}
+};
 
 const ENM={
   shan:{n:'青面山魈',el:'土',hp:42,atk:7,exp:30,gold:24,draw:'shan',s:6},
@@ -167,6 +180,20 @@ function drawKing(x,y,s){pix('king',x,y,s);}
 const SPRM={shan:{w:20,h:20,s:8},fox:{w:20,h:20,s:8},snake:{w:20,h:20,s:8},snakeK:{w:20,h:22,s:9},flame:{w:16,h:20,s:9},golem:{w:20,h:20,s:8},king:{w:24,h:26,s:9}};
 const SPR={girl:drawGirl,vill:drawVill,shan:drawShan,snake:drawSnake,snakeK:drawSnakeK,fox:drawFox,flame:drawFlame,golem:drawGolem,king:drawKing};
 
+// ===== Phase 1:室内家具贴图(进屋找宝贝)=====
+PALS.furn={K:'#241709',W:'#8a5a2b',w:'#6e4520',L:'#b9854f',C:'#5d6878',c:'#46505e',V:'#8f9cad',A:'#6fcfe8',P:'#e8dcb8',R:'#c43a2f',r:'#8a2a22',G:'#d9aa3c',B:'#2f6f93',E:'#4f8f3a',F:'#ff7a45',f:'#ffd23f'};
+Object.assign(PIX,{
+cab:["................","..KKKKKKKKKKKK..","..KLLLLLLLLLLK..","..KWWWWWWWWWWK..","..KWWWWGGWWWWK..","..KKKKKKKKKKKK..","..KWWWWWWWWWWK..","..KWWWWGGWWWWK..","..KKKKKKKKKKKK..","..KWWWWWWWWWWK..","..KWWWWGGWWWWK..","..KKKKKKKKKKKK..","..KwwwwwwwwwwK..","..KKKKKKKKKKKK..","..KK........KK..","................"],
+vat:["................","................","...KKKKKKKKKK...","..KKAAAAAAAAKK..","..KCCAAAAAACCK..",".KCCCCCCCCCCCCK.",".KCVVCCCCCCCCCK.",".KCVCCCCCCCCCCK.",".KCCCCCCCCCCCCK.",".KCCCCCCCCCCCCK.",".KcCCCCCCCCCCcK.","..KcCCCCCCCCcK..","..KKccccccccKK..","...KKKKKKKKKK...","................","................"],
+rice:["................","................","...KKKKKKKKKK...","..KKPPPPPPPPKK..","..KWPPPPPPPPWK..",".KWWWPPPPPPWWWK.",".KWWWWWWWWWWWWK.",".KWLLWWWWWWWWWK.",".KWLWWWWWWWWWWK.",".KWWWWWWWWWWWWK.",".KwWWWWWWWWWWwK.","..KwWWWWWWWWwK..","..KKwwwwwwwwKK..","...KKKKKKKKKK...","................","................"],
+shelf:["................",".KKKKKKKKKKKKKK.",".KLLLLLLLLLLLLK.",".KRRBEERBBERBEK.",".KRRBEERBBERBEK.",".KKKKKKKKKKKKKK.",".KBERRBBEERRBEK.",".KBERRBBEERRBEK.",".KKKKKKKKKKKKKK.",".KEEBRREBBEERRK.",".KEEBRREBBEERRK.",".KKKKKKKKKKKKKK.",".KwwwwwwwwwwwwK.",".KKKKKKKKKKKKKK.",".KK..........KK.","................"],
+bed:["................","..KKKKKKKKKKKK..","..KLLLLLLLLLLK..","..KWWWWWWWWWWK..","..KPPPPPPPPPPK..","..KPPPPPPPPPPK..","..KRRRRRRRRRRK..","..KRRRRRRRRRRK..","..KRrrRRRRrrRK..","..KRRRRRRRRRRK..","..KRrrRRRRrrRK..","..KRRRRRRRRRRK..","..KWWWWWWWWWWK..","..KKKKKKKKKKKK..","..KK........KK..","................"],
+jar:["................","......KKKK......",".....KPPPPK.....",".....KPPPPK.....","....KKWWWWKK....","...KWWWWWWWWK...","..KWLWWWWWWWWK..","..KWLWWWWWWWWK..","..KWWWWWWWWWWK..","..KwWWWWWWWWwK..","...KwWWWWWWwK...","....KKwwwwKK....",".....KKKKKK.....","................","................","................"],
+stove:["....KKKKKKKK....","...KcCCCCCCcK...","...KcCCCCCCcK...","..KKKKKKKKKKKK..","..KLLLLLLLLLLK..","..KWwWWwWWwWWK..","..KwWWwWWwWWwK..","..KWWKKKKKKWWK..","..KWwKfFFfKWwK..","..KwWKFFFFKWwK..","..KWWKFfFFKwWK..","..KwWKKKKKKWWK..","..KWwWWwWWwWwK..","..KKKKKKKKKKKK..","................","................"]
+});
+Object.assign(PIXPAL,{cab:'furn',vat:'furn',rice:'furn',shelf:'furn',bed:'furn',jar:'furn',stove:'furn'});
+VPALS['#4a6b2a']=Object.assign({},PALS.vill,{C:'#4a6b2a',c:'#36511e',A:'#caa46a',H:'#2e2618'});
+
 'use strict';
 // ===== 地图层:瓦片地图生成 + MAPS 注册表 + NPC 配置 =====
 // 瓦片字符:G 草 t 深草 T 树 W 水 P 路 b 桥 R 屋顶 H 墙 X 石墙 F 石地
@@ -191,7 +218,16 @@ function makeWorld(){
   fillR(m,4,35,56,12,'G');
   fillR(m,31,35,2,10,'P');fillR(m,10,42,44,2,'P');
   house(m,9,37);house(m,19,37);house(m,41,37);house(m,51,37);
+  m[40][11]='d';m[40][21]='d';m[40][43]='d';m[40][53]='d';
   fillR(m,0,0,w,1,'T');fillR(m,0,h-1,w,1,'T');fillR(m,0,0,1,h,'T');fillR(m,w-1,0,1,h,'T');
+  return m;
+}
+// Phase 1:室内小图(12×10),f 木地板、H 墙、O 出口,家具走 POI 层
+function makeHouse(){
+  const w=12,h=10,m=blank(w,h,'f');
+  fillR(m,0,0,w,2,'H');fillR(m,0,h-1,w,1,'H');
+  fillR(m,0,0,1,h,'H');fillR(m,w-1,0,1,h,'H');
+  m[h-1][6]='O';
   return m;
 }
 function makeTower(){
@@ -205,17 +241,70 @@ function makeTower(){
 }
 const MAPS={
   world:{m:makeWorld(),w:64,h:48,bg:'field',rate:0.13,pool:()=>S.lvl>=3?['shan','fox','snake']:['shan','fox']},
-  tower:{m:makeTower(),w:24,h:30,bg:'tower',rate:0.16,pool:()=>['ghost','golem']}
+  tower:{m:makeTower(),w:24,h:30,bg:'tower',rate:0.16,pool:()=>['ghost','golem']},
+  house1:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
+  house2:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
+  house3:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
+  house4:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]}
+};
+// 双向传送门:'地图:x,y' → 目的地(d 木门进屋,O 出口回村)
+const DOORS={
+  'world:11,40':{map:'house1',x:6,y:8},
+  'world:21,40':{map:'house2',x:6,y:8},
+  'world:43,40':{map:'house3',x:6,y:8},
+  'world:53,40':{map:'house4',x:6,y:8},
+  'house1:6,9':{map:'world',x:11,y:41},
+  'house2:6,9':{map:'world',x:21,y:41},
+  'house3:6,9':{map:'world',x:43,y:41},
+  'house4:6,9':{map:'world',x:53,y:41}
+};
+// 可调查点:撞上家具即翻找。loot: gold 银两 / item 物品 / note 纸条 / none 空手
+const POIS={
+  house1:[ // 王大娘的家
+    {id:'h1_cab',x:2,y:2,kind:'cab',loot:{t:'gold',n:20}},
+    {id:'h1_stove',x:4,y:2,kind:'stove',loot:{t:'none'}},
+    {id:'h1_vat',x:9,y:2,kind:'vat',loot:{t:'item',k:'dan',n:1}}
+  ],
+  house2:[ // 老村长的家
+    {id:'h2_shelf',x:2,y:2,kind:'shelf',loot:{t:'note',text:'泛黄的书页间夹着一张字条:「锁妖塔镇千年妖王,塔心封印以五灵为锁。妖王属火,水灵咒可克之。」'}},
+    {id:'h2_cab',x:9,y:2,kind:'cab',loot:{t:'gold',n:30}},
+    {id:'h2_bed',x:1,y:4,kind:'bed',loot:{t:'gold',n:10}},
+    {id:'h2_jar',x:10,y:6,kind:'jar',loot:{t:'item',k:'qing',n:1}}
+  ],
+  house3:[ // 阿萝的家
+    {id:'h3_bed',x:2,y:2,kind:'bed',loot:{t:'note',text:'枕头底下压着一本小册子,娟秀的字迹:「今日师兄又在瀑布下练剑,偷偷看了半个时辰……哎呀,不写了不写了。」'}},
+    {id:'h3_cab',x:4,y:2,kind:'cab',loot:{t:'none'}},
+    {id:'h3_rice',x:9,y:2,kind:'rice',loot:{t:'item',k:'dan',n:1}},
+    {id:'h3_vat',x:10,y:6,kind:'vat',loot:{t:'gold',n:15}}
+  ],
+  house4:[ // 猎户的家
+    {id:'h4_shelf',x:2,y:2,kind:'shelf',loot:{t:'note',text:'猎户的字据背面,歪歪扭扭画着三个小人,写着:「爱莎、安娜、艾米莉,到此一游!」'}},
+    {id:'h4_stove',x:4,y:2,kind:'stove',loot:{t:'item',k:'qing',n:1}},
+    {id:'h4_cab',x:9,y:2,kind:'cab',loot:{t:'item',k:'dadan',n:1}},
+    {id:'h4_jar',x:10,y:5,kind:'jar',loot:{t:'gold',n:40}}
+  ]
+};
+// 翻第二件东西时主人的吐槽(致敬经典:进屋翻箱倒柜,主人毫无意见)
+const SNARK={
+  house1:{n:'王大娘',t:'哎哟,小侠客,你这是把我家当自家翻呢?……罢了罢了,看你顺眼,翻吧翻吧!'},
+  house2:{n:'老村长',t:'年轻人,书架轻点翻!那是老朽攒了一辈子的书……唉,拿都拿了,就当村里资助你降妖了。'},
+  house3:{n:'外婆',t:'阿萝那丫头的东西你也敢乱翻?……嗯?你就是她常念叨的师兄?那、那随便看!'},
+  house4:{n:'猎户',t:'好家伙,进门就掏人家的坛坛罐罐,跟山里的狸子一个习性!'}
 };
 
 const NPCS={
   world:[
     {x:34,y:43,draw:'girl',n:'阿萝',talk:()=>talkAluo()},
-    {x:21,y:41,draw:'vill',c:'#7a5230',n:'杂货商',talk:()=>openShop('item')},
-    {x:43,y:41,draw:'vill',c:'#3f6f8f',n:'老板娘',talk:()=>inn()},
-    {x:53,y:41,draw:'vill',c:'#555560',n:'铁匠',talk:()=>openShop('gear')}
+    // 注意:不能站在房门(x,40)正下方,否则会堵住进屋的唯一通路
+    {x:20,y:41,draw:'vill',c:'#7a5230',n:'杂货商',talk:()=>openShop('item')},
+    {x:42,y:41,draw:'vill',c:'#3f6f8f',n:'老板娘',talk:()=>inn()},
+    {x:52,y:41,draw:'vill',c:'#555560',n:'铁匠',talk:()=>openShop('gear')}
   ],
-  tower:[]
+  tower:[],
+  house1:[{x:8,y:3,draw:'vill',c:'#7a5230',n:'王大娘',talk:()=>showDialog([{n:'王大娘',t:'娃儿来啦?随便坐!屋里东西尽管翻,大娘藏不住啥宝贝。'}])}],
+  house2:[{x:5,y:3,draw:'vill',c:'#555560',n:'老村长',talk:()=>showDialog([{n:'老村长',t:'锁妖塔建于前朝,塔心封印千万碰不得……咳,老朽的书你随便看,可别折了页角。'}])}],
+  house3:[{x:6,y:4,draw:'vill',c:'#3f6f8f',n:'外婆',talk:()=>showDialog([{n:'外婆',t:'阿萝常念叨你哩。灶上温着汤,自己舀着喝,别客气。'}])}],
+  house4:[{x:7,y:4,draw:'vill',c:'#4a6b2a',n:'猎户',talk:()=>showDialog([{n:'猎户',t:'北边林子最近不太平,妖气重。进塔之前,把皮甲穿厚实些!'}])}]
 };
 
 'use strict';
@@ -489,6 +578,7 @@ const sHurt=()=>tone(110,0.22,'sawtooth',0.07,45);
 const sHeal=()=>tone(480,0.18,'sine',0.05,950);
 const sCast=()=>tone(280,0.3,'triangle',0.05,1300);
 const sWin=()=>[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,0.18,'square',0.04),i*110));
+const sDing=()=>[784,1175,1568].forEach((f,i)=>setTimeout(()=>tone(f,0.09,'square',0.05),i*70));
 const sLvl=()=>[440,554,659,880].forEach((f,i)=>setTimeout(()=>tone(f,0.14,'triangle',0.05),i*90));
 let musicOn=false,mi=0,mTimer=null;
 const MEL=[392,440,523,0,587,523,440,392,330,392,440,523,587,0,659,587,523,440,392,330,392,0,440,523,440,392,330,294,330,392,440,0];
@@ -506,8 +596,9 @@ function r(x,y,w,h,c){g.fillStyle=c;g.fillRect(x,y,w,h);}
 
 function tileAt(x,y){if(x<0||y<0||x>=cur.w||y>=cur.h)return 'T';return cur.m[y][x];}
 function npcAt(x,y){return (NPCS[curName]||[]).find(n=>n.x===x&&n.y===y);}
+function poiAt(x,y){return (POIS[curName]||[]).find(q=>q.x===x&&q.y===y);}
 function canWalk(x,y){
-  if(npcAt(x,y))return false;
+  if(npcAt(x,y)||poiAt(x,y))return false;
   if(curName==='world'&&!flags.mini&&y===13&&(x===31||x===32))return false;
   return !('TWXHR'.includes(tileAt(x,y)));
 }
@@ -515,6 +606,18 @@ function switchMap(name,x,y){curName=name;cur=MAPS[name];p.tx=x;p.ty=y;p.x=x*T;p
 
 function drawTile(i,j,sx,sy){
   const c=cur.m[j][i];
+  if(cur.bg==='house'){
+    if(c==='H'){
+      r(sx,sy,T,T,'#5a3a22');r(sx,sy,T,4,'#3e2814');r(sx,sy,2,T,'#3e2814');r(sx+30,sy,2,T,'#3e2814');
+      if(j===1&&i%3===1){r(sx+6,sy+8,20,18,'#2a1c10');r(sx+8,sy+10,16,14,'#e8d8a8');r(sx+15,sy+10,2,14,'#5a3a22');r(sx+8,sy+16,16,2,'#5a3a22');}
+      return;
+    }
+    r(sx,sy,T,T,'#b9854f');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.05)');
+    r(sx,sy+15,T,1,'#9a6a3a');r(sx,sy+31,T,1,'#9a6a3a');
+    r(sx+((i+j)%2?8:22),sy,1,15,'#9a6a3a');r(sx+((i+j)%2?22:8),sy+16,1,15,'#9a6a3a');
+    if(c==='O'){r(sx+4,sy+6,24,22,'#8a5e32');r(sx+6,sy+8,20,18,'#a8744a');r(sx,sy+28,T,4,'#3e2814');}
+    return;
+  }
   if(curName==='tower'){
     if(c==='X'){r(sx,sy,T,T,'#2c2638');r(sx+2,sy+2,12,12,'#241f30');r(sx+18,sy+18,12,12,'#241f30');r(sx+18,sy+2,12,12,'#332b42');r(sx+2,sy+18,12,12,'#332b42');return;}
     r(sx,sy,T,T,'#4a4356');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.07)');
@@ -532,7 +635,8 @@ function drawTile(i,j,sx,sy){
   else if(c==='b'){r(sx,sy,T,T,'#3f7fbf');r(sx,sy+2,T,8,'#9a6a3a');r(sx,sy+12,T,8,'#8a5e32');r(sx,sy+22,T,8,'#9a6a3a');r(sx,sy,4,T,'#6e4a26');r(sx+28,sy,4,T,'#6e4a26');r(sx+14,sy+5,2,2,'#5a3a1e');r(sx+14,sy+25,2,2,'#5a3a1e');}
   else if(c==='T'){r(sx+13,sy+20,6,12,'#5d4327');r(sx+14,sy+20,2,12,'#7a5a36');r(sx+6,sy+12,20,10,'#2f6b1e');r(sx+2,sy+7,28,9,'#2f6b1e');r(sx+8,sy+2,16,8,'#2f6b1e');r(sx+10,sy+4,12,8,'#3f8429');r(sx+6,sy+9,18,6,'#3f8429');r(sx+11,sy+5,6,4,'#52a338');}
   else if(c==='R'){r(sx,sy,T,T,'#8a3b2c');for(let k=0;k<4;k++)r(sx,sy+k*8+6,T,2,'#6e2e22');r(sx+10,sy,2,T,'#6e2e22');r(sx+22,sy,2,T,'#6e2e22');}
-  else if(c==='H'){r(sx,sy,T,T,'#caa46a');r(sx,sy,T,3,'#a8854f');r(sx,sy,2,T,'#8a6a3e');r(sx+30,sy,2,T,'#8a6a3e');if((i===11||i===21||i===43||i===53)&&j===40){r(sx+8,sy+4,16,28,'#5d4327');r(sx+10,sy+6,12,26,'#4a3520');r(sx+19,sy+18,2,3,'#d9aa3c');}else if(j===39){r(sx+8,sy+10,16,14,'#5d4327');r(sx+10,sy+12,12,10,'#8fb8d0');r(sx+15,sy+12,2,10,'#5d4327');r(sx+10,sy+16,12,2,'#5d4327');}}
+  else if(c==='H'){r(sx,sy,T,T,'#caa46a');r(sx,sy,T,3,'#a8854f');r(sx,sy,2,T,'#8a6a3e');r(sx+30,sy,2,T,'#8a6a3e');if(j===39){r(sx+8,sy+10,16,14,'#5d4327');r(sx+10,sy+12,12,10,'#8fb8d0');r(sx+15,sy+12,2,10,'#5d4327');r(sx+10,sy+16,12,2,'#5d4327');}}
+  else if(c==='d'){r(sx,sy,T,T,'#caa46a');r(sx,sy,T,3,'#a8854f');r(sx+8,sy+4,16,28,'#5d4327');r(sx+10,sy+6,12,26,'#4a3520');r(sx+19,sy+18,2,3,'#d9aa3c');}
   else if(c==='X'){r(sx,sy,T,T,'#7d7f8a');r(sx,sy,16,16,'#8a8c97');r(sx+16,sy+16,16,16,'#8a8c97');r(sx,sy,T,1,'#5f616c');r(sx,sy+15,T,1,'#5f616c');r(sx+2,sy+26,4,3,'#6f8a5a');}
   else if(c==='D'){r(sx,sy,T,T,'#7d7f8a');r(sx+4,sy+4,24,28,flags.boss?'#ffd76a':'#2a2233');r(sx+6,sy+6,20,26,flags.boss?'#e8c050':'#1c1726');r(sx+14,sy+2,4,3,'#e24b4a');}
   else if(c==='S'){r(sx+4,sy+4,24,24,'#6fcfc6');r(sx+8,sy+8,16,16,'#9fe7e0');const o=(frame>>3)%4;r(sx+8+o*4,sy+8+(o*5)%14,4,4,'#ffffff');r(sx+2,sy+14,2,4,'#8a8c97');r(sx+28,sy+10,2,4,'#8a8c97');}
@@ -553,11 +657,18 @@ function drawHUD(){
   g.fillText(S.hp+'/'+S.maxHp,224,58);g.fillText(S.mp+'/'+S.maxMp,224,76);
 }
 function drawWorld(){
-  r(0,0,SW,SH,curName==='tower'?'#1a1622':'#234d1e');
-  const camX=Math.max(0,Math.min(cur.w*T-SW,p.x-SW/2+16));
-  const camY=Math.max(0,Math.min(cur.h*T-SH,p.y-SH/2+16));
-  const x0=Math.floor(camX/T),y0=Math.floor(camY/T);
+  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':'#234d1e');
+  const mw=cur.w*T,mh=cur.h*T;
+  const camX=mw<=SW?(mw-SW)/2:Math.max(0,Math.min(mw-SW,p.x-SW/2+16));
+  const camY=mh<=SH?(mh-SH)/2:Math.max(0,Math.min(mh-SH,p.y-SH/2+16));
+  const x0=Math.max(0,Math.floor(camX/T)),y0=Math.max(0,Math.floor(camY/T));
   for(let j=y0;j<=Math.min(cur.h-1,y0+VH);j++)for(let i=x0;i<=Math.min(cur.w-1,x0+VW);i++)drawTile(i,j,i*T-camX,j*T-camY);
+  (POIS[curName]||[]).forEach(q=>{
+    const sx=q.x*T-camX,sy=q.y*T-camY;
+    if(sx<-T||sy<-T||sx>SW||sy>SH)return;
+    pix(q.kind,sx,sy,2);
+    if(!looted[q.id]&&(frame>>4)%3===0){r(sx+22,sy+2,3,3,'#fff3c0');r(sx+23,sy+3,1,1,'#ffffff');}
+  });
   (NPCS[curName]||[]).forEach(n=>{
     const sx=n.x*T-camX,sy=n.y*T-camY;
     if(sx<-T||sy<-T||sx>SW||sy>SH)return;
@@ -583,8 +694,9 @@ function updWorld(dt){
     if(K.up)dy=-1;else if(K.down)dy=1;else if(K.left)dx=-1;else if(K.right)dx=1;
     if(dx||dy){
       const nx=p.tx+dx,ny=p.ty+dy;
-      const n=npcAt(nx,ny);
+      const n=npcAt(nx,ny),q=n?null:poiAt(nx,ny);
       if(n){K.up=K.down=K.left=K.right=0;n.talk();}
+      else if(q){K.up=K.down=K.left=K.right=0;investigate(q);}
       else if(canWalk(nx,ny)){p.mv={fx:p.tx*T,fy:p.ty*T,gx:nx*T,gy:ny*T,t:0};p.tx=nx;p.ty=ny;}
     }
   }else{
@@ -601,7 +713,11 @@ function onStep(){
     showDialog(['你推开沉重的石门,塔内阴风扑面……'],()=>switchMap('tower',11,25));
     return;
   }
-  if(c==='O'){switchMap('world',31,3);return;}
+  if(c==='d'||c==='O'){
+    const door=DOORS[curName+':'+p.tx+','+p.ty];
+    if(door){switchMap(door.map,door.x,door.y);return;}
+    if(c==='O'){switchMap('world',31,3);return;}
+  }
   if(c==='B'){
     if(!flags.boss){
       showDialog([
@@ -625,6 +741,23 @@ function onStep(){
       startBattle(pool[rnd(0,pool.length-1)],false);
     }
   }
+}
+
+// Phase 1:翻找家具。首次有宝物("叮"+金色飘字),重复调查按种类给不同文案
+function investigate(q){
+  const kd=POI_KINDS[q.kind];
+  if(looted[q.id]){showDialog([kd.again]);return;}
+  looted[q.id]=true;
+  const lt=q.loot,lines=[];
+  if(lt.t==='gold'){S.gold+=lt.n;sDing();wpop('+'+lt.n+' 两','#ffd76a');lines.push('你在'+kd.n+'里翻出了 '+lt.n+' 两银子!');}
+  else if(lt.t==='item'){const n=lt.n||1;INV[lt.k]+=n;sDing();wpop(ITEMN[lt.k]+' ×'+n,'#ffd76a');lines.push('你在'+kd.n+'里找到了'+ITEMN[lt.k]+'!');}
+  else if(lt.t==='note'){sDing();wpop('发现纸条','#ffd76a');lines.push('你在'+kd.n+'里发现一张纸条……',lt.text);}
+  else lines.push('你仔细翻了翻'+kd.n+'……什么都没有。');
+  // 翻到第二件时,屋主忍不住吐槽一句(每间屋一次)
+  const sn=SNARK[curName];
+  if(sn&&(POIS[curName]||[]).filter(x=>looted[x.id]).length===2)lines.push(sn);
+  showDialog(lines);
+  save();
 }
 
 function talkAluo(){
@@ -707,13 +840,15 @@ function openStatus(){
 }
 function doSave(){save();toast('已保存');closePanel();}
 function save(){
-  try{localStorage.setItem('lingshan1',JSON.stringify({S:S,INV:INV,EQ:EQ,flags:flags,map:curName,x:p.tx,y:p.ty}));}catch(e){}
+  try{localStorage.setItem('lingshan1',JSON.stringify({S:S,INV:INV,EQ:EQ,flags:flags,looted:looted,map:curName,x:p.tx,y:p.ty}));}catch(e){}
 }
 function loadSave(){
   try{
     const d=JSON.parse(localStorage.getItem('lingshan1'));
     if(!d)return false;
     Object.assign(S,d.S);Object.assign(INV,d.INV);Object.assign(EQ,d.EQ);Object.assign(flags,d.flags);
+    for(const k in looted)delete looted[k];
+    Object.assign(looted,d.looted||{});
     switchMap(d.map||'world',d.x,d.y);
     return true;
   }catch(e){return false;}
@@ -724,6 +859,7 @@ function resetState(){
   Object.assign(INV,{dan:3,dadan:0,qing:1});
   EQ.wpn=0;EQ.arm=0;
   flags.aluo=false;flags.mini=false;flags.boss=false;
+  for(const k in looted)delete looted[k];
   switchMap('world',31,44);
 }
 

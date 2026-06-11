@@ -19,10 +19,10 @@
 
 ## Phase 0 · 工程化(进 Claude Code 第一天)
 
-- [ ] 建仓库,`git init`,把单文件拆为 `index.html` / `src/engine.js` / `src/maps.js` / `src/sprites.js` / `src/battle.js` / `src/data.js`
-- [ ] 保留零依赖原则:构建时合并回单文件 `dist/lingshan-rpg.html`(方便分享给孩子,双击即玩)
-- [ ] 迁移现有测试:`npm test` 跑冒烟测试,`npm run shots` 出视觉截图
-- [ ] 写 `CLAUDE.md`:架构说明 + 本计划要点 + 测试命令
+- [x] 建仓库,`git init`,把单文件拆为 `index.html` / `src/engine.js` / `src/maps.js` / `src/sprites.js` / `src/battle.js` / `src/data.js`
+- [x] 保留零依赖原则:构建时合并回单文件 `dist/lingshan-rpg.html`(方便分享给孩子,双击即玩)
+- [x] 迁移现有测试:`npm test` 跑冒烟测试,`npm run shots` 出视觉截图(node-canvas 可选,未装自动跳过)
+- [x] 写 `CLAUDE.md`:架构说明 + 本计划要点 + 测试命令
 
 ## Phase 1 · 进屋找宝贝(P0,核心交付)
 
@@ -35,11 +35,11 @@
 - 存档:`save()` 增加 `looted: {flagId: true}`,翻过的点跨存档持久
 
 **验收标准**
-- [ ] 4 间房都能进出,室内有家具陈设和主人 NPC
-- [ ] 每间房 ≥3 个可调查点,全村合计 ≥12 个
-- [ ] 找到宝物有音效 + 飘字;重复调查有不同文案
-- [ ] 翻东西时主人有吐槽对话彩蛋(致敬经典)
-- [ ] 存档正确记录已翻过的点;手机浏览器可玩
+- [x] 4 间房都能进出,室内有家具陈设和主人 NPC(冒烟测试覆盖,含门口通路可达性)
+- [x] 每间房 ≥3 个可调查点,全村合计 ≥12 个(实际 3+4+4+4=15 个)
+- [x] 找到宝物有音效 + 飘字;重复调查有不同文案(每种家具各有重复文案)
+- [x] 翻东西时主人有吐槽对话彩蛋(翻到第二件时触发,每屋一次)
+- [x] 存档正确记录已翻过的点;手机浏览器可玩(撞击交互与 dpad 同路径;真机回归待人工)
 
 ## Phase 2 · 体验打磨(P1)
 

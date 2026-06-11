@@ -21,6 +21,19 @@ const CK={'水':'火','火':'雷','雷':'土','土':'风','风':'水'};
 function atkP(){return 10+S.lvl*4+WPNS[EQ.wpn].a;}
 function defP(){return ARMS[EQ.arm].d;}
 
+// Phase 1:进屋找宝贝 —— 已翻过的调查点(跨存档持久,见 save/loadSave)
+const looted={};
+// 可调查点种类:名称 + 家具贴图 + 重复调查文案(每种不同,情怀所在)
+const POI_KINDS={
+  cab:{n:'柜子',again:'柜子已经被你翻得乱七八糟,再没有别的了。'},
+  vat:{n:'水缸',again:'水缸里只剩下清亮亮的水,照得见你的脸。'},
+  rice:{n:'米缸',again:'米缸里只有白米。再掏下去要被骂了。'},
+  shelf:{n:'书架',again:'书架上的书都翻过一遍了,没夹着别的东西。'},
+  bed:{n:'床底',again:'床底下连灰都被你摸干净了。'},
+  jar:{n:'坛子',again:'坛子已经空空如也,嗡嗡作响。'},
+  stove:{n:'灶台',again:'灶台冷冰冰的,什么也没有。'}
+};
+
 const ENM={
   shan:{n:'青面山魈',el:'土',hp:42,atk:7,exp:30,gold:24,draw:'shan',s:6},
   fox:{n:'风狸',el:'风',hp:50,atk:9,exp:44,gold:36,draw:'fox',s:6},

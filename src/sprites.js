@@ -33,3 +33,17 @@ function drawGolem(x,y,s){pix('golem',x,y,s);}
 function drawKing(x,y,s){pix('king',x,y,s);}
 const SPRM={shan:{w:20,h:20,s:8},fox:{w:20,h:20,s:8},snake:{w:20,h:20,s:8},snakeK:{w:20,h:22,s:9},flame:{w:16,h:20,s:9},golem:{w:20,h:20,s:8},king:{w:24,h:26,s:9}};
 const SPR={girl:drawGirl,vill:drawVill,shan:drawShan,snake:drawSnake,snakeK:drawSnakeK,fox:drawFox,flame:drawFlame,golem:drawGolem,king:drawKing};
+
+// ===== Phase 1:室内家具贴图(进屋找宝贝)=====
+PALS.furn={K:'#241709',W:'#8a5a2b',w:'#6e4520',L:'#b9854f',C:'#5d6878',c:'#46505e',V:'#8f9cad',A:'#6fcfe8',P:'#e8dcb8',R:'#c43a2f',r:'#8a2a22',G:'#d9aa3c',B:'#2f6f93',E:'#4f8f3a',F:'#ff7a45',f:'#ffd23f'};
+Object.assign(PIX,{
+cab:["................","..KKKKKKKKKKKK..","..KLLLLLLLLLLK..","..KWWWWWWWWWWK..","..KWWWWGGWWWWK..","..KKKKKKKKKKKK..","..KWWWWWWWWWWK..","..KWWWWGGWWWWK..","..KKKKKKKKKKKK..","..KWWWWWWWWWWK..","..KWWWWGGWWWWK..","..KKKKKKKKKKKK..","..KwwwwwwwwwwK..","..KKKKKKKKKKKK..","..KK........KK..","................"],
+vat:["................","................","...KKKKKKKKKK...","..KKAAAAAAAAKK..","..KCCAAAAAACCK..",".KCCCCCCCCCCCCK.",".KCVVCCCCCCCCCK.",".KCVCCCCCCCCCCK.",".KCCCCCCCCCCCCK.",".KCCCCCCCCCCCCK.",".KcCCCCCCCCCCcK.","..KcCCCCCCCCcK..","..KKccccccccKK..","...KKKKKKKKKK...","................","................"],
+rice:["................","................","...KKKKKKKKKK...","..KKPPPPPPPPKK..","..KWPPPPPPPPWK..",".KWWWPPPPPPWWWK.",".KWWWWWWWWWWWWK.",".KWLLWWWWWWWWWK.",".KWLWWWWWWWWWWK.",".KWWWWWWWWWWWWK.",".KwWWWWWWWWWWwK.","..KwWWWWWWWWwK..","..KKwwwwwwwwKK..","...KKKKKKKKKK...","................","................"],
+shelf:["................",".KKKKKKKKKKKKKK.",".KLLLLLLLLLLLLK.",".KRRBEERBBERBEK.",".KRRBEERBBERBEK.",".KKKKKKKKKKKKKK.",".KBERRBBEERRBEK.",".KBERRBBEERRBEK.",".KKKKKKKKKKKKKK.",".KEEBRREBBEERRK.",".KEEBRREBBEERRK.",".KKKKKKKKKKKKKK.",".KwwwwwwwwwwwwK.",".KKKKKKKKKKKKKK.",".KK..........KK.","................"],
+bed:["................","..KKKKKKKKKKKK..","..KLLLLLLLLLLK..","..KWWWWWWWWWWK..","..KPPPPPPPPPPK..","..KPPPPPPPPPPK..","..KRRRRRRRRRRK..","..KRRRRRRRRRRK..","..KRrrRRRRrrRK..","..KRRRRRRRRRRK..","..KRrrRRRRrrRK..","..KRRRRRRRRRRK..","..KWWWWWWWWWWK..","..KKKKKKKKKKKK..","..KK........KK..","................"],
+jar:["................","......KKKK......",".....KPPPPK.....",".....KPPPPK.....","....KKWWWWKK....","...KWWWWWWWWK...","..KWLWWWWWWWWK..","..KWLWWWWWWWWK..","..KWWWWWWWWWWK..","..KwWWWWWWWWwK..","...KwWWWWWWwK...","....KKwwwwKK....",".....KKKKKK.....","................","................","................"],
+stove:["....KKKKKKKK....","...KcCCCCCCcK...","...KcCCCCCCcK...","..KKKKKKKKKKKK..","..KLLLLLLLLLLK..","..KWwWWwWWwWWK..","..KwWWwWWwWWwK..","..KWWKKKKKKWWK..","..KWwKfFFfKWwK..","..KwWKFFFFKWwK..","..KWWKFfFFKwWK..","..KwWKKKKKKWWK..","..KWwWWwWWwWwK..","..KKKKKKKKKKKK..","................","................"]
+});
+Object.assign(PIXPAL,{cab:'furn',vat:'furn',rice:'furn',shelf:'furn',bed:'furn',jar:'furn',stove:'furn'});
+VPALS['#4a6b2a']=Object.assign({},PALS.vill,{C:'#4a6b2a',c:'#36511e',A:'#caa46a',H:'#2e2618'});

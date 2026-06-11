@@ -130,6 +130,105 @@ t('大地图/塔内各渲染一帧不崩溃',()=>{
   E(`switchMap('world',31,44)`);
 });
 
+console.log('— Phase 1:进屋找宝贝 —');
+const HOUSES=[['house1',11],['house2',21],['house3',43],['house4',53]];
+t('验收:4 间房都能从村里进、从屋里出',()=>{
+  for(const [h,dx] of HOUSES){
+    E(`switchMap('world',${dx},41);p.tx=${dx};p.ty=40;onStep()`);
+    eq(E('curName'),h,'踏上 '+dx+',40 的木门应进入 '+h);
+    E('p.tx=6;p.ty=9;onStep()');
+    eq(E('curName'),'world','踏上出口应回到村里');
+    eq(E('p.tx'),dx,'应回到对应房门口');
+  }
+});
+t('房门口的通路没有被 NPC 堵死(可达性)',()=>{
+  E(`switchMap('world',31,44)`);
+  for(const [h,dx] of HOUSES){
+    ok(E(`canWalk(${dx},40)`),h+' 的木门应可走');
+    ok(E(`canWalk(${dx},41)`),h+' 门前一格应可走,不能被 NPC 占住');
+  }
+});
+t('验收:每间房 ≥3 个调查点 + 主人 NPC,全村合计 ≥12',()=>{
+  let total=0;
+  for(const [h] of HOUSES){
+    const n=E(`POIS['${h}'].length`);
+    ok(n>=3,h+' 应有 ≥3 个调查点,实际 '+n);
+    ok(E(`NPCS['${h}'].length`)>=1,h+' 应有主人 NPC');
+    total+=n;
+  }
+  ok(total>=12,'全村调查点应 ≥12,实际 '+total);
+});
+t('调查点配置合法:id 唯一、在地板上、不与 NPC/出口重叠',()=>{
+  const ids=new Set();
+  for(const [h] of HOUSES){
+    for(const q of E(`POIS['${h}']`)){
+      ok(!ids.has(q.id),'id 重复:'+q.id);ids.add(q.id);
+      eq(E(`MAPS['${h}'].m[${q.y}][${q.x}]`),'f',q.id+' 应放在木地板上');
+      ok(!E(`NPCS['${h}'].some(n=>n.x===${q.x}&&n.y===${q.y})`),q.id+' 不应与 NPC 重叠');
+      ok(E(`POI_KINDS['${q.kind}']`),q.id+' 的 kind 应有定义:'+q.kind);
+      ok(E(`PIX['${q.kind}']`),q.kind+' 应有家具贴图');
+    }
+  }
+});
+t('验收:撞上柜子翻出银两(飘字+入账),重复调查换文案不重复给钱',()=>{
+  E(`for(const k in looted)delete looted[k]`);
+  E(`switchMap('house1',2,3)`);
+  const gold=E('S.gold'),wp=E('wpops.length');
+  E('K.up=1;updWorld(0.05);K.up=0');
+  eq(E('S.gold'),gold+20,'柜子应翻出 20 两');
+  ok(E('wpops.length')>wp,'应有金色飘字');
+  ok(E(`looted['h1_cab']`),'应记录已翻过');
+  const first=E(`$('dlgText').textContent`);
+  E('while(dq.length||dcb)nextDlg()');
+  E(`investigate(poiAt(2,2))`);
+  const again=E(`$('dlgText').textContent`);
+  ok(again!==first,'重复调查应是不同文案');
+  ok(again.includes('翻得乱七八糟'),'应提示已翻过');
+  eq(E('S.gold'),gold+20,'重复调查不应再给钱');
+  E('while(dq.length||dcb)nextDlg()');
+});
+t('验收:翻第二件东西时主人吐槽(致敬经典)',()=>{
+  E(`investigate(poiAt(4,2))`);
+  ok(E('dq.some(l=>l.n===NPCS.house1[0].n)'),'第二次翻找后主人应吐槽');
+  E('while(dq.length||dcb)nextDlg()');
+});
+t('物品/纸条/空手三类宝物都生效',()=>{
+  E(`switchMap('house4',6,5)`);
+  const qing=E('INV.qing'),dadan=E('INV.dadan'),gold=E('S.gold');
+  E('investigate(poiAt(4,2))');E('while(dq.length||dcb)nextDlg()');
+  eq(E('INV.qing'),qing+1,'灶台应翻出清心散');
+  E('investigate(poiAt(9,2))');E('while(dq.length||dcb)nextDlg()');
+  eq(E('INV.dadan'),dadan+1,'柜子应翻出大还丹');
+  E('investigate(poiAt(2,2))');
+  ok(E(`dq.length&&String(dq[0]).includes('爱莎')`),'书架纸条应是三个孩子的彩蛋');
+  E('while(dq.length||dcb)nextDlg()');
+  E(`switchMap('house3',4,3)`);
+  E('investigate(poiAt(4,2))');
+  ok(E(`$('dlgText').textContent`).includes('什么都没有'),'空手也要有情怀文案');
+  E('while(dq.length||dcb)nextDlg()');
+  eq(E('S.gold'),gold,'这几件不应改变银两');
+});
+t('验收:已翻过的点写入存档,读档恢复,重新开始清空',()=>{
+  E('save()');
+  ok(JSON.parse(G.store['lingshan1']).looted['h1_cab'],'存档应含 looted');
+  E(`looted['h1_cab']=false;delete looted['h4_cab']`);
+  ok(E('loadSave()'));
+  ok(E(`looted['h1_cab']===true&&looted['h4_cab']===true`),'读档应恢复已翻过的点');
+  E('resetState()');
+  eq(E('Object.keys(looted).length'),0,'重新开始应清空');
+});
+t('室内不遇敌,木门/出口可走,家具挡路',()=>{
+  for(const [h] of HOUSES)eq(E(`MAPS['${h}'].rate`),0,h+' 遇敌率应为 0');
+  E(`switchMap('world',11,41)`);
+  ok(E('canWalk(11,40)'),'木门应可走');
+  E(`switchMap('house1',2,3)`);
+  ok(!E('canWalk(2,2)'),'家具应挡路');
+});
+t('室内渲染一帧不崩溃(小图居中)',()=>{
+  E(`switchMap('house2',6,5)`);G.frame();
+  E(`switchMap('world',31,44)`);
+});
+
 console.log('— dist 单文件 —');
 t('dist/lingshan-rpg.html 内联脚本可独立启动',()=>{
   const D=createGame(loadDistSource());

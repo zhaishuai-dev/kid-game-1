@@ -32,6 +32,7 @@ const sHurt=()=>tone(110,0.22,'sawtooth',0.07,45);
 const sHeal=()=>tone(480,0.18,'sine',0.05,950);
 const sCast=()=>tone(280,0.3,'triangle',0.05,1300);
 const sWin=()=>[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,0.18,'square',0.04),i*110));
+const sDing=()=>[784,1175,1568].forEach((f,i)=>setTimeout(()=>tone(f,0.09,'square',0.05),i*70));
 const sLvl=()=>[440,554,659,880].forEach((f,i)=>setTimeout(()=>tone(f,0.14,'triangle',0.05),i*90));
 let musicOn=false,mi=0,mTimer=null;
 const MEL=[392,440,523,0,587,523,440,392,330,392,440,523,587,0,659,587,523,440,392,330,392,0,440,523,440,392,330,294,330,392,440,0];
@@ -49,8 +50,9 @@ function r(x,y,w,h,c){g.fillStyle=c;g.fillRect(x,y,w,h);}
 
 function tileAt(x,y){if(x<0||y<0||x>=cur.w||y>=cur.h)return 'T';return cur.m[y][x];}
 function npcAt(x,y){return (NPCS[curName]||[]).find(n=>n.x===x&&n.y===y);}
+function poiAt(x,y){return (POIS[curName]||[]).find(q=>q.x===x&&q.y===y);}
 function canWalk(x,y){
-  if(npcAt(x,y))return false;
+  if(npcAt(x,y)||poiAt(x,y))return false;
   if(curName==='world'&&!flags.mini&&y===13&&(x===31||x===32))return false;
   return !('TWXHR'.includes(tileAt(x,y)));
 }
@@ -58,6 +60,18 @@ function switchMap(name,x,y){curName=name;cur=MAPS[name];p.tx=x;p.ty=y;p.x=x*T;p
 
 function drawTile(i,j,sx,sy){
   const c=cur.m[j][i];
+  if(cur.bg==='house'){
+    if(c==='H'){
+      r(sx,sy,T,T,'#5a3a22');r(sx,sy,T,4,'#3e2814');r(sx,sy,2,T,'#3e2814');r(sx+30,sy,2,T,'#3e2814');
+      if(j===1&&i%3===1){r(sx+6,sy+8,20,18,'#2a1c10');r(sx+8,sy+10,16,14,'#e8d8a8');r(sx+15,sy+10,2,14,'#5a3a22');r(sx+8,sy+16,16,2,'#5a3a22');}
+      return;
+    }
+    r(sx,sy,T,T,'#b9854f');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.05)');
+    r(sx,sy+15,T,1,'#9a6a3a');r(sx,sy+31,T,1,'#9a6a3a');
+    r(sx+((i+j)%2?8:22),sy,1,15,'#9a6a3a');r(sx+((i+j)%2?22:8),sy+16,1,15,'#9a6a3a');
+    if(c==='O'){r(sx+4,sy+6,24,22,'#8a5e32');r(sx+6,sy+8,20,18,'#a8744a');r(sx,sy+28,T,4,'#3e2814');}
+    return;
+  }
   if(curName==='tower'){
     if(c==='X'){r(sx,sy,T,T,'#2c2638');r(sx+2,sy+2,12,12,'#241f30');r(sx+18,sy+18,12,12,'#241f30');r(sx+18,sy+2,12,12,'#332b42');r(sx+2,sy+18,12,12,'#332b42');return;}
     r(sx,sy,T,T,'#4a4356');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.07)');
@@ -75,7 +89,8 @@ function drawTile(i,j,sx,sy){
   else if(c==='b'){r(sx,sy,T,T,'#3f7fbf');r(sx,sy+2,T,8,'#9a6a3a');r(sx,sy+12,T,8,'#8a5e32');r(sx,sy+22,T,8,'#9a6a3a');r(sx,sy,4,T,'#6e4a26');r(sx+28,sy,4,T,'#6e4a26');r(sx+14,sy+5,2,2,'#5a3a1e');r(sx+14,sy+25,2,2,'#5a3a1e');}
   else if(c==='T'){r(sx+13,sy+20,6,12,'#5d4327');r(sx+14,sy+20,2,12,'#7a5a36');r(sx+6,sy+12,20,10,'#2f6b1e');r(sx+2,sy+7,28,9,'#2f6b1e');r(sx+8,sy+2,16,8,'#2f6b1e');r(sx+10,sy+4,12,8,'#3f8429');r(sx+6,sy+9,18,6,'#3f8429');r(sx+11,sy+5,6,4,'#52a338');}
   else if(c==='R'){r(sx,sy,T,T,'#8a3b2c');for(let k=0;k<4;k++)r(sx,sy+k*8+6,T,2,'#6e2e22');r(sx+10,sy,2,T,'#6e2e22');r(sx+22,sy,2,T,'#6e2e22');}
-  else if(c==='H'){r(sx,sy,T,T,'#caa46a');r(sx,sy,T,3,'#a8854f');r(sx,sy,2,T,'#8a6a3e');r(sx+30,sy,2,T,'#8a6a3e');if((i===11||i===21||i===43||i===53)&&j===40){r(sx+8,sy+4,16,28,'#5d4327');r(sx+10,sy+6,12,26,'#4a3520');r(sx+19,sy+18,2,3,'#d9aa3c');}else if(j===39){r(sx+8,sy+10,16,14,'#5d4327');r(sx+10,sy+12,12,10,'#8fb8d0');r(sx+15,sy+12,2,10,'#5d4327');r(sx+10,sy+16,12,2,'#5d4327');}}
+  else if(c==='H'){r(sx,sy,T,T,'#caa46a');r(sx,sy,T,3,'#a8854f');r(sx,sy,2,T,'#8a6a3e');r(sx+30,sy,2,T,'#8a6a3e');if(j===39){r(sx+8,sy+10,16,14,'#5d4327');r(sx+10,sy+12,12,10,'#8fb8d0');r(sx+15,sy+12,2,10,'#5d4327');r(sx+10,sy+16,12,2,'#5d4327');}}
+  else if(c==='d'){r(sx,sy,T,T,'#caa46a');r(sx,sy,T,3,'#a8854f');r(sx+8,sy+4,16,28,'#5d4327');r(sx+10,sy+6,12,26,'#4a3520');r(sx+19,sy+18,2,3,'#d9aa3c');}
   else if(c==='X'){r(sx,sy,T,T,'#7d7f8a');r(sx,sy,16,16,'#8a8c97');r(sx+16,sy+16,16,16,'#8a8c97');r(sx,sy,T,1,'#5f616c');r(sx,sy+15,T,1,'#5f616c');r(sx+2,sy+26,4,3,'#6f8a5a');}
   else if(c==='D'){r(sx,sy,T,T,'#7d7f8a');r(sx+4,sy+4,24,28,flags.boss?'#ffd76a':'#2a2233');r(sx+6,sy+6,20,26,flags.boss?'#e8c050':'#1c1726');r(sx+14,sy+2,4,3,'#e24b4a');}
   else if(c==='S'){r(sx+4,sy+4,24,24,'#6fcfc6');r(sx+8,sy+8,16,16,'#9fe7e0');const o=(frame>>3)%4;r(sx+8+o*4,sy+8+(o*5)%14,4,4,'#ffffff');r(sx+2,sy+14,2,4,'#8a8c97');r(sx+28,sy+10,2,4,'#8a8c97');}
@@ -96,11 +111,18 @@ function drawHUD(){
   g.fillText(S.hp+'/'+S.maxHp,224,58);g.fillText(S.mp+'/'+S.maxMp,224,76);
 }
 function drawWorld(){
-  r(0,0,SW,SH,curName==='tower'?'#1a1622':'#234d1e');
-  const camX=Math.max(0,Math.min(cur.w*T-SW,p.x-SW/2+16));
-  const camY=Math.max(0,Math.min(cur.h*T-SH,p.y-SH/2+16));
-  const x0=Math.floor(camX/T),y0=Math.floor(camY/T);
+  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':'#234d1e');
+  const mw=cur.w*T,mh=cur.h*T;
+  const camX=mw<=SW?(mw-SW)/2:Math.max(0,Math.min(mw-SW,p.x-SW/2+16));
+  const camY=mh<=SH?(mh-SH)/2:Math.max(0,Math.min(mh-SH,p.y-SH/2+16));
+  const x0=Math.max(0,Math.floor(camX/T)),y0=Math.max(0,Math.floor(camY/T));
   for(let j=y0;j<=Math.min(cur.h-1,y0+VH);j++)for(let i=x0;i<=Math.min(cur.w-1,x0+VW);i++)drawTile(i,j,i*T-camX,j*T-camY);
+  (POIS[curName]||[]).forEach(q=>{
+    const sx=q.x*T-camX,sy=q.y*T-camY;
+    if(sx<-T||sy<-T||sx>SW||sy>SH)return;
+    pix(q.kind,sx,sy,2);
+    if(!looted[q.id]&&(frame>>4)%3===0){r(sx+22,sy+2,3,3,'#fff3c0');r(sx+23,sy+3,1,1,'#ffffff');}
+  });
   (NPCS[curName]||[]).forEach(n=>{
     const sx=n.x*T-camX,sy=n.y*T-camY;
     if(sx<-T||sy<-T||sx>SW||sy>SH)return;
@@ -126,8 +148,9 @@ function updWorld(dt){
     if(K.up)dy=-1;else if(K.down)dy=1;else if(K.left)dx=-1;else if(K.right)dx=1;
     if(dx||dy){
       const nx=p.tx+dx,ny=p.ty+dy;
-      const n=npcAt(nx,ny);
+      const n=npcAt(nx,ny),q=n?null:poiAt(nx,ny);
       if(n){K.up=K.down=K.left=K.right=0;n.talk();}
+      else if(q){K.up=K.down=K.left=K.right=0;investigate(q);}
       else if(canWalk(nx,ny)){p.mv={fx:p.tx*T,fy:p.ty*T,gx:nx*T,gy:ny*T,t:0};p.tx=nx;p.ty=ny;}
     }
   }else{
@@ -144,7 +167,11 @@ function onStep(){
     showDialog(['你推开沉重的石门,塔内阴风扑面……'],()=>switchMap('tower',11,25));
     return;
   }
-  if(c==='O'){switchMap('world',31,3);return;}
+  if(c==='d'||c==='O'){
+    const door=DOORS[curName+':'+p.tx+','+p.ty];
+    if(door){switchMap(door.map,door.x,door.y);return;}
+    if(c==='O'){switchMap('world',31,3);return;}
+  }
   if(c==='B'){
     if(!flags.boss){
       showDialog([
@@ -168,6 +195,23 @@ function onStep(){
       startBattle(pool[rnd(0,pool.length-1)],false);
     }
   }
+}
+
+// Phase 1:翻找家具。首次有宝物("叮"+金色飘字),重复调查按种类给不同文案
+function investigate(q){
+  const kd=POI_KINDS[q.kind];
+  if(looted[q.id]){showDialog([kd.again]);return;}
+  looted[q.id]=true;
+  const lt=q.loot,lines=[];
+  if(lt.t==='gold'){S.gold+=lt.n;sDing();wpop('+'+lt.n+' 两','#ffd76a');lines.push('你在'+kd.n+'里翻出了 '+lt.n+' 两银子!');}
+  else if(lt.t==='item'){const n=lt.n||1;INV[lt.k]+=n;sDing();wpop(ITEMN[lt.k]+' ×'+n,'#ffd76a');lines.push('你在'+kd.n+'里找到了'+ITEMN[lt.k]+'!');}
+  else if(lt.t==='note'){sDing();wpop('发现纸条','#ffd76a');lines.push('你在'+kd.n+'里发现一张纸条……',lt.text);}
+  else lines.push('你仔细翻了翻'+kd.n+'……什么都没有。');
+  // 翻到第二件时,屋主忍不住吐槽一句(每间屋一次)
+  const sn=SNARK[curName];
+  if(sn&&(POIS[curName]||[]).filter(x=>looted[x.id]).length===2)lines.push(sn);
+  showDialog(lines);
+  save();
 }
 
 function talkAluo(){
@@ -250,13 +294,15 @@ function openStatus(){
 }
 function doSave(){save();toast('已保存');closePanel();}
 function save(){
-  try{localStorage.setItem('lingshan1',JSON.stringify({S:S,INV:INV,EQ:EQ,flags:flags,map:curName,x:p.tx,y:p.ty}));}catch(e){}
+  try{localStorage.setItem('lingshan1',JSON.stringify({S:S,INV:INV,EQ:EQ,flags:flags,looted:looted,map:curName,x:p.tx,y:p.ty}));}catch(e){}
 }
 function loadSave(){
   try{
     const d=JSON.parse(localStorage.getItem('lingshan1'));
     if(!d)return false;
     Object.assign(S,d.S);Object.assign(INV,d.INV);Object.assign(EQ,d.EQ);Object.assign(flags,d.flags);
+    for(const k in looted)delete looted[k];
+    Object.assign(looted,d.looted||{});
     switchMap(d.map||'world',d.x,d.y);
     return true;
   }catch(e){return false;}
@@ -267,6 +313,7 @@ function resetState(){
   Object.assign(INV,{dan:3,dadan:0,qing:1});
   EQ.wpn=0;EQ.arm=0;
   flags.aluo=false;flags.mini=false;flags.boss=false;
+  for(const k in looted)delete looted[k];
   switchMap('world',31,44);
 }
 
