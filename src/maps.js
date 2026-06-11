@@ -4,6 +4,8 @@
 //          e 符纹遇敌地 D 门(锁妖塔/水府) d 木门(进屋) O 出口 S 灵泉 B 封印
 //          第二章:V 漩涡(湖面入口) a 湖水 c 水草(遇敌) Z 蛟龙王座
 //          第三章:v 魔土 m 魔纹(遇敌) M 魔尊王座(鬼门复用锁妖塔封印 B)
+//          第四章:Y 风口(湖畔入口) sky/shrine 复用 a/c/R/S/D/O,N 大鹏王座
+//          第五章:U 后土王座(地缝入口 G,复用 v/m/R/S/D/O)
 function blank(w,h,f){const m=[];for(let y=0;y<h;y++)m.push(new Array(w).fill(f));return m;}
 function fillR(m,x,y,w,h,c){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++){if(m[j]&&m[j][i]!==undefined)m[j][i]=c;}}
 function house(m,x,y){fillR(m,x,y,5,2,'R');fillR(m,x,y+2,5,2,'H');}
@@ -26,6 +28,8 @@ function makeWorld(){
   house(m,9,37);house(m,19,37);house(m,41,37);house(m,51,37);
   m[40][11]='d';m[40][21]='d';m[40][43]='d';m[40][53]='d';
   m[14][24]='V'; // 第二章:湖面漩涡(降妖王后由阿萝点醒才显现,见 canWalk/onStep 的 ch2 判定)
+  m[16][50]='Y'; // 第四章:湖畔风口(第四章开启后才成旋风,ch4 前如常草地)
+  m[40][6]='q';  // 第五章:村西地缝(第五章开启后才裂开,ch5 前如常草地)
   fillR(m,0,0,w,1,'T');fillR(m,0,h-1,w,1,'T');fillR(m,0,0,1,h,'T');fillR(m,w-1,0,1,h,'T');
   return m;
 }
@@ -81,6 +85,31 @@ function makeHell(){
   m[13][11]='O';
   return m;
 }
+// 第四章 · 九霄云海:云端大图(28×24);沿用 a/c/R/S/D/O 字符,按 bg='sky' 另样渲染
+// a 云路 c 罡风带(遇敌) R 云隙(阻挡) S 风眼灵泉 D 风窟门 O 回湖畔
+function makeSky(){
+  const w=28,h=24,m=blank(w,h,'a');
+  fillR(m,0,0,w,1,'R');fillR(m,0,h-1,w,1,'R');fillR(m,0,0,1,h,'R');fillR(m,w-1,0,1,h,'R');
+  fillR(m,6,5,4,2,'R');fillR(m,18,5,4,2,'R');
+  fillR(m,12,10,4,2,'R');
+  fillR(m,3,14,3,3,'R');fillR(m,22,14,3,3,'R');
+  fillR(m,3,3,8,3,'c');fillR(m,17,3,8,3,'c');
+  fillR(m,2,17,10,3,'c');fillR(m,16,17,10,3,'c');
+  fillR(m,10,12,8,4,'c');
+  m[15][14]='S';
+  m[1][14]='D';
+  m[22][14]='O';
+  return m;
+}
+// 第四章 · 天风殿:Boss 殿堂(22×16),N 大鹏王座
+function makeShrine(){
+  const w=22,h=16,m=blank(w,h,'X');
+  fillR(m,3,3,16,11,'F');
+  [[5,5],[16,5],[5,11],[16,11]].forEach(c=>{m[c[1]][c[0]]='X';});
+  m[3][11]='N';
+  m[13][11]='O';
+  return m;
+}
 // Phase 1:室内小图(12×10),f 木地板、H 墙、O 出口,家具走 POI 层
 function makeHouse(){
   const w=12,h=10,m=blank(w,h,'f');
@@ -108,7 +137,9 @@ const MAPS={
   lake:{m:makeLake(),w:28,h:24,bg:'lake',rate:0.18,pool:()=>S.lvl>=12?['yaksha','clam','squid','turtle']:['yaksha','clam','squid']},
   palace:{m:makePalace(),w:22,h:16,bg:'palace',rate:0,pool:()=>[]},
   abyss:{m:makeAbyss(),w:28,h:24,bg:'abyss',rate:0.20,pool:()=>['yanmo','yin','mojiang','leiyu']},
-  hell:{m:makeHell(),w:22,h:16,bg:'hell',rate:0,pool:()=>[]}
+  hell:{m:makeHell(),w:22,h:16,bg:'hell',rate:0,pool:()=>[]},
+  sky:{m:makeSky(),w:28,h:24,bg:'sky',rate:0.19,pool:()=>['gangfeng','yunpeng','pili','fengli']},
+  shrine:{m:makeShrine(),w:22,h:16,bg:'shrine',rate:0,pool:()=>[]}
 };
 // 双向传送门:'地图:x,y' → 目的地(d 木门进屋,O 出口回村)
 const DOORS={
@@ -127,7 +158,11 @@ const DOORS={
   // 第三章:魔渊 O 回锁妖塔、魔渊 D 进魔殿、魔殿 O 回魔渊(鬼门入口与魔尊王座为特判,见 onStep)
   'abyss:14,22':{map:'tower',x:11,y:5},
   'abyss:14,1':{map:'hell',x:11,y:12},
-  'hell:11,13':{map:'abyss',x:14,y:2}
+  'hell:11,13':{map:'abyss',x:14,y:2},
+  // 第四章:云海 O 回湖畔、云海 D 进天风殿、天风殿 O 回云海(风口入口与大鹏王座为特判)
+  'sky:14,22':{map:'world',x:50,y:17},
+  'sky:14,1':{map:'shrine',x:11,y:12},
+  'shrine:11,13':{map:'sky',x:14,y:2}
 };
 // 可调查点:撞上家具即翻找。loot: gold 银两 / item 物品 / note 纸条 / none 空手
 const POIS={
@@ -163,6 +198,11 @@ const POIS={
     {id:'ab_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:300}},
     {id:'ab_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:2}},
     {id:'ab_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'焦黑的石匣里一片残碑:「五灵大成,可破混沌。魔尊性属雷,烈焰咒克之。」'}}
+  ],
+  sky:[ // 第四章:云中宝匣
+    {id:'sk_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:500}},
+    {id:'sk_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:2}},
+    {id:'sk_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'云中飘来一片羽书:「大鹏振翅九万里,性属风,唯厚土可镇其翼。」'}}
   ]
 };
 // 翻第二件东西时主人的吐槽(致敬经典:进屋翻箱倒柜,主人毫无意见)
@@ -191,5 +231,8 @@ const NPCS={
   palace:[],
   // 第三章:阿萝随你闯魔渊
   abyss:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoAbyss()}],
-  hell:[]
+  hell:[],
+  // 第四章:阿萝随你上九霄
+  sky:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoSky()}],
+  shrine:[]
 };

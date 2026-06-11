@@ -418,7 +418,7 @@ t('魔尊 Boss:烈焰咒拔群,击败后终章结局',()=>{
   for(let i=0;i<20&&E('B&&B.anim');i++)E('updBattle(0.05)');
   G.flushTimers();
   ok(E('flags.demon'),'击败魔尊应置 flags.demon');
-  eq(E(`document.getElementById('endTitle').textContent`),'终章 · 完');
+  eq(E(`document.getElementById('endTitle').textContent`),'第三章 · 完');
   E(`document.getElementById('endov').style.display='none'`);
 });
 t('第三章进度随存档持久(ch3/demon + 所在魔殿)',()=>{
@@ -443,6 +443,86 @@ t('魔渊/魔殿/魔渊战斗各渲染一帧不崩溃',()=>{
   E(`mode='world';B=null;switchMap('abyss',14,12)`);G.frame();
   E(`switchMap('hell',11,8)`);G.frame();
   E(`switchMap('abyss',14,12);startBattle('demon',true)`);G.frame();
+  E(`mode='world';B=null;battleUI(false);switchMap('world',31,44)`);
+});
+
+console.log('— 第四章:九霄云海 —');
+t('风族与大鹏 Boss 数据齐备,精灵可绘',()=>{
+  for(const k of ['gangfeng','yunpeng','pili','fengli','peng']){
+    ok(E(`ENM['${k}']`),'缺敌人 '+k);
+    const d=E(`ENM['${k}'].draw`);
+    ok(E(`SPR['${d}']`),d+' 缺绘制');ok(E(`SPRM['${d}']`),d+' 缺尺寸');
+  }
+  eq(E('ENM.peng.el'),'风');eq(E('ENM.pili.el'),'雷');
+});
+t('土灵咒补全五灵,土克风(大鹏)',()=>{
+  E('resetState()');
+  ok(!E(`skillKnown(SKILLS.find(s=>s.n==='土灵咒'))`),'未传授前不会土灵咒');
+  E('flags.earth=true');
+  ok(E(`skillKnown(SKILLS.find(s=>s.n==='土灵咒'))`),'传授后会土灵咒');
+  eq(E(`advMult('土','风')`),1.5,'土灵咒应拔群于风妖');
+  // 五灵到齐:火水雷风土都有基础咒
+  const els=E(`SKILLS.filter(s=>!SKILL_UP[s.n]||true).map(s=>s.el)`);
+  ['火','水','雷','风','土'].forEach(e=>ok(E(`SKILLS.some(s=>s.el==='${e}')`),'应有 '+e+' 系咒'));
+});
+t('厚土咒为土灵咒的大成、更强',()=>{
+  eq(E(`SKILL_UP['土灵咒']`),'厚土咒');
+  ok(E(`SKILLS.find(s=>s.n==='厚土咒').mult>SKILLS.find(s=>s.n==='土灵咒').mult`));
+});
+t('风口降妖王/降蛟龙前不显,第四章开启后可登',()=>{
+  E('resetState()');
+  ok(E(`MAPS.world.m[16][50]`),'风口瓦片应存在');eq(E(`MAPS.world.m[16][50]`),'Y');
+  ok(E('canWalk(50,16)'),'风口所在为草地,一直可走');
+});
+t('第四章开篇:降魔尊后与阿萝对话开启 ch4、传授土灵咒',()=>{
+  E('resetState();Object.assign(flags,{aluo:true,mini:true,boss:true,ch2:true,wind:true,dragon:true,ch3:true,demon:true})');
+  E(`switchMap('world',34,44)`);
+  E('K.up=1;updWorld(0.05);K.up=0');
+  ok(E('flags.ch4'),'应开启第四章');ok(E('flags.earth'),'应传授土灵咒');
+  E('while(dq.length||dcb)nextDlg()');
+});
+t('踏风口升九霄(首次旁白),云海↔湖畔↔天风殿互通',()=>{
+  E(`switchMap('world',50,17);p.tx=50;p.ty=17`);
+  E('K.up=1');for(let i=0;i<10&&!E('flags.skyIntro');i++)E('updWorld(0.05)');E('K.up=0');
+  ok(E('flags.skyIntro'),'首次升空应有旁白');
+  E('while(dq.length||dcb)nextDlg()');
+  eq(E('curName'),'sky');
+  E('p.tx=14;p.ty=22;onStep()');eq(E('curName'),'world');eq(E('p.tx'),50);
+  E(`switchMap('sky',14,2);p.tx=14;p.ty=1;onStep()`);eq(E('curName'),'shrine');
+  E('p.tx=11;p.ty=13;onStep()');eq(E('curName'),'sky');
+});
+t('云海风带遇敌、天风殿无随机遇敌、宝匣合法',()=>{
+  eq(E('MAPS.sky.rate>0'),true);eq(E('MAPS.shrine.rate'),0);
+  ok(E('POIS.sky.length>=2'));
+  for(const q of E('POIS.sky'))eq(E(`MAPS.sky.m[${q.y}][${q.x}]`),'a',q.id+' 应在云路上');
+});
+t('大鹏 Boss:土灵咒拔群,击败后第四章结局',()=>{
+  E('resetState();Object.assign(flags,{ch4:true,earth:true,skyIntro:true});S.lvl=28;S.maxMp=320;S.mp=320;S.maxHp=560;S.hp=560;EQ.wpn=2;EQ.arm=2');
+  E(`switchMap('shrine',11,4);p.tx=11;p.ty=3;onStep()`);
+  E('while(dq.length||dcb)nextDlg()');
+  eq(E('mode'),'battle');eq(E('B.key'),'peng');
+  const tu=E(`SKILLS.findIndex(s=>s.n==='土灵咒')`);
+  E(`castSkill(${tu})`);
+  for(let i=0;i<60&&E('B.anim');i++)E('updBattle(0.02)');
+  ok(E(`B.pops.some(p=>p.txt==='效果拔群!')`),'土灵咒应对大鹏拔群');
+  E('B.e.hp=1;B.phase="cmd"');E(`act('atk')`);
+  for(let i=0;i<20&&E('B&&B.anim');i++)E('updBattle(0.05)');
+  G.flushTimers();
+  ok(E('flags.peng'),'击败大鹏应置 flags.peng');
+  eq(E(`document.getElementById('endTitle').textContent`),'第四章 · 完');
+  E(`document.getElementById('endov').style.display='none'`);
+});
+t('第四章进度随存档持久 + BGM 云海主题',()=>{
+  E(`switchMap('sky',8,8);Object.assign(flags,{ch4:true,earth:true,peng:true});save()`);
+  E('resetState()');ok(E('loadSave()'));
+  eq(E('curName'),'sky');ok(E('flags.ch4&&flags.earth&&flags.peng'));
+  eq(E(`melForBg('sky')`),'sky');eq(E(`melForBg('shrine')`),'sky');
+  ok(E(`MELS.sky&&MELS.sky.join()!==MELS.field.join()`),'云海主题应独立');
+});
+t('云海/天风殿/云端战斗各渲染一帧不崩溃',()=>{
+  E(`mode='world';B=null;switchMap('sky',14,12)`);G.frame();
+  E(`switchMap('shrine',11,8)`);G.frame();
+  E(`switchMap('sky',14,12);startBattle('peng',true)`);G.frame();
   E(`mode='world';B=null;battleUI(false);switchMap('world',31,44)`);
 });
 

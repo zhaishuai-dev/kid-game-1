@@ -91,3 +91,23 @@ function drawYin(x,y,s){pix((frame>>3)%2?'flame1':'flame0',x,y,s,YINPAL);}
 function drawMojiang(x,y,s){pix('golem',x,y,s,MOJPAL);}
 Object.assign(SPR,{yanmo:drawYanmo,leiyu:drawLeiyu,demon:drawDemon,yin:drawYin,mojiang:drawMojiang});
 Object.assign(SPRM,{yanmo:{w:20,h:20,s:6},leiyu:{w:20,h:20,s:6},demon:{w:24,h:24,s:6},yin:{w:16,h:20,s:8},mojiang:{w:20,h:20,s:7}});
+
+// ===== 第四章 · 九霄云海:风族像素图 + 改色复用 =====
+PALS.yunpeng={"K": "#101820", "W": "#eaf2f8", "w": "#b9cad8", "B": "#3f7fb0", "L": "#9fd0ec", "Y": "#ffc23a", "E": "#1a2230", "F": "#d9aa3c"};
+PALS.peng={"K": "#0c1018", "P": "#34507a", "p": "#22344f", "G": "#ffd23f", "W": "#eaf2f8", "E": "#ff4040", "Y": "#ffb030", "L": "#7fb0d8", "F": "#caa46a"};
+Object.assign(PIX,{
+  yunpeng:["....................",".........KK.........","........KWWK........","........KWWK........",".......KWWWWK.......","......KWEWWEWK......","......KWWWWWWK......",".....KKWWYYWWKK.....","...KKBWWWWWWWWBKK...","..KBBBKWWWWWWKBBBK..",".KBLLBBKWWWWKBBLLBK.",".KLLLLBBKWWKBBLLLLK.","..KLLBBBKWWKBBBLLK..","...KKBBKWWWWKBBKK...",".....KKWWWWWWKK.....",".......KWWWWK.......",".......KWwwWK.......","......KWWKKWWK......",".....KFFK..KFFK.....","...................."],
+  peng:["........................","...........GG...........","..........GGGG..........",".........GKKKKG.........",".........KPPPPK.........","........KPEPPEPK........","........KPPPPPPK........",".......KKPPYYPPKK.......",".....KKPPPPPPPPPPKK.....","...KKPLLPPPPPPPPLLPKK...","..KPLLLLPPPPPPPPLLLLPK..",".KPLLLLLPKWWWWKPLLLLLPK.",".KLLLLPPKWWWWWWKPPLLLLK.","..KKPPKKWWWWWWWWKKPPKK..","....KKKWWWWWWWWWWKKK....",".....KKWWWWWWWWWWKK.....",".......KWWWWWWWWK.......",".......KWWWPPWWWK.......",".......KWWKKKKWWK.......","......KPPK....KPPK......",".....KPPPK....KPPPK.....","....KKFFKK....KKFFKK....","...KFKKK........KKKFK...","........................"],
+});
+Object.assign(PIXPAL,{yunpeng:'yunpeng',peng:'peng'});
+// 罡风鬼:借鬼火帧改罡风白绿;霹雳鸟:借云鹏改雷暴黄紫;风狸王:借风狸改银白
+const GFPAL={K:'#16241c',B:'#3a6e54',b:'#244a38',L:'#cfeede',W:'#f2fff8',E:'#9fe7a0'};
+const PILIPAL=Object.assign({},PALS.yunpeng,{W:'#f6efc0',w:'#cdbf7a',B:'#6a4ea8',L:'#ffe24a',Y:'#ff7a30',E:'#2a1840'});
+const FENGLIPAL={K:'#2a2a36','C':'#e6eef6','c':'#bcc8d6','W':'#ffffff','P':'#cfe0ff','E':'#3a4660','G':'#9fd0ec','T':'#9aa6b8','t':'#76808f'};
+function drawYunpeng(x,y,s){pix('yunpeng',x,y,s);}
+function drawPeng(x,y,s){pix('peng',x,y,s);}
+function drawGangfeng(x,y,s){pix((frame>>3)%2?'flame1':'flame0',x,y,s,GFPAL);}
+function drawPili(x,y,s){pix('yunpeng',x,y,s,PILIPAL);}
+function drawFengli(x,y,s){pix('fox',x,y,s,FENGLIPAL);}
+Object.assign(SPR,{yunpeng:drawYunpeng,peng:drawPeng,gangfeng:drawGangfeng,pili:drawPili,fengli:drawFengli});
+Object.assign(SPRM,{yunpeng:{w:20,h:20,s:6},peng:{w:24,h:24,s:6},gangfeng:{w:16,h:20,s:8},pili:{w:20,h:20,s:6},fengli:{w:20,h:20,s:6}});

@@ -4,7 +4,8 @@ const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 let seed=20260610;const srnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
 
 // 剧情位:aluo/mini/boss=第一章;ch2/wind/lakeIntro/dragon=第二章;ch3/abyssIntro/demon=第三章
-const flags={aluo:false,mini:false,boss:false,ch2:false,wind:false,lakeIntro:false,dragon:false,ch3:false,abyssIntro:false,demon:false};
+//        ch4/earth/skyIntro/peng=第四章;ch5/caveIntro/sovereign=第五章
+const flags={aluo:false,mini:false,boss:false,ch2:false,wind:false,lakeIntro:false,dragon:false,ch3:false,abyssIntro:false,demon:false,ch4:false,earth:false,skyIntro:false,peng:false,ch5:false,caveIntro:false,sovereign:false};
 const S={hp:70,maxHp:70,mp:36,maxMp:36,lvl:1,exp:0,gold:80};
 const INV={dan:3,dadan:0,qing:1};
 const EQ={wpn:0,arm:0};
@@ -18,14 +19,17 @@ const SKILLS=[
   {n:'雷灵咒',el:'雷',mp:22,mult:2.7,lvl:7},
   // 风灵咒:第二章由阿萝传授(flag 解锁),风克水
   {n:'风灵咒',el:'风',mp:18,mult:2.4,lvl:1,flag:'wind'},
-  // 第三章 · 五灵术升级链:勤修到高阶,基础咒法臻至大成(高等级解锁,自动领悟)
+  // 土灵咒:第四章由阿萝传授(flag 解锁),土克风——补全五灵
+  {n:'土灵咒',el:'土',mp:22,mult:2.8,lvl:1,flag:'earth'},
+  // 五灵术升级链:勤修到高阶,基础咒法臻至大成(高等级解锁,自动领悟)
   {n:'烈焰咒',el:'火',mp:26,mult:3.2,lvl:16},
   {n:'玄冰咒',el:'水',mp:26,mult:3.2,lvl:18},
   {n:'罡风咒',el:'风',mp:30,mult:3.6,lvl:20,flag:'wind'},
-  {n:'紫雷咒',el:'雷',mp:38,mult:4.0,lvl:22}
+  {n:'紫雷咒',el:'雷',mp:38,mult:4.0,lvl:22},
+  {n:'厚土咒',el:'土',mp:34,mult:3.8,lvl:26,flag:'earth'}
 ];
 // 升级链:基础咒 → 大成咒(状态面板里用「↑」标注已进阶)
-const SKILL_UP={'火灵咒':'烈焰咒','水灵咒':'玄冰咒','风灵咒':'罡风咒','雷灵咒':'紫雷咒'};
+const SKILL_UP={'火灵咒':'烈焰咒','水灵咒':'玄冰咒','风灵咒':'罡风咒','雷灵咒':'紫雷咒','土灵咒':'厚土咒'};
 // 是否已习得某仙术:够等级 且(无 flag 要求或该 flag 已解锁)
 function skillKnown(s){return S.lvl>=(s.lvl||1)&&(!s.flag||flags[s.flag]);}
 const ELC={'水':'#56b9ff','火':'#ff7a45','雷':'#ffe24a','风':'#9fe7a0','土':'#d2a86a','无':'#cdd6e0'};
@@ -66,5 +70,17 @@ const ENM={
   yin:{n:'玄阴鬼',el:'水',hp:140,atk:26,exp:150,gold:96,draw:'yin',s:6},
   mojiang:{n:'魔将',el:'土',hp:230,atk:25,exp:200,gold:140,draw:'mojiang',s:6},
   leiyu:{n:'雷狱卒',el:'雷',hp:165,atk:28,exp:175,gold:112,draw:'leiyu',s:6},
-  demon:{n:'混沌魔尊',el:'雷',hp:820,atk:36,exp:1500,gold:2000,draw:'demon',s:6,gw:24,caster:true}
+  demon:{n:'混沌魔尊',el:'雷',hp:820,atk:36,exp:1500,gold:2000,draw:'demon',s:6,gw:24,caster:true},
+  // 第四章 · 九霄云海:风妖为主(土灵咒克之),霹雳鸟属雷(玄冰咒不行,用烈焰咒)
+  gangfeng:{n:'罡风鬼',el:'风',hp:210,atk:31,exp:230,gold:155,draw:'gangfeng',s:6},
+  yunpeng:{n:'云鹏',el:'风',hp:240,atk:33,exp:255,gold:175,draw:'yunpeng',s:6},
+  pili:{n:'霹雳鸟',el:'雷',hp:220,atk:37,exp:245,gold:165,draw:'pili',s:6},
+  fengli:{n:'风狸王',el:'风',hp:265,atk:32,exp:275,gold:185,draw:'fengli',s:6},
+  peng:{n:'大鹏妖王',el:'风',hp:1060,atk:42,exp:2300,gold:3000,draw:'peng',s:6,gw:24,caster:true},
+  // 第五章 · 黄泉地心:土妖为主(紫雷咒克之),熔岩兽属火(玄冰咒克之)
+  shankui:{n:'山魈圣',el:'土',hp:300,atk:36,exp:320,gold:210,draw:'shankui',s:6},
+  shisha:{n:'石煞',el:'土',hp:360,atk:34,exp:360,gold:240,draw:'shisha',s:6},
+  rongyan:{n:'熔岩兽',el:'火',hp:290,atk:40,exp:340,gold:225,draw:'rongyan',s:6},
+  dilie:{n:'地裂魔',el:'土',hp:340,atk:38,exp:355,gold:235,draw:'dilie',s:6},
+  sovereign:{n:'后土魔君',el:'土',hp:1380,atk:48,exp:3600,gold:5000,draw:'sovereign',s:6,gw:24,caster:true}
 };
