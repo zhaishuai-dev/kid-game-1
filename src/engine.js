@@ -54,6 +54,7 @@ function poiAt(x,y){return (POIS[curName]||[]).find(q=>q.x===x&&q.y===y);}
 function canWalk(x,y){
   if(npcAt(x,y)||poiAt(x,y))return false;
   if(curName==='world'&&!flags.mini&&y===13&&(x===31||x===32))return false;
+  if(tileAt(x,y)==='V'&&!flags.ch2)return false; // 漩涡未显现前如同湖水,不可入
   return !('TWXHR'.includes(tileAt(x,y)));
 }
 function switchMap(name,x,y){curName=name;cur=MAPS[name];p.tx=x;p.ty=y;p.x=x*T;p.y=y*T;p.mv=null;}
@@ -70,6 +71,27 @@ function drawTile(i,j,sx,sy){
     r(sx,sy+15,T,1,'#9a6a3a');r(sx,sy+31,T,1,'#9a6a3a');
     r(sx+((i+j)%2?8:22),sy,1,15,'#9a6a3a');r(sx+((i+j)%2?22:8),sy+16,1,15,'#9a6a3a');
     if(c==='O'){r(sx+4,sy+6,24,22,'#8a5e32');r(sx+6,sy+8,20,18,'#a8744a');r(sx,sy+28,T,4,'#3e2814');}
+    return;
+  }
+  if(cur.bg==='lake'){
+    if(c==='R'){r(sx,sy,T,T,'#1a3340');r(sx+3,sy+4,12,12,'#27505f');r(sx+16,sy+14,12,12,'#27505f');r(sx+18,sy+3,9,9,'#16303a');r(sx+4,sy+19,9,9,'#16303a');return;}
+    // 水底:幽蓝水体 + 流动焦散光纹
+    r(sx,sy,T,T,'#1d5566');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.06)');
+    const o=(frame>>4)%2,o2=(frame>>3)%3;
+    r(sx+4+o*6,sy+6,9,2,'rgba(150,230,240,0.30)');r(sx+18-o*6,sy+20,8,2,'rgba(150,230,240,0.24)');
+    r(sx+24,sy+5+o2*3,2,2,'rgba(210,250,255,0.5)'); // 上浮气泡
+    if(c==='c'){[[5,20],[11,24],[18,18],[23,22],[8,12]].forEach(b=>{r(sx+b[0],sy+b[1],3,T-b[1]-1,'#2f7f6a');r(sx+b[0],sy+b[1],1,6,'#54b594');});}
+    else if(c==='S'){r(sx+4,sy+4,24,24,'#3aa0a8');r(sx+8,sy+8,16,16,'#7fe6e0');const k=(frame>>3)%4;r(sx+10+k*3,sy+6+(k*4)%16,3,3,'#ffffff');r(sx+6,sy+18,2,3,'#cffcff');r(sx+24,sy+10,2,3,'#cffcff');}
+    else if(c==='O'){r(sx+3,sy+3,26,26,'#2a7a8c');r(sx+8,sy+8,16,16,'#aef0ff');const k=(frame>>2)%3;r(sx+12,sy+4+k*2,8,4,'#e8feff');g.fillStyle='#0c2a33';g.font='12px monospace';g.fillText('↑',sx+12,sy+22);}
+    else if(c==='D'){r(sx,sy,T,T,'#16303a');r(sx+3,sy+2,26,30,'#1c4f5e');r(sx+6,sy+5,20,27,'#0e2630');r(sx+10,sy+8,12,24,'#2f7f93');r(sx+14,sy+3,4,4,'#5dded6');r(sx+8,sy+14,3,3,'#9fe1cb');r(sx+21,sy+14,3,3,'#9fe1cb');}
+    return;
+  }
+  if(cur.bg==='palace'){
+    if(c==='X'){r(sx,sy,T,T,'#13313a');r(sx+3,sy+2,26,28,'#1d4a57');r(sx+6,sy+5,20,22,'#163a45');r(sx+13,sy+2,6,28,'#2f7f93');r(sx+14,sy+6,4,6,'#5dded6');r(sx+14,sy+18,4,6,'#5dded6');return;}
+    r(sx,sy,T,T,'#0e2a33');if((i+j)%2)r(sx,sy,T,T,'rgba(95,222,214,0.05)');
+    r(sx,sy,T,1,'#14424d');r(sx,sy,1,T,'#14424d');
+    if(c==='O'){r(sx+3,sy+3,26,26,'#16303a');r(sx+8,sy+8,16,16,'#2a7a8c');r(sx+11,sy+12,10,8,'#aef0ff');g.fillStyle='#0c2a33';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='Z'){const gl=flags.dragon?'#9fe1cb':'#ffd76a';r(sx+6,sy+2,20,28,'#10333d');r(sx+9,sy+5,14,22,'#1d4a57');r(sx+8,sy+4,4,6,gl);r(sx+20,sy+4,4,6,gl);r(sx+13,sy+12,6,10,gl);r(sx+10,sy+24,12,4,'#0a2229');}
     return;
   }
   if(curName==='tower'){
@@ -94,6 +116,20 @@ function drawTile(i,j,sx,sy){
   else if(c==='X'){r(sx,sy,T,T,'#7d7f8a');r(sx,sy,16,16,'#8a8c97');r(sx+16,sy+16,16,16,'#8a8c97');r(sx,sy,T,1,'#5f616c');r(sx,sy+15,T,1,'#5f616c');r(sx+2,sy+26,4,3,'#6f8a5a');}
   else if(c==='D'){r(sx,sy,T,T,'#7d7f8a');r(sx+4,sy+4,24,28,flags.boss?'#ffd76a':'#2a2233');r(sx+6,sy+6,20,26,flags.boss?'#e8c050':'#1c1726');r(sx+14,sy+2,4,3,'#e24b4a');}
   else if(c==='S'){r(sx+4,sy+4,24,24,'#6fcfc6');r(sx+8,sy+8,16,16,'#9fe7e0');const o=(frame>>3)%4;r(sx+8+o*4,sy+8+(o*5)%14,4,4,'#ffffff');r(sx+2,sy+14,2,4,'#8a8c97');r(sx+28,sy+10,2,4,'#8a8c97');}
+  else if(c==='V'){
+    if(!flags.ch2){ // 未开启第二章时与湖水无异
+      r(sx,sy,T,T,'#3f7fbf');const o=(frame>>4)%2;r(sx+4+o*8,sy+8,10,2,'#7fb2e0');r(sx+16-o*6,sy+22,10,2,'#7fb2e0');
+    }else{ // 漩涡:双臂螺旋 + 幽暗涡心(第二章入口,需醒目)
+      r(sx,sy,T,T,'#1d4f78');const a=frame*0.14;
+      for(let k=1;k<=4;k++){
+        const rad=2+k*3.4,an=a+k*0.9;
+        g.fillStyle=k%2?'#cdeeff':'#3f7fbf';
+        g.fillRect(sx+16+Math.cos(an)*rad-2,sy+16+Math.sin(an)*rad-2,4,4);
+        g.fillRect(sx+16-Math.cos(an)*rad-2,sy+16-Math.sin(an)*rad-2,4,4);
+      }
+      r(sx+13,sy+13,6,6,'#0a1d2e');
+    }
+  }
 }
 function label(n,sx,sy){
   g.font='13px monospace';
@@ -111,7 +147,7 @@ function drawHUD(){
   g.fillText(S.hp+'/'+S.maxHp,224,58);g.fillText(S.mp+'/'+S.maxMp,224,76);
 }
 function drawWorld(){
-  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':'#234d1e');
+  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':'#234d1e');
   const mw=cur.w*T,mh=cur.h*T;
   const camX=mw<=SW?(mw-SW)/2:Math.max(0,Math.min(mw-SW,p.x-SW/2+16));
   const camY=mh<=SH?(mh-SH)/2:Math.max(0,Math.min(mh-SH,p.y-SH/2+16));
@@ -163,14 +199,25 @@ function updWorld(dt){
 function onStep(){
   const c=tileAt(p.tx,p.ty);
   if(c==='S'&&(S.hp<S.maxHp||S.mp<S.maxMp)){S.hp=S.maxHp;S.mp=S.maxMp;sHeal();wpop('灵泉:全恢复!','#9fe7e0');}
-  if(c==='D'){
+  if(c==='D'&&curName==='world'){
     showDialog(['你推开沉重的石门,塔内阴风扑面……'],()=>switchMap('tower',11,25));
     return;
   }
-  if(c==='d'||c==='O'){
+  if(c==='V'&&flags.ch2){diveLake();return;}
+  if(c==='d'||c==='D'||c==='O'){ // 通用传送门:木门、水府门、各类出口
     const door=DOORS[curName+':'+p.tx+','+p.ty];
     if(door){switchMap(door.map,door.x,door.y);return;}
     if(c==='O'){switchMap('world',31,3);return;}
+  }
+  if(c==='Z'){ // 蛟龙王座
+    if(!flags.dragon){
+      showDialog([
+        '水府深处,一条墨色蛟龙自蟠柱间昂起,鳞甲泛着幽光。',
+        {n:'阿萝',t:'师兄小心!这蛟龙性属水,快用风灵咒——御风能破它的水鳞!'},
+        {n:'墨蛟龙王',t:'谁人扰我清眠……既来了,便永沉这湖底吧!'}
+      ],()=>startBattle('dragon',true));
+    }else wpop('王座空荡荡的','#9fe1cb');
+    return;
   }
   if(c==='B'){
     if(!flags.boss){
@@ -188,13 +235,24 @@ function onStep(){
     ],()=>startBattle('snakeKing',true));
     return;
   }
-  if(c==='t'||c==='e'){
+  if(c==='t'||c==='e'||c==='c'){ // 深草 / 符纹地 / 水草:遇敌地形
     if(grace>0){grace--;return;}
     if(Math.random()<cur.rate){
       const pool=cur.pool();
       startBattle(pool[rnd(0,pool.length-1)],false);
     }
   }
+}
+// 第二章:纵身潜入水月湖底(首次潜入播一段旁白)
+function diveLake(){
+  if(!flags.lakeIntro){
+    flags.lakeIntro=true;
+    showDialog([
+      '你深吸一口气,纵身跃入漩涡。冰凉的湖水将你裹住,世界沉入一片幽蓝。',
+      {n:'阿萝',t:'师兄,我跟你一起!这水府机关重重,千万跟紧我。'},
+      '(水草丛中会遇上水妖;气泡灵泉可回满状态。北边的水府门后,便是蛟龙的巢穴。)'
+    ],()=>switchMap('lake',14,21));
+  }else switchMap('lake',14,21);
 }
 
 // Phase 1:翻找家具。首次有宝物("叮"+金色飘字),重复调查按种类给不同文案
@@ -225,7 +283,27 @@ function talkAluo(){
   }
   else if(!flags.mini)showDialog([{n:'阿萝',t:'先在草丛练级、买好装备,再去会那蛇妖王!它属水,雷法可不好使。'}]);
   else if(!flags.boss)showDialog([{n:'阿萝',t:'塔里阴气重,鬼火属火——练到 5 级学会水灵咒就能克它,妖王也一样!'}]);
-  else showDialog([{n:'阿萝',t:'师兄是大英雄!第二章的故事,也要带上我哦。'}]);
+  else if(!flags.ch2){ // 第二章开篇:妖王残魂惊动湖底蛟龙,阿萝传授风灵咒,湖面漩涡显现
+    flags.ch2=true;flags.wind=true;
+    showDialog([
+      {n:'阿萝',t:'师兄,大事不好!妖王临死那缕妖魂沉进了水月湖,惊醒了湖底沉睡千年的蛟龙!'},
+      {n:'阿萝',t:'湖水一夜暴涨,村子要保不住了……这回,我陪你一起下湖!'},
+      {n:'阿萝',t:'湖底水妖个个属水。我把师门的「风灵咒」传给你——风能克水,正好破它们!'},
+      '【习得仙术 · 风灵咒】(战斗中选「仙术」即可施放)',
+      {n:'阿萝',t:'湖中央起了个漩涡,那就是入口。走,我在漩涡边等你!'}
+    ]);
+    save();
+  }
+  else if(!flags.dragon)showDialog([{n:'阿萝',t:'湖中漩涡通往水府。记住——水府里的妖物都属水,风灵咒打它们最疼!'}]);
+  else showDialog([{n:'阿萝',t:'蛟龙也降了,师兄真是顶天立地的大英雄!下一程,我还要跟着你。'}]);
+}
+// 第二章:阿萝在湖底剧情同行(随进度变化的台词)
+function talkAluoLake(){
+  if(!flags.dragon)showDialog([
+    {n:'阿萝',t:'顺着水草往北走就是水府门。当心,墨鱼妖最快,先用风灵咒点它!'},
+    {n:'阿萝',t:'那只龟将军壳硬属土——对它改用雷灵咒,事半功倍。'}
+  ]);
+  else showDialog([{n:'阿萝',t:'湖水退下去了,水府也安静了。师兄,我们回村报喜吧!'}]);
 }
 function inn(){
   const c=Math.min(10,S.gold);S.gold-=c;S.hp=S.maxHp;S.mp=S.maxMp;sHeal();save();
@@ -283,7 +361,7 @@ function buyArm(i){
   S.gold-=ARMS[i].p;EQ.arm=i;sLvl();toast('已装备 '+ARMS[i].n);openShop('gear');
 }
 function openStatus(){
-  const known=SKILLS.filter(s=>S.lvl>=s.lvl).map(s=>s.n+'·'+s.el).join('  ');
+  const known=SKILLS.filter(skillKnown).map(s=>s.n+'·'+s.el).join('  ');
   openPanel('<h3>云无衣</h3>'+
     '<div class="srow"><div><b>等级 '+S.lvl+'</b><span>经验 '+S.exp+' / '+(S.lvl*45)+'</span></div></div>'+
     '<div class="srow"><div><b>气血 '+S.hp+'/'+S.maxHp+'</b><span>灵力 '+S.mp+'/'+S.maxMp+'</span></div></div>'+
@@ -313,12 +391,20 @@ function resetState(){
   Object.assign(INV,{dan:3,dadan:0,qing:1});
   EQ.wpn=0;EQ.arm=0;
   flags.aluo=false;flags.mini=false;flags.boss=false;
+  flags.ch2=false;flags.wind=false;flags.lakeIntro=false;flags.dragon=false;
   for(const k in looted)delete looted[k];
   switchMap('world',31,44);
 }
 
 function showEnding(){
-  $('endText').textContent='千年妖王哀嚎着被吸回封印,法阵重新亮起金光。阿萝在塔外迎着晨光向你奔来——灵山的传说,才刚刚开始。想要第二章?回到 Claude 的对话里喊一声就行。';
+  if($('endTitle'))$('endTitle').textContent='第一章 · 完';
+  $('endText').textContent='千年妖王哀嚎着被吸回封印,法阵重新亮起金光。阿萝在塔外迎着晨光向你奔来——回到村里找她,水月湖那边,似乎又起了波澜……';
+  $('endov').style.display='flex';
+  sWin();
+}
+function showEnding2(){
+  if($('endTitle'))$('endTitle').textContent='第二章 · 完';
+  $('endText').textContent='墨蛟龙王化作一池清水,湖面重归平静,月影粼粼。阿萝挽住你的衣袖,笑着说还要陪你走更远的路——灵山的传说,仍未完待续。想要第三章?回到 Claude 的对话里喊一声就行。';
   $('endov').style.display='flex';
   sWin();
 }

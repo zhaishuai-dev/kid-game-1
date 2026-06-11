@@ -47,7 +47,7 @@ function act(a){
 function openSkillMenu(){
   let h='<h3>仙术</h3><div class="gold">灵力:'+S.mp+' / '+S.maxMp+'</div>';
   SKILLS.forEach((s,i)=>{
-    if(S.lvl>=s.lvl)h+='<div class="srow"><div><b style="color:'+ELC[s.el]+'">'+s.n+'</b><span>'+s.el+'系 · 威力×'+s.mult+'</span></div><button class="pbtn" onclick="castSkill('+i+')">'+s.mp+' 灵力</button></div>';
+    if(skillKnown(s))h+='<div class="srow"><div><b style="color:'+ELC[s.el]+'">'+s.n+'</b><span>'+s.el+'系 · 威力×'+s.mult+'</span></div><button class="pbtn" onclick="castSkill('+i+')">'+s.mp+' 灵力</button></div>';
   });
   h+='<button class="pbtn" onclick="closePanel()">返回</button>';
   openPanel(h);
@@ -112,6 +112,9 @@ function winB(){
     }else if(key==='king'){
       flags.boss=true;
       showEnding();
+    }else if(key==='dragon'){
+      flags.dragon=true;
+      showEnding2();
     }else if(learned.length){
       showDialog(['你领悟了新仙术:'+learned.join('、')+'!']);
     }
@@ -168,7 +171,16 @@ function updBattle(dt){
 }
 function drawBattle(){
   const towerBg=cur.bg==='tower'||B.key==='king';
-  if(towerBg){
+  const waterBg=cur.bg==='lake'||cur.bg==='palace'||B.key==='dragon';
+  if(waterBg){
+    // 水下战场:深蓝水体 + 焦散光柱 + 上浮气泡
+    r(0,0,SW,420,'#0f3a48');r(0,420,SW,220,'#0a2a34');
+    g.fillStyle='rgba(120,220,230,0.10)';
+    [120,360,600,840].forEach((x,i)=>{g.beginPath();g.moveTo(x,0);g.lineTo(x+60,0);g.lineTo(x+120,420);g.lineTo(x+40,420);g.closePath();g.fill();});
+    g.fillStyle='rgba(190,240,250,0.5)';
+    for(let k=0;k<14;k++){const bx=(k*137+(frame*2))%960,by=420-((frame*3+k*90)%440);g.fillRect(bx,by,3,3);}
+    if(B.key==='dragon'){r(360,60,240,360,'#0a2a34');r(450,120,60,120,'#06181e');r(462,132,36,14,'#5dded6');}
+  }else if(towerBg){
     r(0,0,SW,420,'#1d1530');r(0,420,SW,220,'#3a2f4a');
     r(80,120,36,300,'#251a3a');r(844,120,36,300,'#251a3a');
     r(90,130,8,280,'#332450');r(854,130,8,280,'#332450');

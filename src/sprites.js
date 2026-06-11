@@ -47,3 +47,26 @@ stove:["....KKKKKKKK....","...KcCCCCCCcK...","...KcCCCCCCcK...","..KKKKKKKKKKKK.
 });
 Object.assign(PIXPAL,{cab:'furn',vat:'furn',rice:'furn',shelf:'furn',bed:'furn',jar:'furn',stove:'furn'});
 VPALS['#4a6b2a']=Object.assign({},PALS.vill,{C:'#4a6b2a',c:'#36511e',A:'#caa46a',H:'#2e2618'});
+
+// ===== 第二章 · 水月湖底:水妖 + 蛟龙 Boss 像素图 =====
+PALS.yaksha={"K": "#0e1c24", "B": "#2f7f8f", "b": "#1f5a66", "W": "#eef6f6", "E": "#ff4747", "H": "#13343a", "R": "#c43a2f", "G": "#5dded6"};
+PALS.clam={"K": "#241a2e", "S": "#e090b4", "s": "#b5688f", "W": "#f8eef4", "P": "#9fe7ff", "E": "#3a2030", "G": "#ffd76a"};
+PALS.squid={"K": "#160c20", "P": "#7a4ec0", "p": "#5a3494", "W": "#efe6ff", "E": "#ffe24a", "I": "#2a1840"};
+PALS.turtle={"K": "#15240f", "S": "#8a5a2b", "s": "#6e4520", "L": "#caa46a", "H": "#6f7a86", "A": "#d9aa3c", "E": "#ff4747"};
+PALS.dragon={"K": "#0a1622", "B": "#2f6f93", "b": "#1c4f6e", "L": "#5dded6", "W": "#e8f0f8", "E": "#ffe24a", "R": "#c43a2f", "G": "#9fe1cb"};
+Object.assign(PIX,{
+  yaksha:["....................","......KK....KK......","......KBK..KBK......",".....KKBK..KBKK.....","...KKBBBBKKBBBBKK...","..KBBBBBBBBBBBBBBK..","..KBHHHHHHHHHHHHBK..","..KBEEKBBBBBBKEEBK..","..KBEEKBBBBBBKEEBK..","..KBBBKBBBBBBKBBBK..","..KBBBWWBBBBWWBBBK..","...KBBWWBBBBWWBBK...","...KKBBBBBBBBBBKK...",".KKBBBBBBBBBBBBBBKK.","KBBBBBBBBBBBBBBBBBBK","KBBBbBBBBBBBBBBbBBBK",".KBBbBBRRRRRRBBbBBK.","..KKBBBRRRRRRBBBKK..","....KKBBBRRBBBKK....","......KKBBBBKK......"],
+  clam:["....................","....................",".......KKKKKK.......","....KKKSSSSSSKKK....","..KKSSSSSSSSSSSSKK..",".KSSSSSSSSSSSSSSSSK.",".KSSSSWWWWWWWWSSSSK.","KSSSWWWPPPPPPWWWSSSK","KSSWWWWPPPPPPWWWWSSK","KSSWWWWWWWWWWWWWWSSK",".KSSSWWWWWWWWWWSSSK.",".KsSSSSSSSSSSSSSSsK.","..KKsSSSSSSSSSSsKK..","....KKsSSSSSSsKK....",".......KKssKK.......","...................."],
+  squid:["........KKKK........",".......KPPPPK.......","......KPPPPPPK......",".....KPPPPPPPPK.....","....KPPPPPPPPPPK....","...KPPPPPPPPPPPPK...","..KPPPPPPPPPPPPPPK..",".KPPPPPPPPPPPPPPPPK.",".KPPWWWWPPPPWWWWPPK.",".KPWEEWWPPPPWWEEWPK.",".KPWEEWWPPPPWWEEWPK.",".KPPWWWWPPPPWWWWPPK.","..KPPPPPPPPPPPPPPK..","..KpPPpPPPPPPpPPpK..","..KpKpKpKppKpKpKpK..","..KpKpKpKppKpKpKpK..","...KpKpKpKKpKpKpK...","..Kp.Kp.KppK.pK.pK..","..K..Kp..KK..pK..K..",".....K........K....."],
+  turtle:["....................","......HHHKKHHH......","....HHHHHHHHHHHH....","...HAAAAHHHHAAAAH...","...HLLLLLLLLLLLLH...","..KLEELLLLLLLLEELK..","..KLLLLLLLLLLLLLLK..","..KKLLLLLLLLLLLLKK..",".KSSSKKLLLLLLKKSSSK.","KSSSSSSSKKKKSSSSSSSK","KSsSSSSSSSSSSSSSSsSK","KSSSsSSSSSSSSSSsSSSK","KSsSSSsSSSSSSsSSSsSK","KSSSSSSSSSSSSSSSSSSK",".KSSSSSSSSSSSSSSSSK.","..KKSSSSSSSSSSSSKK..",".K..KKSSSSSSSSKK..K.",".K....KKSSSSKK....K."],
+  dragon:["...........LL...........","..........LLLL..........",".....L...LBLLBL...L.....","....LBL.LBBLLBBL.LBL....","...LBBLLBBBBBBBBLLBBL...","...LBBBBBBBBBBBBBBBBL...","..KBBBBBBBBBBBBBBBBBBK..","..KBBEEKBBBBBBBBKEEBBK..","..KBBEEKBBBBBBBBKEEBBK..","..KBBBBKBBBBBBBBKBBBBK..","..KBBBBBBBBBBBBBBBBBBK..","..KBBWWWWWWWWWWWWWWBBK..","..KBWWRRRRRRRRRRRRWWBK..","...KWWRRRRRRRRRRRRWWK...","...KKBBWWWWWWWWWWBBKK...","....KBBBBBBBBBBBBBBK....",".....KBBBBBBBBBBBBK.....","....KBbBBBBBBBBBBbBK....","...KBbBBBBBBBBBBBBbBK...","..KBbBBBBLBBBBLBBBBbBK..","..KBBBBBBLBBBBLBBBBBBK..","...KBbBBBBBBBBBBBBbBK...","....KKBBBBBBBBBBBBKK....","......KKBBBBBBBBKK......"],
+});
+Object.assign(PIXPAL,{yaksha:'yaksha',clam:'clam',squid:'squid',turtle:'turtle',dragon:'dragon'});
+Object.assign(PIX,{chest:["................","................","...KKKKKKKKKK...","..KLLLLLLLLLLK..","..KWWWWWWWWWWK..","..KKKKKKKKKKKK..","..KWWWWGGWWWWK..","..KWWWWGGWWWWK..","..KWWWWWWWWWWK..","..KWwWWWWWWwWK..","..KWwWWWWWWwWK..","..KKKKKKKKKKKK..","..KK........KK..","................","................","................"]});PIXPAL.chest='furn';
+function drawYaksha(x,y,s){pix('yaksha',x,y,s);}
+function drawClam(x,y,s){pix('clam',x,y,s);}
+function drawSquid(x,y,s){pix('squid',x,y,s);}
+function drawTurtle(x,y,s){pix('turtle',x,y,s);}
+function drawDragon(x,y,s){pix('dragon',x,y,s);}
+Object.assign(SPR,{yaksha:drawYaksha,clam:drawClam,squid:drawSquid,turtle:drawTurtle,dragon:drawDragon});
+Object.assign(SPRM,{yaksha:{w:20,h:20,s:6},clam:{w:20,h:16,s:6},squid:{w:20,h:20,s:6},turtle:{w:20,h:18,s:6},dragon:{w:24,h:24,s:6}});

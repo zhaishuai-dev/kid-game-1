@@ -229,6 +229,111 @@ t('室内渲染一帧不崩溃(小图居中)',()=>{
   E(`switchMap('world',31,44)`);
 });
 
+console.log('— 第二章:水月湖底 —');
+t('新妖怪与蛟龙 Boss 数据齐备,精灵可绘',()=>{
+  for(const k of ['yaksha','clam','squid','turtle','dragon']){
+    ok(E(`ENM['${k}']`),'缺敌人 '+k);
+    const draw=E(`ENM['${k}'].draw`);
+    ok(E(`SPR['${draw}']`),draw+' 缺绘制函数');
+    ok(E(`SPRM['${draw}']`),draw+' 缺尺寸');
+    ok(E(`PIX['${draw}']`),draw+' 缺像素图');
+  }
+  eq(E(`ENM.dragon.el`),'水');eq(E(`ENM.turtle.el`),'土');
+});
+t('五灵策略成立:风克水(蛟龙)、雷克土(龟将)',()=>{
+  eq(E(`advMult('风','水')`),1.5,'风灵咒应拔群于水妖');
+  eq(E(`advMult('雷','土')`),1.5,'雷灵咒应拔群于龟将');
+  eq(E(`advMult('水','水')`),1,'水打水无加成');
+});
+t('风灵咒按 flag 解锁,而非等级',()=>{
+  E('resetState()');
+  ok(!E(`skillKnown(SKILLS.find(s=>s.n==='风灵咒'))`),'未传授前不应会风灵咒');
+  E('flags.wind=true');
+  ok(E(`skillKnown(SKILLS.find(s=>s.n==='风灵咒'))`),'传授后应会风灵咒');
+});
+t('漩涡在降妖王前不可入、第二章开启后可入',()=>{
+  E('resetState()');
+  ok(!E('canWalk(24,14)'),'第二章前漩涡如水,不可走');
+  E('flags.ch2=true');
+  ok(E('canWalk(24,14)'),'第二章后漩涡可入');
+});
+t('第二章开篇:与阿萝对话开启 ch2、传授风灵咒',()=>{
+  E('resetState();flags.aluo=true;flags.mini=true;flags.boss=true');
+  E(`switchMap('world',34,44)`);
+  E('K.up=1;updWorld(0.05);K.up=0');
+  ok(E('flags.ch2'),'对话应开启第二章');
+  ok(E('flags.wind'),'应传授风灵咒');
+  E('while(dq.length||dcb)nextDlg()');
+});
+t('踏入漩涡潜入湖底(首次有旁白),湖底↔水面↔水府互通',()=>{
+  E(`switchMap('world',24,15);p.tx=24;p.ty=15`);
+  E('K.up=1');                                 // 走上漩涡(需完成移动后才触发 onStep)
+  for(let i=0;i<10&&!E('flags.lakeIntro');i++)E('updWorld(0.05)');
+  E('K.up=0');
+  ok(E('flags.lakeIntro'),'首次潜入应触发旁白');
+  E('while(dq.length||dcb)nextDlg()');
+  eq(E('curName'),'lake','应进入湖底');
+  E('p.tx=14;p.ty=22;onStep()');               // 湖底出口 → 回水面
+  eq(E('curName'),'world');eq(E('p.tx'),24);
+  // 再潜入(无旁白),走到水府门
+  E(`switchMap('world',24,15);p.tx=24;p.ty=14;onStep()`);
+  eq(E('curName'),'lake');
+  E('p.tx=14;p.ty=1;onStep()');                // 水府门 → 水府
+  eq(E('curName'),'palace');
+  E('p.tx=11;p.ty=13;onStep()');               // 水府出口 → 回湖底
+  eq(E('curName'),'lake');
+});
+t('湖底沉箱:撞开取宝,配置合法',()=>{
+  ok(E(`POIS.lake.length>=2`),'湖底应有沉箱');
+  for(const q of E('POIS.lake')){
+    eq(E(`MAPS.lake.m[${q.y}][${q.x}]`),'a',q.id+' 应在湖水上');
+    ok(E(`'TWXHR'.includes(MAPS.lake.m[${q.y}][${q.x}])===false`));
+  }
+  E(`for(const k in looted)delete looted[k];switchMap('lake',4,9)`);
+  const gold=E('S.gold');
+  E('K.up=1;updWorld(0.05);K.up=0');           // 撞 (4,8) 沉箱
+  eq(E('S.gold'),gold+120,'沉箱应给 120 两');
+  E('while(dq.length||dcb)nextDlg()');
+});
+t('湖底水草遇敌、水府无随机遇敌',()=>{
+  eq(E('MAPS.lake.rate>0'),true);
+  eq(E('MAPS.palace.rate'),0);
+  ok(E(`['a','c','R','S','D','O'].includes(MAPS.lake.m[12][12])`),'湖底瓦片应在约定字符集内');
+});
+t('蛟龙 Boss:风灵咒拔群,击败后第二章结局',()=>{
+  E('resetState();flags.ch2=true;flags.wind=true;flags.lakeIntro=true;S.lvl=14;S.mp=200;S.maxMp=200');
+  E(`switchMap('palace',11,4)`);
+  E('p.tx=11;p.ty=3;onStep()');                // 踏上王座 → 蛟龙战
+  E('while(dq.length||dcb)nextDlg()');
+  eq(E('mode'),'battle');eq(E('B.key'),'dragon');
+  const wind=E(`SKILLS.findIndex(s=>s.n==='风灵咒')`);
+  E(`castSkill(${wind})`);
+  for(let i=0;i<60&&E('B.anim');i++)E('updBattle(0.02)');
+  ok(E(`B.pops.some(p=>p.txt==='效果拔群!')`),'风灵咒应对蛟龙拔群');
+  E('B.e.hp=1;B.phase="cmd"');
+  E(`act('atk')`);
+  for(let i=0;i<20&&E('B&&B.anim');i++)E('updBattle(0.05)');
+  G.flushTimers();
+  ok(E('flags.dragon'),'击败蛟龙应置 flags.dragon');
+  eq(E(`document.getElementById('endov').style.display`),'flex','应弹出第二章结局');
+  eq(E(`document.getElementById('endTitle').textContent`),'第二章 · 完');
+  E(`document.getElementById('endov').style.display='none'`);
+});
+t('第二章进度随存档持久(ch2/wind/dragon + 所在水府)',()=>{
+  E(`switchMap('palace',8,8);flags.ch2=true;flags.wind=true;flags.dragon=true;save()`);
+  E(`resetState()`);
+  ok(E('loadSave()'),'读档应成功');
+  eq(E('curName'),'palace');
+  ok(E('flags.ch2&&flags.wind&&flags.dragon'),'第二章 flag 应恢复');
+  ok(E(`skillKnown(SKILLS.find(s=>s.n==='风灵咒'))`),'读档后风灵咒仍在');
+});
+t('湖底/水府/水下战斗各渲染一帧不崩溃',()=>{
+  E(`mode='world';B=null;switchMap('lake',14,12)`);G.frame();
+  E(`switchMap('palace',11,8)`);G.frame();
+  E(`switchMap('lake',14,12);startBattle('dragon',true)`);G.frame();
+  E(`mode='world';B=null;battleUI(false);switchMap('world',31,44)`);
+});
+
 console.log('— dist 单文件 —');
 t('dist/lingshan-rpg.html 内联脚本可独立启动',()=>{
   const D=createGame(loadDistSource());

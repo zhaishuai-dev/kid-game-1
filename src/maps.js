@@ -1,7 +1,8 @@
 'use strict';
 // ===== 地图层:瓦片地图生成 + MAPS 注册表 + NPC 配置 =====
 // 瓦片字符:G 草 t 深草 T 树 W 水 P 路 b 桥 R 屋顶 H 墙 X 石墙 F 石地
-//          e 符纹遇敌地 D 门(锁妖塔) O 出口 S 灵泉 B 封印
+//          e 符纹遇敌地 D 门(锁妖塔/水府) d 木门(进屋) O 出口 S 灵泉 B 封印
+//          第二章:V 漩涡(湖面入口) a 湖水 c 水草(遇敌) Z 蛟龙王座
 function blank(w,h,f){const m=[];for(let y=0;y<h;y++)m.push(new Array(w).fill(f));return m;}
 function fillR(m,x,y,w,h,c){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++){if(m[j]&&m[j][i]!==undefined)m[j][i]=c;}}
 function house(m,x,y){fillR(m,x,y,5,2,'R');fillR(m,x,y+2,5,2,'H');}
@@ -23,7 +24,34 @@ function makeWorld(){
   fillR(m,31,35,2,10,'P');fillR(m,10,42,44,2,'P');
   house(m,9,37);house(m,19,37);house(m,41,37);house(m,51,37);
   m[40][11]='d';m[40][21]='d';m[40][43]='d';m[40][53]='d';
+  m[14][24]='V'; // 第二章:湖面漩涡(降妖王后由阿萝点醒才显现,见 canWalk/onStep 的 ch2 判定)
   fillR(m,0,0,w,1,'T');fillR(m,0,h-1,w,1,'T');fillR(m,0,0,1,h,'T');fillR(m,w-1,0,1,h,'T');
+  return m;
+}
+// 第二章 · 水月湖底:可探索的水下大图(28×24,竖向卷轴)
+// a 湖水(安全) c 水草(遇敌带) R 礁石(阻挡) S 气泡灵泉 D 水府门 O 回水面
+function makeLake(){
+  const w=28,h=24,m=blank(w,h,'a');
+  fillR(m,0,0,w,1,'R');fillR(m,0,h-1,w,1,'R');fillR(m,0,0,1,h,'R');fillR(m,w-1,0,1,h,'R');
+  fillR(m,6,5,3,2,'R');fillR(m,19,5,3,2,'R');
+  fillR(m,4,13,2,3,'R');fillR(m,22,13,2,3,'R');
+  fillR(m,12,9,4,2,'R');
+  fillR(m,3,3,8,3,'c');fillR(m,17,3,8,3,'c');
+  fillR(m,2,17,10,3,'c');fillR(m,16,17,10,3,'c');
+  fillR(m,10,11,8,4,'c');
+  m[15][14]='S';
+  m[1][14]='D';
+  m[22][14]='O';
+  return m;
+}
+// 第二章 · 水府龙宫:Boss 殿堂(22×16,静止单屏)
+// X 殿墙/盘龙柱(阻挡) F 殿地 Z 蛟龙王座(踏上即战) O 回湖底
+function makePalace(){
+  const w=22,h=16,m=blank(w,h,'X');
+  fillR(m,3,3,16,11,'F');
+  [[5,5],[16,5],[5,11],[16,11]].forEach(c=>{m[c[1]][c[0]]='X';});
+  m[3][11]='Z';
+  m[13][11]='O';
   return m;
 }
 // Phase 1:室内小图(12×10),f 木地板、H 墙、O 出口,家具走 POI 层
@@ -49,7 +77,9 @@ const MAPS={
   house1:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
   house2:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
   house3:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
-  house4:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]}
+  house4:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
+  lake:{m:makeLake(),w:28,h:24,bg:'lake',rate:0.18,pool:()=>S.lvl>=12?['yaksha','clam','squid','turtle']:['yaksha','clam','squid']},
+  palace:{m:makePalace(),w:22,h:16,bg:'palace',rate:0,pool:()=>[]}
 };
 // 双向传送门:'地图:x,y' → 目的地(d 木门进屋,O 出口回村)
 const DOORS={
@@ -60,7 +90,11 @@ const DOORS={
   'house1:6,9':{map:'world',x:11,y:41},
   'house2:6,9':{map:'world',x:21,y:41},
   'house3:6,9':{map:'world',x:43,y:41},
-  'house4:6,9':{map:'world',x:53,y:41}
+  'house4:6,9':{map:'world',x:53,y:41},
+  // 第二章:湖底 O 回水面、湖底 D 进水府、水府 O 回湖底(漩涡入口与蛟龙王座为特判,见 onStep)
+  'lake:14,22':{map:'world',x:24,y:15},
+  'lake:14,1':{map:'palace',x:11,y:12},
+  'palace:11,13':{map:'lake',x:14,y:2}
 };
 // 可调查点:撞上家具即翻找。loot: gold 银两 / item 物品 / note 纸条 / none 空手
 const POIS={
@@ -86,6 +120,11 @@ const POIS={
     {id:'h4_stove',x:4,y:2,kind:'stove',loot:{t:'item',k:'qing',n:1}},
     {id:'h4_cab',x:9,y:2,kind:'cab',loot:{t:'item',k:'dadan',n:1}},
     {id:'h4_jar',x:10,y:5,kind:'jar',loot:{t:'gold',n:40}}
+  ],
+  lake:[ // 第二章:湖底沉箱(撞开即取)
+    {id:'lk_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:120}},
+    {id:'lk_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:1}},
+    {id:'lk_chest3',x:9,y:20,kind:'chest',loot:{t:'note',text:'沉箱里一卷油布包着块龟甲,刻着:「蛟龙性属水,畏风;御风可破其鳞。」'}}
   ]
 };
 // 翻第二件东西时主人的吐槽(致敬经典:进屋翻箱倒柜,主人毫无意见)
@@ -108,5 +147,8 @@ const NPCS={
   house1:[{x:8,y:3,draw:'vill',c:'#7a5230',n:'王大娘',talk:()=>showDialog([{n:'王大娘',t:'娃儿来啦?随便坐!屋里东西尽管翻,大娘藏不住啥宝贝。'}])}],
   house2:[{x:5,y:3,draw:'vill',c:'#555560',n:'老村长',talk:()=>showDialog([{n:'老村长',t:'锁妖塔建于前朝,塔心封印千万碰不得……咳,老朽的书你随便看,可别折了页角。'}])}],
   house3:[{x:6,y:4,draw:'vill',c:'#3f6f8f',n:'外婆',talk:()=>showDialog([{n:'外婆',t:'阿萝常念叨你哩。灶上温着汤,自己舀着喝,别客气。'}])}],
-  house4:[{x:7,y:4,draw:'vill',c:'#4a6b2a',n:'猎户',talk:()=>showDialog([{n:'猎户',t:'北边林子最近不太平,妖气重。进塔之前,把皮甲穿厚实些!'}])}]
+  house4:[{x:7,y:4,draw:'vill',c:'#4a6b2a',n:'猎户',talk:()=>showDialog([{n:'猎户',t:'北边林子最近不太平,妖气重。进塔之前,把皮甲穿厚实些!'}])}],
+  // 第二章:阿萝在湖底剧情同行(战斗仍由主角单打)
+  lake:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoLake()}],
+  palace:[]
 };

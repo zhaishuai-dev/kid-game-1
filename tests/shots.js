@@ -53,6 +53,12 @@ async function diffRatio(fileA,fileB){
   if(E(`typeof MAPS.house1!=='undefined'`)){
     E(`mode='world';B=null;battleUI(false);switchMap('house1',6,5)`);G.frame(16);shots.push(snap('05-house'));
   }
+  if(E(`typeof MAPS.lake!=='undefined'`)){
+    E(`flags.ch2=true;flags.lakeIntro=true;mode='world';B=null;battleUI(false);switchMap('lake',14,12)`);G.frame(16);shots.push(snap('06-lake'));
+    E(`switchMap('palace',11,8)`);G.frame(16);shots.push(snap('07-palace'));
+    E(`switchMap('lake',14,12);startBattle('dragon',true)`);G.frame(16);shots.push(snap('08-dragon'));
+    E(`mode='world';B=null;battleUI(false);switchMap('world',24,16)`);G.frame(16);shots.push(snap('09-whirlpool'));
+  }
   let fail=0;
   for(const s of shots){
     if(s.baseline){

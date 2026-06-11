@@ -3,7 +3,8 @@
 const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 let seed=20260610;const srnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
 
-const flags={aluo:false,mini:false,boss:false};
+// 剧情位:aluo/mini/boss=第一章;ch2/wind/lakeIntro/dragon=第二章
+const flags={aluo:false,mini:false,boss:false,ch2:false,wind:false,lakeIntro:false,dragon:false};
 const S={hp:70,maxHp:70,mp:36,maxMp:36,lvl:1,exp:0,gold:80};
 const INV={dan:3,dadan:0,qing:1};
 const EQ={wpn:0,arm:0};
@@ -14,8 +15,12 @@ const SKILLS=[
   {n:'御剑术',el:'无',mp:8,mult:1.8,lvl:1},
   {n:'火灵咒',el:'火',mp:14,mult:2.2,lvl:3},
   {n:'水灵咒',el:'水',mp:14,mult:2.2,lvl:5},
-  {n:'雷灵咒',el:'雷',mp:22,mult:2.7,lvl:7}
+  {n:'雷灵咒',el:'雷',mp:22,mult:2.7,lvl:7},
+  // 风灵咒:第二章由阿萝传授(flag 解锁,不按等级),风克水,专破湖底水妖
+  {n:'风灵咒',el:'风',mp:18,mult:2.4,lvl:99,flag:'wind'}
 ];
+// 是否已习得某仙术:够等级,或剧情 flag 解锁
+function skillKnown(s){return S.lvl>=s.lvl||(s.flag&&flags[s.flag]);}
 const ELC={'水':'#56b9ff','火':'#ff7a45','雷':'#ffe24a','风':'#9fe7a0','土':'#d2a86a','无':'#cdd6e0'};
 const CK={'水':'火','火':'雷','雷':'土','土':'风','风':'水'};
 function atkP(){return 10+S.lvl*4+WPNS[EQ.wpn].a;}
@@ -31,7 +36,8 @@ const POI_KINDS={
   shelf:{n:'书架',again:'书架上的书都翻过一遍了,没夹着别的东西。'},
   bed:{n:'床底',again:'床底下连灰都被你摸干净了。'},
   jar:{n:'坛子',again:'坛子已经空空如也,嗡嗡作响。'},
-  stove:{n:'灶台',again:'灶台冷冰冰的,什么也没有。'}
+  stove:{n:'灶台',again:'灶台冷冰冰的,什么也没有。'},
+  chest:{n:'沉箱',again:'沉箱已被你撬空了,只剩些缠手的水藻。'}
 };
 
 const ENM={
@@ -41,5 +47,11 @@ const ENM={
   ghost:{n:'鬼火',el:'火',hp:48,atk:12,exp:58,gold:44,draw:'flame',s:6},
   golem:{n:'石傀',el:'土',hp:95,atk:11,exp:75,gold:64,draw:'golem',s:6},
   snakeKing:{n:'蛇妖王',el:'水',hp:190,atk:13,exp:230,gold:280,draw:'snakeK',s:7,caster:true},
-  king:{n:'千年妖王',el:'火',hp:330,atk:17,exp:520,gold:600,draw:'king',s:6,gw:20,caster:true}
+  king:{n:'千年妖王',el:'火',hp:330,atk:17,exp:520,gold:600,draw:'king',s:6,gw:20,caster:true},
+  // 第二章 · 水月湖底:水妖为主(风灵咒拔群),龟将属土(雷灵咒拔群)
+  yaksha:{n:'巡水夜叉',el:'水',hp:96,atk:17,exp:78,gold:54,draw:'yaksha',s:6},
+  clam:{n:'蚌壳精',el:'水',hp:120,atk:14,exp:86,gold:66,draw:'clam',s:6},
+  squid:{n:'墨鱼妖',el:'水',hp:88,atk:20,exp:80,gold:58,draw:'squid',s:6},
+  turtle:{n:'龟将军',el:'土',hp:160,atk:18,exp:120,gold:96,draw:'turtle',s:6},
+  dragon:{n:'墨蛟龙王',el:'水',hp:560,atk:27,exp:880,gold:1100,draw:'dragon',s:6,gw:24,caster:true}
 };
