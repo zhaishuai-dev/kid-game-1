@@ -63,9 +63,9 @@ function castSkill(i){
 }
 function openItemMenu(){
   let h='<h3>物品</h3>';
-  h+='<div class="srow"><div><b>回灵丹 ×'+INV.dan+'</b><span>恢复 45 气血</span></div><button class="pbtn" onclick="useItem(\'dan\')">使用</button></div>';
+  h+='<div class="srow"><div><b>回灵丹 ×'+INV.dan+'</b><span>恢复 '+healAmt('dan')+' 气血</span></div><button class="pbtn" onclick="useItem(\'dan\')">使用</button></div>';
   h+='<div class="srow"><div><b>大还丹 ×'+INV.dadan+'</b><span>气血全满</span></div><button class="pbtn" onclick="useItem(\'dadan\')">使用</button></div>';
-  h+='<div class="srow"><div><b>清心散 ×'+INV.qing+'</b><span>恢复 30 灵力</span></div><button class="pbtn" onclick="useItem(\'qing\')">使用</button></div>';
+  h+='<div class="srow"><div><b>清心散 ×'+INV.qing+'</b><span>恢复 '+healAmt('qing')+' 灵力</span></div><button class="pbtn" onclick="useItem(\'qing\')">使用</button></div>';
   h+='<button class="pbtn" onclick="closePanel()">返回</button>';
   openPanel(h);
 }
@@ -74,9 +74,9 @@ function useItem(k){
   if(INV[k]<1){toast('没有了……');return;}
   closePanel();
   INV[k]--;
-  if(k==='dan'){const h=Math.min(45,S.maxHp-S.hp);S.hp+=h;pop(700,320,'+'+h,'#7CFC9A');bmsg('服下回灵丹。');}
+  if(k==='dan'){const h=Math.min(healAmt('dan'),S.maxHp-S.hp);S.hp+=h;pop(700,320,'+'+h,'#7CFC9A');bmsg('服下回灵丹。');}
   else if(k==='dadan'){const h=S.maxHp-S.hp;S.hp=S.maxHp;pop(700,320,'+'+h,'#7CFC9A');bmsg('大还丹入腹,气血全满!');}
-  else{const m=Math.min(30,S.maxMp-S.mp);S.mp+=m;pop(700,320,'+'+m+' 灵力','#bfa7ff');bmsg('服下清心散。');}
+  else{const m=Math.min(healAmt('qing'),S.maxMp-S.mp);S.mp+=m;pop(700,320,'+'+m+' 灵力','#bfa7ff');bmsg('服下清心散。');}
   sHeal();
   B.phase='wait';B.timer=0.55;refreshBtns();
 }
@@ -87,7 +87,7 @@ function enemyAct(){
   B.phase='anim';
 }
 function hurtHero(base){
-  const d=Math.max(1,base-defP());
+  const d=Math.max(1,Math.round((base-defP())*hurtScale())); // 孩童模式受伤减半
   S.hp-=d;B.fH=0.18;B.shake=0.22;
   pop(740,280,'-'+d,'#ff6b6b');sHurt();
 }

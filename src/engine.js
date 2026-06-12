@@ -286,6 +286,10 @@ function drawWorld(){
     g.globalAlpha=1;
   }
   drawHUD();
+  if(CFG.kidMode){ // 右上角小标:让家长一眼看到孩童模式开着
+    r(SW-92,16,78,24,'rgba(20,16,30,0.72)');
+    g.font='14px monospace';g.fillStyle='#9fe7a0';g.fillText('孩童·护',SW-86,33);
+  }
 }
 function updWorld(dt){
   if(!p.mv){
@@ -572,8 +576,8 @@ function shopRow(n,d,pr,fn){
 function openShop(kind){
   let h='<h3>'+(kind==='item'?'杂货铺':'铁匠铺')+'</h3><div class="gold">银两:'+S.gold+'</div>';
   if(kind==='item'){
-    h+=shopRow('回灵丹','恢复 45 气血(现有 '+INV.dan+')',30,"buyItem('dan',30)");
-    h+=shopRow('清心散','恢复 30 灵力(现有 '+INV.qing+')',30,"buyItem('qing',30)");
+    h+=shopRow('回灵丹','恢复 '+healAmt('dan')+' 气血(现有 '+INV.dan+')',30,"buyItem('dan',30)");
+    h+=shopRow('清心散','恢复 '+healAmt('qing')+' 灵力(现有 '+INV.qing+')',30,"buyItem('qing',30)");
     h+=shopRow('大还丹','气血全满(现有 '+INV.dadan+')',90,"buyItem('dadan',90)");
   }else{
     for(let i=1;i<WPNS.length;i++)h+=shopRow(WPNS[i].n,'攻击 +'+WPNS[i].a+(EQ.wpn===i?' · 已装备':EQ.wpn>i?' · 已淘汰':''),WPNS[i].p,'buyWpn('+i+')');
@@ -605,9 +609,37 @@ function openStatus(){
     '<div class="srow"><div><b>攻击 '+atkP()+' · 防御 '+defP()+'</b><span>'+WPNS[EQ.wpn].n+' / '+ARMS[EQ.arm].n+'</span></div></div>'+
     '<div class="srow"><div><b>仙术</b><span>'+known+'</span></div></div>'+
     '<div class="srow"><div><b>行囊</b><span>回灵丹×'+INV.dan+'  大还丹×'+INV.dadan+'  清心散×'+INV.qing+'  银两 '+S.gold+'</span></div></div>'+
+    '<div class="srow"><div><b>难度 · '+(CFG.kidMode?'孩童模式':'普通模式')+'</b><span>'+(CFG.kidMode?'伤害减半 · 丹药翻倍':'家长可开启孩童模式护着孩子')+'</span></div><button class="pbtn" onclick="openKidMode()">家长设置</button></div>'+
     '<button class="pbtn" onclick="doSave()">保存进度</button> <button class="pbtn" onclick="closePanel()">关闭</button>');
 }
 function doSave(){save();toast('已保存');closePanel();}
+// 孩童模式 · 家长锁:配置存独立 key,不随存档/重开走
+function loadCfg(){try{const c=JSON.parse(localStorage.getItem('lingshan_cfg'));if(c){CFG.kidMode=!!c.kidMode;CFG.pwd=c.pwd||'';}}catch(e){}}
+function saveCfg(){try{localStorage.setItem('lingshan_cfg',JSON.stringify(CFG));}catch(e){}}
+function openKidMode(){
+  const on=CFG.kidMode,first=!CFG.pwd;
+  let h='<h3>家长设置 · 难度</h3>';
+  h+='<div class="gold">当前:'+(on?'孩童模式(伤害减半 · 丹药翻倍)':'普通模式')+'</div>';
+  if(first)h+='<div class="srow"><div><span>第一次使用:先设一个家长密码。之后要改难度,都得先输这个密码——孩子就改不动啦。</span></div></div>';
+  h+='<input id="pwIn" type="password" inputmode="numeric" autocomplete="off" placeholder="'+(first?'设置家长密码':'输入家长密码')+'">';
+  h+='<button class="pbtn" onclick="'+(first?'setKidPwd()':'applyKidMode()')+'">'+(on?'关闭孩童模式':'开启孩童模式')+(first?'(并设密码)':'')+'</button>';
+  if(!first)h+=' <span style="color:#6e6655;font-size:11px;">忘了密码?清除浏览器网站数据可重置</span>';
+  h+='<div style="margin-top:6px;"><button class="pbtn" onclick="openStatus()">返回</button></div>';
+  openPanel(h);
+  setTimeout(()=>{const e=$('pwIn');if(e&&e.focus)e.focus();},60);
+}
+function setKidPwd(){
+  const v=(($('pwIn')||{}).value||'').trim();
+  if(!v){toast('密码不能为空');return;}
+  CFG.pwd=v;CFG.kidMode=!CFG.kidMode;saveCfg();
+  toast(CFG.kidMode?'已开启孩童模式':'已关闭孩童模式');openStatus();
+}
+function applyKidMode(){
+  const v=(($('pwIn')||{}).value||'').trim();
+  if(v!==CFG.pwd){toast('密码不对,未改动');return;}
+  CFG.kidMode=!CFG.kidMode;saveCfg();
+  toast(CFG.kidMode?'已开启孩童模式':'已关闭孩童模式');openStatus();
+}
 function save(){
   try{localStorage.setItem('lingshan1',JSON.stringify({S:S,INV:INV,EQ:EQ,flags:flags,looted:looted,map:curName,x:p.tx,y:p.ty}));}catch(e){}
 }
@@ -722,6 +754,7 @@ $('btnCont').onclick=()=>{
   if(loadSave()){$('title').style.display='none';mode='world';}
   else toast('没有找到存档');
 };
+loadCfg();
 if(!hasSave())$('btnCont').disabled=true;
 battleUI(false);
 

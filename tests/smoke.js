@@ -607,6 +607,48 @@ t('地心/后土殿/地心战斗各渲染一帧不崩溃',()=>{
   E(`mode='world';B=null;battleUI(false);switchMap('world',31,44)`);
 });
 
+console.log('— 孩童模式 · 家长锁 —');
+t('孩童模式:丹药翻倍、受伤减半倍率',()=>{
+  E('CFG.kidMode=false');
+  eq(E(`healAmt('dan')`),45);eq(E(`healAmt('qing')`),30);eq(E('hurtScale()'),1);
+  E('CFG.kidMode=true');
+  eq(E(`healAmt('dan')`),90);eq(E(`healAmt('qing')`),60);eq(E('hurtScale()'),0.5);
+  E('CFG.kidMode=false');
+});
+t('孩童模式:战斗实扣伤害约一半',()=>{
+  E('resetState();startBattle("shan",false)');
+  E('CFG.kidMode=false;S.maxHp=200;S.hp=200;hurtHero(40)');const n=200-E('S.hp');
+  E('CFG.kidMode=true;S.hp=200;hurtHero(40)');const k=200-E('S.hp');
+  eq(n,40,'普通应扣 40');eq(k,20,'孩童应扣 20');
+  E('CFG.kidMode=false;mode="world";B=null;battleUI(false)');
+});
+t('家长锁:首次设密码即开启,并写入独立配置',()=>{
+  E('CFG.pwd="";CFG.kidMode=false');
+  E(`openKidMode();$('pwIn').value='1234';setKidPwd()`);
+  ok(E('CFG.kidMode'),'设密码后应开启孩童模式');eq(E('CFG.pwd'),'1234');
+  ok(JSON.parse(G.store['lingshan_cfg']).kidMode,'应写入 lingshan_cfg');
+});
+t('家长锁:错误密码拒绝、正确密码方可切换',()=>{
+  E(`openKidMode();$('pwIn').value='0000';applyKidMode()`);
+  ok(E('CFG.kidMode'),'错误密码不应改动(仍开着)');
+  E(`openKidMode();$('pwIn').value='1234';applyKidMode()`);
+  ok(!E('CFG.kidMode'),'正确密码应成功关闭');
+});
+t('家长设置不随存档/重开清空',()=>{
+  E('CFG.pwd="1234";CFG.kidMode=true;saveCfg()');
+  E('resetState()');                       // 重新开始
+  ok(E('CFG.kidMode')&&E(`CFG.pwd==='1234'`),'重开后孩童模式/密码应保留');
+  E('save();loadSave()');                   // 存读档不应影响配置
+  ok(E('CFG.kidMode')&&E(`CFG.pwd==='1234'`),'存读档后仍保留');
+});
+t('loadCfg 从独立 key 恢复配置',()=>{
+  G.store['lingshan_cfg']=JSON.stringify({kidMode:true,pwd:'9'});
+  E('CFG.kidMode=false;CFG.pwd=""');
+  E('loadCfg()');
+  ok(E('CFG.kidMode')&&E(`CFG.pwd==='9'`));
+  E('CFG.kidMode=false;CFG.pwd="";saveCfg()');
+});
+
 console.log('— dist 单文件 —');
 t('dist/lingshan-rpg.html 内联脚本可独立启动',()=>{
   const D=createGame(loadDistSource());

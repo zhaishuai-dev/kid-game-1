@@ -12,6 +12,11 @@ const EQ={wpn:0,arm:0};
 const WPNS=[{n:'铁剑',a:0,p:0},{n:'青锋剑',a:8,p:120},{n:'赤霄剑',a:18,p:420}];
 const ARMS=[{n:'布衣',d:0,p:0},{n:'软皮甲',d:4,p:110},{n:'玄铁甲',d:10,p:380}];
 const ITEMN={dan:'回灵丹',dadan:'大还丹',qing:'清心散'};
+// 孩童模式(家长锁):伤害减半、丹药翻倍。配置独立持久(见 loadCfg/saveCfg),不随存档或「重新开始」清空
+const CFG={kidMode:false,pwd:''};
+const HEAL={dan:45,qing:30};                       // 丹药基础回复量
+function healAmt(k){return HEAL[k]*(CFG.kidMode?2:1);}   // 孩童模式翻倍
+function hurtScale(){return CFG.kidMode?0.5:1;}          // 孩童模式受伤减半
 const SKILLS=[
   {n:'御剑术',el:'无',mp:8,mult:1.8,lvl:1},
   {n:'火灵咒',el:'火',mp:14,mult:2.2,lvl:3},

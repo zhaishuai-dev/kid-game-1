@@ -10,8 +10,8 @@ function makeCtx2d(){
           fillStyle:'',strokeStyle:'',font:'',lineWidth:1,globalAlpha:1};
 }
 function makeEl(id){
-  return {id,style:{},textContent:'',innerHTML:'',disabled:false,onclick:null,dataset:{},
-          addEventListener(){},setPointerCapture(){},
+  return {id,style:{},textContent:'',innerHTML:'',value:'',disabled:false,onclick:null,dataset:{},
+          addEventListener(){},setPointerCapture(){},focus(){},
           getContext:()=>makeCtx2d()};
 }
 function createGame(jsSources){
