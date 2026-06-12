@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#14101e">
+<!-- iPad/iPhone:加到主屏后全屏启动(无 Safari 地址栏),像 App 一样 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="灵山剑侠录">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="icon" href="data:image/png;base64,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">
+<title>灵山剑侠录 · 第一章</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: #14121c; color: #e8e2d5; font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+         display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+         /* 全屏到主屏后,避开刘海/状态栏/底部小白条 */
+         padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+                  max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
+  #wrap { position: relative; width: min(960px, 100%); }
+  canvas { width: 100%; display: block; image-rendering: pixelated; image-rendering: crisp-edges;
+           border: 2px solid #3a3148; border-radius: 6px; background: #0d0b14; touch-action: none; }
+  .ovl { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+         justify-content: center; gap: 14px; }
+  #title { background: rgba(13,11,20,0.35); border-radius: 6px; }
+  #title h1 { font-family: "KaiTi", "STKaiti", "DFKai-SB", serif; font-size: clamp(40px, 9vw, 76px);
+              color: #f3e6c8; letter-spacing: 0.18em; text-shadow: 0 3px 0 #5a2c1d, 0 0 24px rgba(255,210,106,0.35); }
+  #title .sub { font-size: 14px; color: #c9b98f; letter-spacing: 0.5em; margin-top: -6px; }
+  .gbtn { font-family: inherit; font-size: 16px; padding: 10px 34px; cursor: pointer;
+          background: #241e33; color: #f3e6c8; border: 1px solid #8a6d3b; border-radius: 4px; letter-spacing: 0.3em; }
+  .gbtn:hover { background: #322a47; }
+  .gbtn:disabled { opacity: 0.4; cursor: default; }
+  #dlg { position: absolute; left: 3%; right: 3%; bottom: 4%; background: rgba(16,13,26,0.92);
+         border: 1px solid #8a6d3b; border-radius: 6px; padding: 12px 16px; cursor: pointer;
+         font-size: clamp(14px, 2.4vw, 17px); line-height: 1.7; display: none; }
+  #dlgName { display: none; background: #8a6d3b; color: #16121f; font-size: 12px; padding: 1px 10px;
+             border-radius: 3px; margin-right: 8px; vertical-align: 2px; }
+  #dlg .cue { color: #8d8470; font-size: 12px; float: right; margin-top: 6px; }
+  #panel { position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+           background: rgba(8,6,12,0.55); }
+  #panelBody { background: #1c1729; border: 1px solid #8a6d3b; border-radius: 8px; padding: 18px 20px;
+               width: min(420px, 92%); max-height: 88%; overflow-y: auto; }
+  #panelBody h3 { font-family: "KaiTi", "STKaiti", serif; color: #ffd76a; font-size: 20px; margin-bottom: 10px; letter-spacing: 0.2em; }
+  #panelBody .gold { color: #c9b98f; font-size: 13px; margin-bottom: 10px; }
+  .srow { display: flex; justify-content: space-between; align-items: center; gap: 10px;
+          border-bottom: 1px solid #322a47; padding: 9px 2px; font-size: 14px; }
+  .srow span { display: block; color: #9a917e; font-size: 12px; margin-top: 2px; }
+  .pbtn { font-family: inherit; font-size: 13px; padding: 7px 14px; cursor: pointer; white-space: nowrap;
+          background: #241e33; color: #f3e6c8; border: 1px solid #8a6d3b; border-radius: 4px; margin-top: 8px; }
+  .pbtn:hover { background: #322a47; }
+  #panelBody input { font-family: inherit; font-size: 16px; padding: 10px 12px; width: 100%; margin: 8px 0;
+          background: #120f1c; color: #f3e6c8; border: 1px solid #8a6d3b; border-radius: 4px; letter-spacing: 0.15em; }
+  #toast { position: absolute; top: 8%; left: 50%; transform: translateX(-50%); background: rgba(16,13,26,0.92);
+           border: 1px solid #8a6d3b; border-radius: 4px; padding: 6px 18px; font-size: 14px; display: none; }
+  #endov { background: rgba(10,8,16,0.88); display: none; text-align: center; padding: 20px; }
+  #endov h2 { font-family: "KaiTi", "STKaiti", serif; font-size: clamp(28px, 6vw, 48px); color: #ffd76a; letter-spacing: 0.2em; }
+  #endov p { color: #c9b98f; font-size: 15px; line-height: 1.9; max-width: 480px; }
+  #ctl { display: flex; width: min(960px, 100%); justify-content: space-between; align-items: center;
+         margin-top: 10px; gap: 10px; flex-wrap: wrap; }
+  #dpad { display: grid; grid-template-columns: repeat(3, 54px); grid-template-rows: repeat(2, 46px); gap: 5px; }
+  #dpad button, #btl button { font-family: inherit; font-size: 15px; cursor: pointer; background: #241e33;
+         color: #f3e6c8; border: 1px solid #574a73; border-radius: 6px; }
+  #dpad button:active, #btl button:active { background: #3d3357; }
+  #btl { display: none; gap: 8px; flex: 1; flex-wrap: wrap; }
+  #btl button { flex: 1; min-width: 76px; padding: 12px 6px; border-color: #8a6d3b; }
+  #btl button:disabled { opacity: 0.4; }
+  #menubar { display: flex; gap: 8px; }
+  #menubar button { font-family: inherit; font-size: 13px; padding: 10px 14px; cursor: pointer;
+         background: #1c1729; color: #c9b98f; border: 1px solid #574a73; border-radius: 6px; }
+  #hint { width: min(960px, 100%); color: #6e6655; font-size: 12px; margin-top: 10px; line-height: 1.8; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="cv" width="960" height="640"></canvas>
+  <div id="title" class="ovl">
+    <h1>灵山剑侠录</h1>
+    <div class="sub">第一章 · 锁妖塔</div>
+    <button id="btnNew" class="gbtn">开始新游戏</button>
+    <button id="btnCont" class="gbtn">继续游戏</button>
+  </div>
+  <div id="dlg"><span id="dlgName"></span><span id="dlgText"></span><span class="cue">▾ 点击 / 回车</span></div>
+  <div id="panel"><div id="panelBody"></div></div>
+  <div id="endov" class="ovl">
+    <h2 id="endTitle">第一章 · 完</h2>
+    <p id="endText"></p>
+    <div style="display:flex;gap:12px;">
+      <button id="btnRoam" class="gbtn">继续游历</button>
+      <button id="btnRestart" class="gbtn">重新开始</button>
+    </div>
+  </div>
+  <div id="toast"></div>
+</div>
+<div id="ctl">
+  <div id="dpad">
+    <span></span><button data-d="up" aria-label="上">▲</button><span></span>
+    <button data-d="left" aria-label="左">◀</button><button data-d="down" aria-label="下">▼</button><button data-d="right" aria-label="右">▶</button>
+  </div>
+  <div id="btl">
+    <button id="batk">攻击</button>
+    <button id="bskl">仙术</button>
+    <button id="bitm">物品</button>
+    <button id="bfle">逃跑</button>
+  </div>
+  <div id="menubar">
+    <button id="btnBag">背包 · 状态</button>
+    <button id="btnMus">音乐:关</button>
+  </div>
+</div>
+<div id="hint">电脑:方向键 / WASD 移动,回车推进对话 · 手机:屏幕按键 · 撞上村民即对话 · 村里的屋子都能进,撞一撞柜子水缸说不定有宝贝 · 深色草丛与塔内符纹地面会遇敌 · 五灵相克:水克火、火克雷、雷克土、土克风、风克水</div>
+<script>
+'use strict';
+// ===== 数值与数据层:随机数、角色、背包、装备、技能、五灵、敌人 =====
+const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+let seed=20260610;const srnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
+
+// 剧情位:aluo/mini/boss=第一章;ch2/wind/lakeIntro/dragon=第二章;ch3/abyssIntro/demon=第三章
+//        ch4/earth/skyIntro/peng=第四章;ch5/caveIntro/sovereign=第五章
+const flags={aluo:false,mini:false,boss:false,ch2:false,wind:false,lakeIntro:false,dragon:false,ch3:false,abyssIntro:false,demon:false,ch4:false,earth:false,skyIntro:false,peng:false,ch5:false,caveIntro:false,sovereign:false};
+const S={hp:70,maxHp:70,mp:36,maxMp:36,lvl:1,exp:0,gold:80};
+const INV={dan:3,dadan:0,qing:1};
+const EQ={wpn:0,arm:0};
+const WPNS=[{n:'铁剑',a:0,p:0},{n:'青锋剑',a:8,p:120},{n:'赤霄剑',a:18,p:420}];
+const ARMS=[{n:'布衣',d:0,p:0},{n:'软皮甲',d:4,p:110},{n:'玄铁甲',d:10,p:380}];
+const ITEMN={dan:'回灵丹',dadan:'大还丹',qing:'清心散'};
+// 孩童模式(家长锁):伤害减半、丹药翻倍。配置独立持久(见 loadCfg/saveCfg),不随存档或「重新开始」清空
+const CFG={kidMode:false,pwd:''};
+const HEAL={dan:45,qing:30};                       // 丹药基础回复量
+function healAmt(k){return HEAL[k]*(CFG.kidMode?2:1);}   // 孩童模式翻倍
+function hurtScale(){return CFG.kidMode?0.5:1;}          // 孩童模式受伤减半
+const SKILLS=[
+  {n:'御剑术',el:'无',mp:8,mult:1.8,lvl:1},
+  {n:'火灵咒',el:'火',mp:14,mult:2.2,lvl:3},
+  {n:'水灵咒',el:'水',mp:14,mult:2.2,lvl:5},
+  {n:'雷灵咒',el:'雷',mp:22,mult:2.7,lvl:7},
+  // 风灵咒:第二章由阿萝传授(flag 解锁),风克水
+  {n:'风灵咒',el:'风',mp:18,mult:2.4,lvl:1,flag:'wind'},
+  // 土灵咒:第四章由阿萝传授(flag 解锁),土克风——补全五灵
+  {n:'土灵咒',el:'土',mp:22,mult:2.8,lvl:1,flag:'earth'},
+  // 五灵术升级链:勤修到高阶,基础咒法臻至大成(高等级解锁,自动领悟)
+  {n:'烈焰咒',el:'火',mp:26,mult:3.2,lvl:16},
+  {n:'玄冰咒',el:'水',mp:26,mult:3.2,lvl:18},
+  {n:'罡风咒',el:'风',mp:30,mult:3.6,lvl:20,flag:'wind'},
+  {n:'紫雷咒',el:'雷',mp:38,mult:4.0,lvl:22},
+  {n:'厚土咒',el:'土',mp:34,mult:3.8,lvl:26,flag:'earth'}
+];
+// 升级链:基础咒 → 大成咒(状态面板里用「↑」标注已进阶)
+const SKILL_UP={'火灵咒':'烈焰咒','水灵咒':'玄冰咒','风灵咒':'罡风咒','雷灵咒':'紫雷咒','土灵咒':'厚土咒'};
+// 是否已习得某仙术:够等级 且(无 flag 要求或该 flag 已解锁)
+function skillKnown(s){return S.lvl>=(s.lvl||1)&&(!s.flag||flags[s.flag]);}
+const ELC={'水':'#56b9ff','火':'#ff7a45','雷':'#ffe24a','风':'#9fe7a0','土':'#d2a86a','无':'#cdd6e0'};
+const CK={'水':'火','火':'雷','雷':'土','土':'风','风':'水'};
+function atkP(){return 10+S.lvl*4+WPNS[EQ.wpn].a;}
+function defP(){return ARMS[EQ.arm].d;}
+
+// Phase 1:进屋找宝贝 —— 已翻过的调查点(跨存档持久,见 save/loadSave)
+const looted={};
+// 可调查点种类:名称 + 家具贴图 + 重复调查文案(每种不同,情怀所在)
+const POI_KINDS={
+  cab:{n:'柜子',again:'柜子已经被你翻得乱七八糟,再没有别的了。'},
+  vat:{n:'水缸',again:'水缸里只剩下清亮亮的水,照得见你的脸。'},
+  rice:{n:'米缸',again:'米缸里只有白米。再掏下去要被骂了。'},
+  shelf:{n:'书架',again:'书架上的书都翻过一遍了,没夹着别的东西。'},
+  bed:{n:'床底',again:'床底下连灰都被你摸干净了。'},
+  jar:{n:'坛子',again:'坛子已经空空如也,嗡嗡作响。'},
+  stove:{n:'灶台',again:'灶台冷冰冰的,什么也没有。'},
+  chest:{n:'沉箱',again:'沉箱已被你撬空了,只剩些缠手的水藻。'}
+};
+
+const ENM={
+  shan:{n:'青面山魈',el:'土',hp:42,atk:7,exp:30,gold:24,draw:'shan',s:6},
+  fox:{n:'风狸',el:'风',hp:50,atk:9,exp:44,gold:36,draw:'fox',s:6},
+  snake:{n:'白鳞蛇妖',el:'水',hp:62,atk:10,exp:52,gold:42,draw:'snake',s:6},
+  ghost:{n:'鬼火',el:'火',hp:48,atk:12,exp:58,gold:44,draw:'flame',s:6},
+  golem:{n:'石傀',el:'土',hp:95,atk:11,exp:75,gold:64,draw:'golem',s:6},
+  snakeKing:{n:'蛇妖王',el:'水',hp:190,atk:13,exp:230,gold:280,draw:'snakeK',s:7,caster:true},
+  king:{n:'千年妖王',el:'火',hp:330,atk:17,exp:520,gold:600,draw:'king',s:6,gw:20,caster:true},
+  // 第二章 · 水月湖底:水妖为主(风灵咒拔群),龟将属土(雷灵咒拔群)
+  yaksha:{n:'巡水夜叉',el:'水',hp:96,atk:17,exp:78,gold:54,draw:'yaksha',s:6},
+  clam:{n:'蚌壳精',el:'水',hp:120,atk:14,exp:86,gold:66,draw:'clam',s:6},
+  squid:{n:'墨鱼妖',el:'水',hp:88,atk:20,exp:80,gold:58,draw:'squid',s:6},
+  turtle:{n:'龟将军',el:'土',hp:160,atk:18,exp:120,gold:96,draw:'turtle',s:6},
+  dragon:{n:'墨蛟龙王',el:'水',hp:560,atk:27,exp:880,gold:1100,draw:'dragon',s:6,gw:24,caster:true},
+  // 第三章 · 妖界魔渊:各属性齐备,逼玩家用全套升级咒(火→玄冰、水→罡风、土→紫雷、雷→烈焰)
+  yanmo:{n:'焰魔',el:'火',hp:150,atk:24,exp:140,gold:90,draw:'yanmo',s:6},
+  yin:{n:'玄阴鬼',el:'水',hp:140,atk:26,exp:150,gold:96,draw:'yin',s:6},
+  mojiang:{n:'魔将',el:'土',hp:230,atk:25,exp:200,gold:140,draw:'mojiang',s:6},
+  leiyu:{n:'雷狱卒',el:'雷',hp:165,atk:28,exp:175,gold:112,draw:'leiyu',s:6},
+  demon:{n:'混沌魔尊',el:'雷',hp:820,atk:36,exp:1500,gold:2000,draw:'demon',s:6,gw:24,caster:true},
+  // 第四章 · 九霄云海:风妖为主(土灵咒克之),霹雳鸟属雷(玄冰咒不行,用烈焰咒)
+  gangfeng:{n:'罡风鬼',el:'风',hp:210,atk:31,exp:230,gold:155,draw:'gangfeng',s:6},
+  yunpeng:{n:'云鹏',el:'风',hp:240,atk:33,exp:255,gold:175,draw:'yunpeng',s:6},
+  pili:{n:'霹雳鸟',el:'雷',hp:220,atk:37,exp:245,gold:165,draw:'pili',s:6},
+  fengli:{n:'风狸王',el:'风',hp:265,atk:32,exp:275,gold:185,draw:'fengli',s:6},
+  peng:{n:'大鹏妖王',el:'风',hp:1060,atk:42,exp:2300,gold:3000,draw:'peng',s:6,gw:24,caster:true},
+  // 第五章 · 黄泉地心:土妖为主(紫雷咒克之),熔岩兽属火(玄冰咒克之)
+  shankui:{n:'山魈圣',el:'土',hp:300,atk:36,exp:320,gold:210,draw:'shankui',s:6},
+  shisha:{n:'石煞',el:'土',hp:360,atk:34,exp:360,gold:240,draw:'shisha',s:6},
+  rongyan:{n:'熔岩兽',el:'火',hp:290,atk:40,exp:340,gold:225,draw:'rongyan',s:6},
+  dilie:{n:'地裂魔',el:'土',hp:340,atk:38,exp:355,gold:235,draw:'dilie',s:6},
+  sovereign:{n:'后土魔君',el:'土',hp:1380,atk:48,exp:3600,gold:5000,draw:'sovereign',s:6,gw:24,caster:true}
+};
+
+'use strict';
+// ===== 像素美术层:字符串像素图 + 调色板 + 绘制函数 =====
+const PALS={"hero": {"K": "#1a1626", "H": "#2b2b3a", "h": "#4a4a63", "S": "#f2c9a0", "s": "#d9a87c", "E": "#1a1626", "R": "#c43a2f", "W": "#e9e2d2", "B": "#2f6f93", "b": "#235877", "L": "#4d8fb3", "G": "#d9aa3c", "M": "#b9c2cc", "m": "#8a939e", "P": "#28404e", "F": "#1c2e38"}, "girl": {"K": "#1f141c", "H": "#3a2430", "h": "#5a3a4a", "S": "#f6d3ae", "s": "#e0b58a", "E": "#1f141c", "o": "#f0a08a", "W": "#efe7d8", "D": "#d4537e", "d": "#b03a60", "l": "#f4c0d1", "R": "#c43a2f", "F": "#72243e"}, "vill": {"K": "#231d14", "H": "#3a3328", "S": "#eec39a", "s": "#d4a578", "E": "#231d14", "C": "#7a5230", "c": "#5e3d22", "A": "#c9b08a", "P": "#33291c", "F": "#241c12"}, "shan": {"K": "#15240f", "I": "#e8dcb8", "i": "#bfae84", "G": "#4f8f3a", "g": "#3a6e28", "L": "#6cab50", "Y": "#ffd23f", "E": "#15240f", "F": "#fff8e6", "M": "#2c5520", "B": "#8a5a2b", "b": "#6e4520", "T": "#caa46a"}, "fox": {"K": "#3a2a14", "C": "#e8cfa0", "c": "#caa873", "W": "#fbf3df", "P": "#e8a0a0", "E": "#7a4a14", "G": "#5dca7c", "T": "#c98c4b", "t": "#a06f33"}, "snake": {"K": "#2a2a36", "W": "#e8e8f0", "w": "#c6c6d6", "V": "#f6f6fb", "E": "#e24b4a", "R": "#c43a2f", "Y": "#ffd23f", "G": "#9fe1cb"}, "snakek": {"K": "#241a2e", "W": "#e6dff2", "w": "#bfb2d6", "V": "#f6f2fb", "E": "#ff4040", "R": "#c43a2f", "Y": "#ffd76a", "y": "#d9aa3c", "G": "#9fe1cb"}, "flame": {"K": "#0c2038", "B": "#2f7fd6", "b": "#4aa3ff", "L": "#9fd0ff", "W": "#f2f8ff", "E": "#0c2038"}, "golem": {"K": "#1d1f26", "G": "#8a8f99", "g": "#6a6f78", "L": "#aab0bb", "M": "#5d8a4a", "R": "#5dded6", "r": "#2a9e96", "E": "#5dded6"}, "king": {"K": "#0e0a16", "O": "#c4502c", "o": "#8a3618", "F": "#cfc6da", "f": "#a39ab5", "E": "#ff4040", "e": "#8a1818", "P": "#3a2b52", "p": "#281c3c", "L": "#54407a", "G": "#d9aa3c", "C": "#cfd2da", "A": "#54108a"}};
+const PIX={"hero0":["......KKKK......",".....KHHHHK.....","....KHHHHHHK....","....KHhHHhHK....","....KRRRRRRK....","...KSSSSSSSSKM..","...KSESSSSESKM..","....KSSssSSKMm..","....KsSSSSsKGm..","..KKBBBWWBBBKK..",".KBBBBWBBWBBBBK.",".KBBBKGGGGKBBBK.",".KsBKBBBBBBKBsK.","..KBBbBBBBbBBK..","..KBBbBBBBbBBK..","..KBbKBBBBKbBK..","....KPPKKPPK....","....KPPK.KPPK...","...KFFFK.KFFK...","................"],"hero1":["......KKKK......",".....KHHHHK.....","....KHHHHHHK....","....KHhHHhHK....","....KRRRRRRK....","...KSSSSSSSSKM..","...KSESSSSESKM..","....KSSssSSKMm..","....KsSSSSsKGm..","..KKBBBWWBBBKK..",".KBBBBWBBWBBBBK.",".KBBBKGGGGKBBBK.",".KsBKBBBBBBKBsK.","..KBBbBBBBbBBK..","..KBBbBBBBbBBK..","..KBbKBBBBKbBK..","....KPPK.KPPK...","....KFFK.KFFFK..","................"],"girl":[".KKK........KKK.","KHHHK......KHHHK","KHhHHKKKKKKHHhHK",".KRKHHHHHHHHKRK.","..KHHHHHHHHHHK..","..KHSSSSSSSSHK..","..KSSESSSSESSK..","..KSoSSssSSoSK..","...KSSSSSSSSK...","...KWWDDDDWWK...","..KDDdDWWDdDDK..","..KDDDDDDDDDDK..",".KsDDlDDDDlDDsK.",".KDDDlDDDDlDDDK.","..KDDDDDDDDDDK..","..KllllllllllK..","..KDDDDDDDDDDK..","..KDDDDDDDDDDK..","...KFFK..KFFK...","................"],"vill":[".....KKKKKK.....","....KHHHHHHK....","....KHHHHHHK....","....KSSSSSSK....","....KSESSESK....","....KSSssSSK....",".....KSSSSK.....","...KKCCCCCCKK...","..KCCCAAAACCCK..","..KCCCAAAACCCK..","..KCCCAAAACCCK..","..KsCCAAAACCsK..","...KCCCCCCCCK...","...KCCCCCCCCK...","....KPPKKPPK....","....KPPK.KPPK...","...KFFFK.KFFFK..","................","................","................"],"shan":[".....II......II.....","....KIiK....KIiK....","...KKGGKKKKKKGGKK...","..KGGGGGGGGGGGGGGK..",".KGGLGGGGGGGGGGLGGK.",".KGGYYKGGGGGGKYYGGK.",".KGGYEKGGGGGGKEYGGK.",".KGGGGGGggGGGGGGGGK.",".KGGKMMMMMMMMMMKGGK.","..KGKMFKMMMMKFMKGK..","..KGGKMMMMMMMMKGGK..",".KGGGGGGGGGGGGGGGGK.","KGgGKGGGGGGGGGGKGgGK","KGgGKGTTTTTTTTKKGgGK","KGGGKGTBBBBBBTKKGGGK",".KKK.KGTTTTTTGK.KKK.",".....KGGGGGGGGK.....","....KGGgGKKGgGGK....","....KGGGGK.KGGGGK...","....KKKKK...KKKKK..."],"fox":["....KK........KK....","...KCCK......KCCK...","...KCPCK....KCPCK...","...KCCCKKKKKKCCCK...","....KCCCCCCCCCCK....","...KCCCCCCCCCCCCK...","...KCEKCCCCCCKECK...","...KCCCCKKCCCCCCK...","....KWWWWWWWWWWK....",".....KWWWWWWWWK.KK..","...KKCCCCCCCCCKKTTK.","..KCCCCCWWWWCCCKTtK.",".KCCCCCWWWWWWCCKTtK.",".KCGGCCWWWWWWCCKTTK.",".KCGGCCWWWWWWCCKTtK.",".KCCCCCCWWWWCCCKTTK.","..KCCCCCCCCCCCKKTK..","..KCCKCCCCKCCCK.K...","..KttK.KttK.KttK....","...................."],"snake":["....KKKK............","...KWWWWK...........","..KWEKWWEK..........","..KWWWWWWK..........","..KWWKKWWK..RR......","...KWWWWWKKRR.......","...KVWWWWWWK........","....KVWWWWWWK.......",".....KKVWWWWWK......",".......KVWWWWWK.....","...KKKKKKVWWWWK.....","..KWWWWWWWVWWWWK....",".KWVVVVVVWWVWWWK....",".KWVWWWWVWWWWWWK....",".KWWWWWWWWWWWWK.....","..KKKWWWWWWWWWWK....",".KWWWWWWWWWWWWWWK...","KWVVVVVVVVVVVVWWWK..","KWWWWWWWWWWWWWWWWK..",".KKKKKKKKKKKKKKKK..."],"snakek":["....KYKYKYK.........","....KYYYYYK.........","...KWWWWWWK.........","..KWEKWWWEK.........","..KWWWWWWWK.........","..KWWKKWWWK..RR.....","...KWWWWWWKKRR......","...KVWWWWWWWK.......","....KVWWWWWWWK......",".....KKVWWWWWWK.....",".......KVWWWWWK.....","...KKKKKKVWWWWK.....","..KWWWWWWWVWWWWK....",".KWVVVVVVWWVWWWWK...",".KWVWWWWVWWWWWWWK...",".KWWWWWWWWWWWWWK....","..KKKWWWWWWWWWWWK...",".KWWWWWWWWWWWWWWWK..","KWVVVVVVVVVVVVVWWWK.","KWWWWWWWWWWWWWWWWWK.",".KKKKKKKKKKKKKKKKK..","...................."],"flame0":["......Kb........",".....KbK..Kb....","....KbbK.KbK....","...KbbbKKbbK....","...KbbbbbbbK....","..KbbLLLLbbbK...","..KbLLLLLLbbK...",".KbLLWWWWLLbK...",".KbLWWWWWWLbK...",".KbLWEWWEWLbK...",".KbLWWWWWWLbK...",".KbLWWEEWWLbK...",".KbLLWWWWLLbK...",".KbbLLLLLLbbK...","..KbbLLLLbbK....","..KbbbbbbbbK....","...KbbbbbbK.....","....KbbbbK......",".....KbbK.......","......KK........"],"flame1":["....Kb..........","...KbK...Kb.....","....KbbKKbK.....","...KbbbbbbK.....","...KbbbbbbbK....","..KbbLLLLbbbK...","..KbLLLLLLbbK...",".KbLLWWWWLLbK...",".KbLWWWWWWLbK...",".KbLWEWWEWLbK...",".KbLWWWWWWLbK...",".KbLWWEEWWLbK...",".KbLLWWWWLLbK...",".KbbLLLLLLbbK...","..KbbLLLLbbK....","..KbbbbbbbbK....","...KbbbbbbK.....","....KbbbbK......",".....KbbK.......","......KK........"],"golem":["....KKKKKKKKKK......","...KLLLGGGGGGGK.....","...KLGGGGGGGGGK.....","...KGEGGGGGEGGK.....","...KGGGGGGGGGGK.....","....KGGgggGGGK......","..KKKKKKKKKKKKKK....",".KLLGGGGGGGGGGGGK...","KLGGGGKRRKGGGGGGGK..","KGGGGKRrrRKGGGGGGK..","KGGGGKRrrRKGGMGGGK..","KGGGGGKRRKGGMMGGGK..","KGgGGGGGGGGGGGGGgK..",".KGGKGGGGGGGGKGGK...",".KGGK.KGGGGK.KGGK...",".KggK.KGGGGK.KggK...",".KKK..KGGGGK..KKK...","......KGggGK........",".....KGGKKGGK.......",".....KKK..KKK......."],"king":["...KOK............KOK...","..KOOK....KKKK....KOOK..",".KOoOK...KFFFFK...KOoOK.",".KOOK...KFFFFFFK...KOOK.",".KOOKK..KFFFFFFK..KKOOK.","..KOOOKKFFFFFFFFKKOOOK..","...KKKFFFEKFFKEFFFKKK...",".....KFFFEEFFEEFFFK.....",".....KFFFFFFFFFFFFK.....",".....KFfFKKKKKKfFFK.....","......KFFeeeeeeFFK......",".....KKPKKKKKKKKPKK.....","...KKPPPPLLLLLLPPPPKK...","..KPPPPPLPPPPPPLPPPPPK..",".KpPPPPLPPAAAAPPLPPPPpK.",".KpPPPPLPPAAAAPPLPPPPpK.",".KpPPPPLPPPPPPPPLPPPPpK.",".KpPKPPLPPPPPPPPLPPKPpK.",".KpPKPPPLLLLLLLLPPPKPpK.",".KpPKPPPPPPPPPPPPPPKPpK.","..KKKPPPPPPPPPPPPPPKKK..",".KCCK.KPPPPPPPPPPK.KCCK.","KCCCK..KPPPPPPPPK..KCCCK","KCCK...KPPKKKKPPK...KCCK",".KK....KPPK..KPPK....KK.",".......KKKK..KKKK......."]};
+const PIXPAL={"hero0": "hero", "hero1": "hero", "girl": "girl", "vill": "vill", "shan": "shan", "fox": "fox", "snake": "snake", "snakek": "snakek", "flame0": "flame", "flame1": "flame", "golem": "golem", "king": "king"};
+
+function pix(name,x,y,s,palOverride){
+  const rows=PIX[name],pal=palOverride||PALS[PIXPAL[name]];
+  for(let j=0;j<rows.length;j++){
+    const row=rows[j];
+    for(let i=0;i<row.length;i++){
+      const ch=row[i];
+      if(ch==='.')continue;
+      g.fillStyle=pal[ch];
+      g.fillRect(x+i*s,y+j*s,s,s);
+    }
+  }
+}
+const VPALS={
+  '#7a5230':PALS.vill,
+  '#3f6f8f':Object.assign({},PALS.vill,{C:'#3f6f8f',c:'#2c536e',A:'#e9e2d2',H:'#4a3a2a'}),
+  '#555560':Object.assign({},PALS.vill,{C:'#555560',c:'#3d3d48',A:'#8a6d3b',H:'#23232b'})
+};
+function drawHero(x,y,s,f){pix(f?'hero1':'hero0',x,y,s);}
+function drawGirl(x,y,s){pix('girl',x,y,s);}
+function drawVill(x,y,s,c){pix('vill',x,y,s,VPALS[c]||PALS.vill);}
+function drawShan(x,y,s){pix('shan',x,y,s);}
+function drawSnake(x,y,s){pix('snake',x,y,s);}
+function drawSnakeK(x,y,s){pix('snakek',x,y,s);}
+function drawFox(x,y,s){pix('fox',x,y,s);}
+function drawFlame(x,y,s){pix((frame>>3)%2?'flame1':'flame0',x,y,s);}
+function drawGolem(x,y,s){pix('golem',x,y,s);}
+function drawKing(x,y,s){pix('king',x,y,s);}
+const SPRM={shan:{w:20,h:20,s:8},fox:{w:20,h:20,s:8},snake:{w:20,h:20,s:8},snakeK:{w:20,h:22,s:9},flame:{w:16,h:20,s:9},golem:{w:20,h:20,s:8},king:{w:24,h:26,s:9}};
+const SPR={girl:drawGirl,vill:drawVill,shan:drawShan,snake:drawSnake,snakeK:drawSnakeK,fox:drawFox,flame:drawFlame,golem:drawGolem,king:drawKing};
+
+// ===== Phase 1:室内家具贴图(进屋找宝贝)=====
+PALS.furn={K:'#241709',W:'#8a5a2b',w:'#6e4520',L:'#b9854f',C:'#5d6878',c:'#46505e',V:'#8f9cad',A:'#6fcfe8',P:'#e8dcb8',R:'#c43a2f',r:'#8a2a22',G:'#d9aa3c',B:'#2f6f93',E:'#4f8f3a',F:'#ff7a45',f:'#ffd23f'};
+Object.assign(PIX,{
+cab:["................","..KKKKKKKKKKKK..","..KLLLLLLLLLLK..","..KWWWWWWWWWWK..","..KWWWWGGWWWWK..","..KKKKKKKKKKKK..","..KWWWWWWWWWWK..","..KWWWWGGWWWWK..","..KKKKKKKKKKKK..","..KWWWWWWWWWWK..","..KWWWWGGWWWWK..","..KKKKKKKKKKKK..","..KwwwwwwwwwwK..","..KKKKKKKKKKKK..","..KK........KK..","................"],
+vat:["................","................","...KKKKKKKKKK...","..KKAAAAAAAAKK..","..KCCAAAAAACCK..",".KCCCCCCCCCCCCK.",".KCVVCCCCCCCCCK.",".KCVCCCCCCCCCCK.",".KCCCCCCCCCCCCK.",".KCCCCCCCCCCCCK.",".KcCCCCCCCCCCcK.","..KcCCCCCCCCcK..","..KKccccccccKK..","...KKKKKKKKKK...","................","................"],
+rice:["................","................","...KKKKKKKKKK...","..KKPPPPPPPPKK..","..KWPPPPPPPPWK..",".KWWWPPPPPPWWWK.",".KWWWWWWWWWWWWK.",".KWLLWWWWWWWWWK.",".KWLWWWWWWWWWWK.",".KWWWWWWWWWWWWK.",".KwWWWWWWWWWWwK.","..KwWWWWWWWWwK..","..KKwwwwwwwwKK..","...KKKKKKKKKK...","................","................"],
+shelf:["................",".KKKKKKKKKKKKKK.",".KLLLLLLLLLLLLK.",".KRRBEERBBERBEK.",".KRRBEERBBERBEK.",".KKKKKKKKKKKKKK.",".KBERRBBEERRBEK.",".KBERRBBEERRBEK.",".KKKKKKKKKKKKKK.",".KEEBRREBBEERRK.",".KEEBRREBBEERRK.",".KKKKKKKKKKKKKK.",".KwwwwwwwwwwwwK.",".KKKKKKKKKKKKKK.",".KK..........KK.","................"],
+bed:["................","..KKKKKKKKKKKK..","..KLLLLLLLLLLK..","..KWWWWWWWWWWK..","..KPPPPPPPPPPK..","..KPPPPPPPPPPK..","..KRRRRRRRRRRK..","..KRRRRRRRRRRK..","..KRrrRRRRrrRK..","..KRRRRRRRRRRK..","..KRrrRRRRrrRK..","..KRRRRRRRRRRK..","..KWWWWWWWWWWK..","..KKKKKKKKKKKK..","..KK........KK..","................"],
+jar:["................","......KKKK......",".....KPPPPK.....",".....KPPPPK.....","....KKWWWWKK....","...KWWWWWWWWK...","..KWLWWWWWWWWK..","..KWLWWWWWWWWK..","..KWWWWWWWWWWK..","..KwWWWWWWWWwK..","...KwWWWWWWwK...","....KKwwwwKK....",".....KKKKKK.....","................","................","................"],
+stove:["....KKKKKKKK....","...KcCCCCCCcK...","...KcCCCCCCcK...","..KKKKKKKKKKKK..","..KLLLLLLLLLLK..","..KWwWWwWWwWWK..","..KwWWwWWwWWwK..","..KWWKKKKKKWWK..","..KWwKfFFfKWwK..","..KwWKFFFFKWwK..","..KWWKFfFFKwWK..","..KwWKKKKKKWWK..","..KWwWWwWWwWwK..","..KKKKKKKKKKKK..","................","................"]
+});
+Object.assign(PIXPAL,{cab:'furn',vat:'furn',rice:'furn',shelf:'furn',bed:'furn',jar:'furn',stove:'furn'});
+VPALS['#4a6b2a']=Object.assign({},PALS.vill,{C:'#4a6b2a',c:'#36511e',A:'#caa46a',H:'#2e2618'});
+
+// ===== 第二章 · 水月湖底:水妖 + 蛟龙 Boss 像素图 =====
+PALS.yaksha={"K": "#0e1c24", "B": "#2f7f8f", "b": "#1f5a66", "W": "#eef6f6", "E": "#ff4747", "H": "#13343a", "R": "#c43a2f", "G": "#5dded6"};
+PALS.clam={"K": "#241a2e", "S": "#e090b4", "s": "#b5688f", "W": "#f8eef4", "P": "#9fe7ff", "E": "#3a2030", "G": "#ffd76a"};
+PALS.squid={"K": "#160c20", "P": "#7a4ec0", "p": "#5a3494", "W": "#efe6ff", "E": "#ffe24a", "I": "#2a1840"};
+PALS.turtle={"K": "#15240f", "S": "#8a5a2b", "s": "#6e4520", "L": "#caa46a", "H": "#6f7a86", "A": "#d9aa3c", "E": "#ff4747"};
+PALS.dragon={"K": "#0a1622", "B": "#2f6f93", "b": "#1c4f6e", "L": "#5dded6", "W": "#e8f0f8", "E": "#ffe24a", "R": "#c43a2f", "G": "#9fe1cb"};
+Object.assign(PIX,{
+  yaksha:["....................","......KK....KK......","......KBK..KBK......",".....KKBK..KBKK.....","...KKBBBBKKBBBBKK...","..KBBBBBBBBBBBBBBK..","..KBHHHHHHHHHHHHBK..","..KBEEKBBBBBBKEEBK..","..KBEEKBBBBBBKEEBK..","..KBBBKBBBBBBKBBBK..","..KBBBWWBBBBWWBBBK..","...KBBWWBBBBWWBBK...","...KKBBBBBBBBBBKK...",".KKBBBBBBBBBBBBBBKK.","KBBBBBBBBBBBBBBBBBBK","KBBBbBBBBBBBBBBbBBBK",".KBBbBBRRRRRRBBbBBK.","..KKBBBRRRRRRBBBKK..","....KKBBBRRBBBKK....","......KKBBBBKK......"],
+  clam:["....................","....................",".......KKKKKK.......","....KKKSSSSSSKKK....","..KKSSSSSSSSSSSSKK..",".KSSSSSSSSSSSSSSSSK.",".KSSSSWWWWWWWWSSSSK.","KSSSWWWPPPPPPWWWSSSK","KSSWWWWPPPPPPWWWWSSK","KSSWWWWWWWWWWWWWWSSK",".KSSSWWWWWWWWWWSSSK.",".KsSSSSSSSSSSSSSSsK.","..KKsSSSSSSSSSSsKK..","....KKsSSSSSSsKK....",".......KKssKK.......","...................."],
+  squid:["........KKKK........",".......KPPPPK.......","......KPPPPPPK......",".....KPPPPPPPPK.....","....KPPPPPPPPPPK....","...KPPPPPPPPPPPPK...","..KPPPPPPPPPPPPPPK..",".KPPPPPPPPPPPPPPPPK.",".KPPWWWWPPPPWWWWPPK.",".KPWEEWWPPPPWWEEWPK.",".KPWEEWWPPPPWWEEWPK.",".KPPWWWWPPPPWWWWPPK.","..KPPPPPPPPPPPPPPK..","..KpPPpPPPPPPpPPpK..","..KpKpKpKppKpKpKpK..","..KpKpKpKppKpKpKpK..","...KpKpKpKKpKpKpK...","..Kp.Kp.KppK.pK.pK..","..K..Kp..KK..pK..K..",".....K........K....."],
+  turtle:["....................","......HHHKKHHH......","....HHHHHHHHHHHH....","...HAAAAHHHHAAAAH...","...HLLLLLLLLLLLLH...","..KLEELLLLLLLLEELK..","..KLLLLLLLLLLLLLLK..","..KKLLLLLLLLLLLLKK..",".KSSSKKLLLLLLKKSSSK.","KSSSSSSSKKKKSSSSSSSK","KSsSSSSSSSSSSSSSSsSK","KSSSsSSSSSSSSSSsSSSK","KSsSSSsSSSSSSsSSSsSK","KSSSSSSSSSSSSSSSSSSK",".KSSSSSSSSSSSSSSSSK.","..KKSSSSSSSSSSSSKK..",".K..KKSSSSSSSSKK..K.",".K....KKSSSSKK....K."],
+  dragon:["...........LL...........","..........LLLL..........",".....L...LBLLBL...L.....","....LBL.LBBLLBBL.LBL....","...LBBLLBBBBBBBBLLBBL...","...LBBBBBBBBBBBBBBBBL...","..KBBBBBBBBBBBBBBBBBBK..","..KBBEEKBBBBBBBBKEEBBK..","..KBBEEKBBBBBBBBKEEBBK..","..KBBBBKBBBBBBBBKBBBBK..","..KBBBBBBBBBBBBBBBBBBK..","..KBBWWWWWWWWWWWWWWBBK..","..KBWWRRRRRRRRRRRRWWBK..","...KWWRRRRRRRRRRRRWWK...","...KKBBWWWWWWWWWWBBKK...","....KBBBBBBBBBBBBBBK....",".....KBBBBBBBBBBBBK.....","....KBbBBBBBBBBBBbBK....","...KBbBBBBBBBBBBBBbBK...","..KBbBBBBLBBBBLBBBBbBK..","..KBBBBBBLBBBBLBBBBBBK..","...KBbBBBBBBBBBBBBbBK...","....KKBBBBBBBBBBBBKK....","......KKBBBBBBBBKK......"],
+});
+Object.assign(PIXPAL,{yaksha:'yaksha',clam:'clam',squid:'squid',turtle:'turtle',dragon:'dragon'});
+Object.assign(PIX,{chest:["................","................","...KKKKKKKKKK...","..KLLLLLLLLLLK..","..KWWWWWWWWWWK..","..KKKKKKKKKKKK..","..KWWWWGGWWWWK..","..KWWWWGGWWWWK..","..KWWWWWWWWWWK..","..KWwWWWWWWwWK..","..KWwWWWWWWwWK..","..KKKKKKKKKKKK..","..KK........KK..","................","................","................"]});PIXPAL.chest='furn';
+function drawYaksha(x,y,s){pix('yaksha',x,y,s);}
+function drawClam(x,y,s){pix('clam',x,y,s);}
+function drawSquid(x,y,s){pix('squid',x,y,s);}
+function drawTurtle(x,y,s){pix('turtle',x,y,s);}
+function drawDragon(x,y,s){pix('dragon',x,y,s);}
+Object.assign(SPR,{yaksha:drawYaksha,clam:drawClam,squid:drawSquid,turtle:drawTurtle,dragon:drawDragon});
+Object.assign(SPRM,{yaksha:{w:20,h:20,s:6},clam:{w:20,h:16,s:6},squid:{w:20,h:20,s:6},turtle:{w:20,h:18,s:6},dragon:{w:24,h:24,s:6}});
+
+// ===== 第三章 · 妖界魔渊:魔类像素图 + 旧图改色复用 =====
+PALS.yanmo={"K": "#1a0808", "F": "#ff8a2a", "f": "#ffe24a", "R": "#c0382a", "E": "#fff0a0", "W": "#ffe8c0", "B": "#5a1414"};
+PALS.leiyu={"K": "#0e0a18", "D": "#2f2a44", "d": "#1a1626", "Y": "#ffe24a", "y": "#c9a227", "B": "#3a4a72", "E": "#fff0a0"};
+PALS.demon={"K": "#0a0612", "H": "#d9c0a0", "h": "#a08858", "P": "#4a2a6e", "p": "#2a1640", "R": "#c43a2f", "E": "#ff4040", "W": "#ffd0d0"};
+Object.assign(PIX,{
+  yanmo:[".........ff.........","......fFf..fFf......",".....fFFf..fFFf.....","....KFFFFFFFFFFK....","...KFRRRRRRRRRRFK...","...KFRRRRRRRRRRFK...","..KFRREEKRRKEERRFK..","..KFRREEKRRKEERRFK..","..KFRRRRRRRRRRRRFK..",".KFRRRWWWWWWRRRRFK..","..KFRRWKWKWKWRRRFK..","..KFRRRRRRRRRRRRFK..","..KKFRRRRRRRRRRFKK..","...KFBRRRRRRRRBFK...","...KFBBRRRRRRBBFK...","...KBBBRRRRRRBBBK...","...KBBBRRRRRRBBBK...","...KBBRRRRRRRRBBK...","....KKBBRRRRBBKK....","......KKBBBBKK......"],
+  leiyu:["...K....K..K....K...","..KYK..KY..YK..KYK..","..KDK..KD..DK..KDK..",".KDDDDDDDKKDDDDDDDK.","KDDDDDDDDDDDDDDDDDDK","KDDEEKDDDDDDDDKEEDDK","KDDEEKDDDDDDDDKEEDDK","KDDDDKDDDDDDDDKDDDDK","KDYDDDDYDDDDYDDDDYDK","KDDYDDYDDDDDDYDDYDDK",".KDDDDDDDKKDDDDDDDK.",".KBDDDDDBKKBDDDDDBK.","KBBDYYDBBBBBBDYYDBBK","KBDDYYDDBBBBDDYYDDBK","KBDDDDDDBBBBDDDDDDBK",".KBDDDDDBKKBDDDDDBK.",".KKBDDBKK..KKBDDBKK.","...KDDK......KDDK...","..KDKKDK....KDKKDK..",".KDK..KDK..KDK..KDK."],
+  demon:[".H.........HH.........H.",".HH.......HHHH.......HH.","KHhK.....KHhhHK.....KhHK","KHhPK...KPHhhHPK...KPhHK",".KPPPK.KPPPKKPPPK.KPPPK.",".KPPPPKPPPPPPPPPPKPPPPK.","..KPPPPPPPPPPPPPPPPPPK..","..KPPEEKPPPPPPPPKEEPPK..","..KPEEEKPPPPPPPPKEEEPK..","..KPPPPKPPPPPPPPKPPPPK..","..KPPPPPPPPPPPPPPPPPPK..","..KPPWWWWWPPPPWWWWWPPK..","..KPWRKRKRWPPWRKRKRWPK..","...KWRRRRRWPPWRRRRRWK...","...KKPWWWPPPPPPWWWPKK...","....KPPPPPPPPPPPPPPK....","...KpPPPPPPPPPPPPPPpK...","..KpPPPPPPpPPpPPPPPPpK..","..KpPPRRPPpPPpPPRRPPpK..","..KpPRRRRPpPPpPRRRRPpK..","..KpPPRRPPpPPpPPRRPPpK..","...KpPPPPpPKKPpPPPPpK...","....KKPPpKK..KKpPPKK....","......KKK......KKK......"],
+});
+Object.assign(PIXPAL,{yanmo:'yanmo',leiyu:'leiyu',demon:'demon'});
+// 玄阴鬼:借鬼火帧改寒蓝调;魔将:借石傀改暗血调
+const YINPAL={K:'#0a1422',B:'#1c3a6e',b:'#12284a',L:'#5a8fd0',W:'#cfe0ff',E:'#9fd6ff'};
+const MOJPAL=Object.assign({},PALS.golem,{G:'#6a2a3a',g:'#481c28',L:'#9a4a5a',M:'#7a2430',R:'#ff5a5a',r:'#c43a3a',E:'#ff5a5a'});
+function drawYanmo(x,y,s){pix('yanmo',x,y,s);}
+function drawLeiyu(x,y,s){pix('leiyu',x,y,s);}
+function drawDemon(x,y,s){pix('demon',x,y,s);}
+function drawYin(x,y,s){pix((frame>>3)%2?'flame1':'flame0',x,y,s,YINPAL);}
+function drawMojiang(x,y,s){pix('golem',x,y,s,MOJPAL);}
+Object.assign(SPR,{yanmo:drawYanmo,leiyu:drawLeiyu,demon:drawDemon,yin:drawYin,mojiang:drawMojiang});
+Object.assign(SPRM,{yanmo:{w:20,h:20,s:6},leiyu:{w:20,h:20,s:6},demon:{w:24,h:24,s:6},yin:{w:16,h:20,s:8},mojiang:{w:20,h:20,s:7}});
+
+// ===== 第四章 · 九霄云海:风族像素图 + 改色复用 =====
+PALS.yunpeng={"K": "#101820", "W": "#eaf2f8", "w": "#b9cad8", "B": "#3f7fb0", "L": "#9fd0ec", "Y": "#ffc23a", "E": "#1a2230", "F": "#d9aa3c"};
+PALS.peng={"K": "#0c1018", "P": "#34507a", "p": "#22344f", "G": "#ffd23f", "W": "#eaf2f8", "E": "#ff4040", "Y": "#ffb030", "L": "#7fb0d8", "F": "#caa46a"};
+Object.assign(PIX,{
+  yunpeng:["....................",".........KK.........","........KWWK........","........KWWK........",".......KWWWWK.......","......KWEWWEWK......","......KWWWWWWK......",".....KKWWYYWWKK.....","...KKBWWWWWWWWBKK...","..KBBBKWWWWWWKBBBK..",".KBLLBBKWWWWKBBLLBK.",".KLLLLBBKWWKBBLLLLK.","..KLLBBBKWWKBBBLLK..","...KKBBKWWWWKBBKK...",".....KKWWWWWWKK.....",".......KWWWWK.......",".......KWwwWK.......","......KWWKKWWK......",".....KFFK..KFFK.....","...................."],
+  peng:["........................","...........GG...........","..........GGGG..........",".........GKKKKG.........",".........KPPPPK.........","........KPEPPEPK........","........KPPPPPPK........",".......KKPPYYPPKK.......",".....KKPPPPPPPPPPKK.....","...KKPLLPPPPPPPPLLPKK...","..KPLLLLPPPPPPPPLLLLPK..",".KPLLLLLPKWWWWKPLLLLLPK.",".KLLLLPPKWWWWWWKPPLLLLK.","..KKPPKKWWWWWWWWKKPPKK..","....KKKWWWWWWWWWWKKK....",".....KKWWWWWWWWWWKK.....",".......KWWWWWWWWK.......",".......KWWWPPWWWK.......",".......KWWKKKKWWK.......","......KPPK....KPPK......",".....KPPPK....KPPPK.....","....KKFFKK....KKFFKK....","...KFKKK........KKKFK...","........................"],
+});
+Object.assign(PIXPAL,{yunpeng:'yunpeng',peng:'peng'});
+// 罡风鬼:借鬼火帧改罡风白绿;霹雳鸟:借云鹏改雷暴黄紫;风狸王:借风狸改银白
+const GFPAL={K:'#16241c',B:'#3a6e54',b:'#244a38',L:'#cfeede',W:'#f2fff8',E:'#9fe7a0'};
+const PILIPAL=Object.assign({},PALS.yunpeng,{W:'#f6efc0',w:'#cdbf7a',B:'#6a4ea8',L:'#ffe24a',Y:'#ff7a30',E:'#2a1840'});
+const FENGLIPAL={K:'#2a2a36','C':'#e6eef6','c':'#bcc8d6','W':'#ffffff','P':'#cfe0ff','E':'#3a4660','G':'#9fd0ec','T':'#9aa6b8','t':'#76808f'};
+function drawYunpeng(x,y,s){pix('yunpeng',x,y,s);}
+function drawPeng(x,y,s){pix('peng',x,y,s);}
+function drawGangfeng(x,y,s){pix((frame>>3)%2?'flame1':'flame0',x,y,s,GFPAL);}
+function drawPili(x,y,s){pix('yunpeng',x,y,s,PILIPAL);}
+function drawFengli(x,y,s){pix('fox',x,y,s,FENGLIPAL);}
+Object.assign(SPR,{yunpeng:drawYunpeng,peng:drawPeng,gangfeng:drawGangfeng,pili:drawPili,fengli:drawFengli});
+Object.assign(SPRM,{yunpeng:{w:20,h:20,s:6},peng:{w:24,h:24,s:6},gangfeng:{w:16,h:20,s:8},pili:{w:20,h:20,s:6},fengli:{w:20,h:20,s:6}});
+
+// ===== 第五章 · 黄泉地心:土族像素图 + 改色复用 =====
+PALS.dilie={"K": "#1a0e06", "R": "#6a4a30", "r": "#3e2818", "L": "#a07a50", "M": "#ff6a20", "m": "#ffd23f", "E": "#ff5a20"};
+PALS.sovereign={"K": "#140a04", "R": "#6a4a30", "r": "#3e2818", "L": "#9a7648", "M": "#ff7a2a", "m": "#ffe24a", "E": "#ff4040", "G": "#ffd23f", "C": "#a07a50"};
+Object.assign(PIX,{
+  dilie:["....................","......KKKKKK........",".....KRRRRRRK.......","....KRRLLLLRRK......","....KRRRRRRRRK......","...KRREERRRREERRK...","...KRREERRRREERRK...","...KRRRRMMMMRRRRK...","..KRRMMMMMMMMMMRRK..","..KRmMMMMMMMMMMmRK..","..KRRRRRRRRRRRRRRK..","..KRRMRRRRRRRRMRRK..",".KLRRRRRRRRRRRRRRLK.",".KKRRRRRRRRRRRRRRKK.","..KKRRRRRRRRRRRRKK..","...KRRRK....KRRRK...","..KRRRK......KRRRK..",".KRRRK........KRRRK.",".KRK............KRK.","...................."],
+  sovereign:["........................",".....GG..........GG.....","....GGGG........GGGG....","....GGRGG......GGRGG....","....KKRRKKKKKKKKRRKK....","....KRRRRRRRRRRRRRRK....","....KRRREEKRRKEERRRK....","....KRRREEKRRKEERRRK....","....KRRRRRKRRKRRRRRK....","....KRRRRRRRRRRRRRRK....","....KRRRMMMMMMMMRRRK....","....KKRMMmMMMMmMMRKK....","....CKRRMMMMMMMMRRKC....","....CCKRRRRRRRRRRKCC....","....CCKRRRMMMMRRRKCC....","....CKRRRRRRRRRRRRKC....","....KRRRRRKRRKRRRRRK....","....KRRRRKRRRRKRRRRK....","....KKRRKRRRRRRKRRKK....",".....KRRKRRRRRRKRRK.....",".....KKRKKRRRRKKRKK.....","......KRRK....KRRK......",".....KRRK......KRRK.....","........................"],
+});
+Object.assign(PIXPAL,{dilie:'dilie',sovereign:'sovereign'});
+// 山魈圣:借山魈改金土;石煞:借石傀改岩石;熔岩兽:借焰魔改熔岩
+const SHANKPAL=Object.assign({},PALS.shan,{G:'#b08838',g:'#7a5a22',L:'#d9b04a',M:'#6a4a20',B:'#caa46a',b:'#8a6a3a',Y:'#ffe24a'});
+const SHISHAPAL=Object.assign({},PALS.golem,{G:'#8a7256',g:'#5e4a32',L:'#b09a76',M:'#caa46a',R:'#ff8a3a',r:'#c4602a',E:'#ffd23f'});
+const RONGPAL=Object.assign({},PALS.yanmo,{R:'#4a2a14',F:'#ff8a2a',f:'#ffe24a',B:'#2a1408',W:'#ffd0a0'});
+function drawDilie(x,y,s){pix('dilie',x,y,s);}
+function drawSovereign(x,y,s){pix('sovereign',x,y,s);}
+function drawShankui(x,y,s){pix('shan',x,y,s,SHANKPAL);}
+function drawShisha(x,y,s){pix('golem',x,y,s,SHISHAPAL);}
+function drawRongyan(x,y,s){pix('yanmo',x,y,s,RONGPAL);}
+Object.assign(SPR,{dilie:drawDilie,sovereign:drawSovereign,shankui:drawShankui,shisha:drawShisha,rongyan:drawRongyan});
+Object.assign(SPRM,{dilie:{w:20,h:20,s:6},sovereign:{w:24,h:24,s:6},shankui:{w:20,h:20,s:6},shisha:{w:20,h:20,s:7},rongyan:{w:20,h:20,s:6}});
+
+'use strict';
+// ===== 地图层:瓦片地图生成 + MAPS 注册表 + NPC 配置 =====
+// 瓦片字符:G 草 t 深草 T 树 W 水 P 路 b 桥 R 屋顶 H 墙 X 石墙 F 石地
+//          e 符纹遇敌地 D 门(锁妖塔/水府) d 木门(进屋) O 出口 S 灵泉 B 封印
+//          第二章:V 漩涡(湖面入口) a 湖水 c 水草(遇敌) Z 蛟龙王座
+//          第三章:v 魔土 m 魔纹(遇敌) M 魔尊王座(鬼门复用锁妖塔封印 B)
+//          第四章:Y 风口(湖畔入口) sky/shrine 复用 a/c/R/S/D/O,N 大鹏王座
+//          第五章:U 后土王座(地缝入口 G,复用 v/m/R/S/D/O)
+function blank(w,h,f){const m=[];for(let y=0;y<h;y++)m.push(new Array(w).fill(f));return m;}
+function fillR(m,x,y,w,h,c){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++){if(m[j]&&m[j][i]!==undefined)m[j][i]=c;}}
+function house(m,x,y){fillR(m,x,y,5,2,'R');fillR(m,x,y+2,5,2,'H');}
+function makeWorld(){
+  const w=64,h=48,m=blank(w,h,'G');
+  for(let k=0;k<150;k++){
+    const x=2+Math.floor(srnd()*(w-4)),y=2+Math.floor(srnd()*(h-4));
+    if(y>=33)continue;if(y>=11&&y<=17)continue;if(x>=28&&x<=35)continue;
+    m[y][x]='T';
+  }
+  fillR(m,1,13,w-2,2,'W');
+  fillR(m,8,5,8,5,'t');fillR(m,46,4,9,5,'t');fillR(m,12,26,8,5,'t');
+  fillR(m,44,24,9,6,'t');fillR(m,38,18,7,4,'t');fillR(m,16,18,6,4,'t');
+  fillR(m,5,20,8,5,'W');m[22][15]='S';
+  fillR(m,31,3,2,42,'P');
+  fillR(m,31,13,2,2,'b');
+  fillR(m,28,0,8,3,'X');fillR(m,31,2,2,1,'D');
+  fillR(m,4,35,56,12,'G');
+  fillR(m,31,35,2,10,'P');fillR(m,10,42,44,2,'P');
+  house(m,9,37);house(m,19,37);house(m,41,37);house(m,51,37);
+  m[40][11]='d';m[40][21]='d';m[40][43]='d';m[40][53]='d';
+  m[14][24]='V'; // 第二章:湖面漩涡(降妖王后由阿萝点醒才显现,见 canWalk/onStep 的 ch2 判定)
+  m[16][50]='Y'; // 第四章:湖畔风口(第四章开启后才成旋风,ch4 前如常草地)
+  m[40][6]='q';  // 第五章:村西地缝(第五章开启后才裂开,ch5 前如常草地)
+  fillR(m,0,0,w,1,'T');fillR(m,0,h-1,w,1,'T');fillR(m,0,0,1,h,'T');fillR(m,w-1,0,1,h,'T');
+  return m;
+}
+// 第二章 · 水月湖底:可探索的水下大图(28×24,竖向卷轴)
+// a 湖水(安全) c 水草(遇敌带) R 礁石(阻挡) S 气泡灵泉 D 水府门 O 回水面
+function makeLake(){
+  const w=28,h=24,m=blank(w,h,'a');
+  fillR(m,0,0,w,1,'R');fillR(m,0,h-1,w,1,'R');fillR(m,0,0,1,h,'R');fillR(m,w-1,0,1,h,'R');
+  fillR(m,6,5,3,2,'R');fillR(m,19,5,3,2,'R');
+  fillR(m,4,13,2,3,'R');fillR(m,22,13,2,3,'R');
+  fillR(m,12,9,4,2,'R');
+  fillR(m,3,3,8,3,'c');fillR(m,17,3,8,3,'c');
+  fillR(m,2,17,10,3,'c');fillR(m,16,17,10,3,'c');
+  fillR(m,10,11,8,4,'c');
+  m[15][14]='S';
+  m[1][14]='D';
+  m[22][14]='O';
+  return m;
+}
+// 第二章 · 水府龙宫:Boss 殿堂(22×16,静止单屏)
+// X 殿墙/盘龙柱(阻挡) F 殿地 Z 蛟龙王座(踏上即战) O 回湖底
+function makePalace(){
+  const w=22,h=16,m=blank(w,h,'X');
+  fillR(m,3,3,16,11,'F');
+  [[5,5],[16,5],[5,11],[16,11]].forEach(c=>{m[c[1]][c[0]]='X';});
+  m[3][11]='Z';
+  m[13][11]='O';
+  return m;
+}
+// 第三章 · 妖界魔渊:可探索的魔域大图(28×24,竖向卷轴)
+// v 魔土(安全) m 魔纹(遇敌带) R 岩浆(阻挡) X 黑石(阻挡) S 邪泉(回满) D 魔殿门 O 回锁妖塔
+function makeAbyss(){
+  const w=28,h=24,m=blank(w,h,'v');
+  fillR(m,0,0,w,1,'X');fillR(m,0,h-1,w,1,'X');fillR(m,0,0,1,h,'X');fillR(m,w-1,0,1,h,'X');
+  fillR(m,5,6,4,2,'R');fillR(m,19,6,4,2,'R');
+  fillR(m,11,10,6,2,'R');
+  fillR(m,3,14,3,3,'X');fillR(m,22,14,3,3,'X');
+  fillR(m,3,3,8,3,'m');fillR(m,17,3,8,3,'m');
+  fillR(m,2,17,10,3,'m');fillR(m,16,17,10,3,'m');
+  fillR(m,10,12,8,4,'m');
+  m[15][14]='S';
+  m[1][14]='D';
+  m[22][14]='O';
+  return m;
+}
+// 第三章 · 混沌魔殿:终章 Boss 殿堂(22×16)
+// X 魔墙/骨柱(阻挡) F 殿地 M 魔尊王座(踏上即战) O 回魔渊
+function makeHell(){
+  const w=22,h=16,m=blank(w,h,'X');
+  fillR(m,3,3,16,11,'F');
+  [[5,5],[16,5],[5,11],[16,11]].forEach(c=>{m[c[1]][c[0]]='X';});
+  m[3][11]='M';
+  m[13][11]='O';
+  return m;
+}
+// 第四章 · 九霄云海:云端大图(28×24);沿用 a/c/R/S/D/O 字符,按 bg='sky' 另样渲染
+// a 云路 c 罡风带(遇敌) R 云隙(阻挡) S 风眼灵泉 D 风窟门 O 回湖畔
+function makeSky(){
+  const w=28,h=24,m=blank(w,h,'a');
+  fillR(m,0,0,w,1,'R');fillR(m,0,h-1,w,1,'R');fillR(m,0,0,1,h,'R');fillR(m,w-1,0,1,h,'R');
+  fillR(m,6,5,4,2,'R');fillR(m,18,5,4,2,'R');
+  fillR(m,12,10,4,2,'R');
+  fillR(m,3,14,3,3,'R');fillR(m,22,14,3,3,'R');
+  fillR(m,3,3,8,3,'c');fillR(m,17,3,8,3,'c');
+  fillR(m,2,17,10,3,'c');fillR(m,16,17,10,3,'c');
+  fillR(m,10,12,8,4,'c');
+  m[15][14]='S';
+  m[1][14]='D';
+  m[22][14]='O';
+  return m;
+}
+// 第四章 · 天风殿:Boss 殿堂(22×16),N 大鹏王座
+function makeShrine(){
+  const w=22,h=16,m=blank(w,h,'X');
+  fillR(m,3,3,16,11,'F');
+  [[5,5],[16,5],[5,11],[16,11]].forEach(c=>{m[c[1]][c[0]]='X';});
+  m[3][11]='N';
+  m[13][11]='O';
+  return m;
+}
+// 第五章 · 黄泉地心:地脉大图(28×24);沿用 v/m/R/S/D/O,按 bg='cavern' 渲染
+// v 地脉 m 矿脉(遇敌) R 巨岩(阻挡) S 地泉 D 后土殿门 O 回村西
+function makeCavern(){
+  const w=28,h=24,m=blank(w,h,'v');
+  fillR(m,0,0,w,1,'R');fillR(m,0,h-1,w,1,'R');fillR(m,0,0,1,h,'R');fillR(m,w-1,0,1,h,'R');
+  fillR(m,5,6,4,2,'R');fillR(m,19,6,4,2,'R');
+  fillR(m,12,10,4,2,'R');
+  fillR(m,3,14,3,3,'R');fillR(m,22,14,3,3,'R');
+  fillR(m,3,3,8,3,'m');fillR(m,17,3,8,3,'m');
+  fillR(m,2,17,10,3,'m');fillR(m,16,17,10,3,'m');
+  fillR(m,10,12,8,4,'m');
+  m[15][14]='S';
+  m[1][14]='D';
+  m[22][14]='O';
+  return m;
+}
+// 第五章 · 后土魔殿:全剧终 Boss 殿堂(22×16),U 后土王座
+function makeCore(){
+  const w=22,h=16,m=blank(w,h,'X');
+  fillR(m,3,3,16,11,'F');
+  [[5,5],[16,5],[5,11],[16,11]].forEach(c=>{m[c[1]][c[0]]='X';});
+  m[3][11]='U';
+  m[13][11]='O';
+  return m;
+}
+// Phase 1:室内小图(12×10),f 木地板、H 墙、O 出口,家具走 POI 层
+function makeHouse(){
+  const w=12,h=10,m=blank(w,h,'f');
+  fillR(m,0,0,w,2,'H');fillR(m,0,h-1,w,1,'H');
+  fillR(m,0,0,1,h,'H');fillR(m,w-1,0,1,h,'H');
+  m[h-1][6]='O';
+  return m;
+}
+function makeTower(){
+  const w=24,h=30,m=blank(w,h,'X');
+  fillR(m,3,3,18,24,'F');
+  [[6,8],[17,8],[6,14],[17,14],[6,20],[17,20],[10,11],[13,17]].forEach(c=>{m[c[1]][c[0]]='X';});
+  fillR(m,4,10,7,5,'e');fillR(m,13,12,7,5,'e');fillR(m,4,19,7,5,'e');fillR(m,13,20,7,4,'e');
+  fillR(m,11,4,2,1,'B');
+  fillR(m,11,26,2,1,'O');
+  return m;
+}
+const MAPS={
+  world:{m:makeWorld(),w:64,h:48,bg:'field',rate:0.13,pool:()=>S.lvl>=3?['shan','fox','snake']:['shan','fox']},
+  tower:{m:makeTower(),w:24,h:30,bg:'tower',rate:0.16,pool:()=>['ghost','golem']},
+  house1:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
+  house2:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
+  house3:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
+  house4:{m:makeHouse(),w:12,h:10,bg:'house',rate:0,pool:()=>[]},
+  lake:{m:makeLake(),w:28,h:24,bg:'lake',rate:0.18,pool:()=>S.lvl>=12?['yaksha','clam','squid','turtle']:['yaksha','clam','squid']},
+  palace:{m:makePalace(),w:22,h:16,bg:'palace',rate:0,pool:()=>[]},
+  abyss:{m:makeAbyss(),w:28,h:24,bg:'abyss',rate:0.20,pool:()=>['yanmo','yin','mojiang','leiyu']},
+  hell:{m:makeHell(),w:22,h:16,bg:'hell',rate:0,pool:()=>[]},
+  sky:{m:makeSky(),w:28,h:24,bg:'sky',rate:0.19,pool:()=>['gangfeng','yunpeng','pili','fengli']},
+  shrine:{m:makeShrine(),w:22,h:16,bg:'shrine',rate:0,pool:()=>[]},
+  cavern:{m:makeCavern(),w:28,h:24,bg:'cavern',rate:0.21,pool:()=>['shankui','shisha','rongyan','dilie']},
+  core:{m:makeCore(),w:22,h:16,bg:'core',rate:0,pool:()=>[]}
+};
+// 双向传送门:'地图:x,y' → 目的地(d 木门进屋,O 出口回村)
+const DOORS={
+  'world:11,40':{map:'house1',x:6,y:8},
+  'world:21,40':{map:'house2',x:6,y:8},
+  'world:43,40':{map:'house3',x:6,y:8},
+  'world:53,40':{map:'house4',x:6,y:8},
+  'house1:6,9':{map:'world',x:11,y:41},
+  'house2:6,9':{map:'world',x:21,y:41},
+  'house3:6,9':{map:'world',x:43,y:41},
+  'house4:6,9':{map:'world',x:53,y:41},
+  // 第二章:湖底 O 回水面、湖底 D 进水府、水府 O 回湖底(漩涡入口与蛟龙王座为特判,见 onStep)
+  'lake:14,22':{map:'world',x:24,y:15},
+  'lake:14,1':{map:'palace',x:11,y:12},
+  'palace:11,13':{map:'lake',x:14,y:2},
+  // 第三章:魔渊 O 回锁妖塔、魔渊 D 进魔殿、魔殿 O 回魔渊(鬼门入口与魔尊王座为特判,见 onStep)
+  'abyss:14,22':{map:'tower',x:11,y:5},
+  'abyss:14,1':{map:'hell',x:11,y:12},
+  'hell:11,13':{map:'abyss',x:14,y:2},
+  // 第四章:云海 O 回湖畔、云海 D 进天风殿、天风殿 O 回云海(风口入口与大鹏王座为特判)
+  'sky:14,22':{map:'world',x:50,y:17},
+  'sky:14,1':{map:'shrine',x:11,y:12},
+  'shrine:11,13':{map:'sky',x:14,y:2},
+  // 第五章:地心 O 回村西、地心 D 进后土殿、后土殿 O 回地心(地缝入口与后土王座为特判)
+  'cavern:14,22':{map:'world',x:6,y:41},
+  'cavern:14,1':{map:'core',x:11,y:12},
+  'core:11,13':{map:'cavern',x:14,y:2}
+};
+// 可调查点:撞上家具即翻找。loot: gold 银两 / item 物品 / note 纸条 / none 空手
+const POIS={
+  house1:[ // 王大娘的家
+    {id:'h1_cab',x:2,y:2,kind:'cab',loot:{t:'gold',n:20}},
+    {id:'h1_stove',x:4,y:2,kind:'stove',loot:{t:'none'}},
+    {id:'h1_vat',x:9,y:2,kind:'vat',loot:{t:'item',k:'dan',n:1}}
+  ],
+  house2:[ // 老村长的家
+    {id:'h2_shelf',x:2,y:2,kind:'shelf',loot:{t:'note',text:'泛黄的书页间夹着一张字条:「锁妖塔镇千年妖王,塔心封印以五灵为锁。妖王属火,水灵咒可克之。」'}},
+    {id:'h2_cab',x:9,y:2,kind:'cab',loot:{t:'gold',n:30}},
+    {id:'h2_bed',x:1,y:4,kind:'bed',loot:{t:'gold',n:10}},
+    {id:'h2_jar',x:10,y:6,kind:'jar',loot:{t:'item',k:'qing',n:1}}
+  ],
+  house3:[ // 阿萝的家
+    {id:'h3_bed',x:2,y:2,kind:'bed',loot:{t:'note',text:'枕头底下压着一本小册子,娟秀的字迹:「今日师兄又在瀑布下练剑,偷偷看了半个时辰……哎呀,不写了不写了。」'}},
+    {id:'h3_cab',x:4,y:2,kind:'cab',loot:{t:'none'}},
+    {id:'h3_rice',x:9,y:2,kind:'rice',loot:{t:'item',k:'dan',n:1}},
+    {id:'h3_vat',x:10,y:6,kind:'vat',loot:{t:'gold',n:15}}
+  ],
+  house4:[ // 猎户的家
+    {id:'h4_shelf',x:2,y:2,kind:'shelf',loot:{t:'note',text:'猎户的字据背面,歪歪扭扭画着三个小人,写着:「爱莎、安娜、艾米莉,到此一游!」'}},
+    {id:'h4_stove',x:4,y:2,kind:'stove',loot:{t:'item',k:'qing',n:1}},
+    {id:'h4_cab',x:9,y:2,kind:'cab',loot:{t:'item',k:'dadan',n:1}},
+    {id:'h4_jar',x:10,y:5,kind:'jar',loot:{t:'gold',n:40}}
+  ],
+  lake:[ // 第二章:湖底沉箱(撞开即取)
+    {id:'lk_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:120}},
+    {id:'lk_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:1}},
+    {id:'lk_chest3',x:9,y:20,kind:'chest',loot:{t:'note',text:'沉箱里一卷油布包着块龟甲,刻着:「蛟龙性属水,畏风;御风可破其鳞。」'}}
+  ],
+  abyss:[ // 第三章:魔渊魔焰宝匣
+    {id:'ab_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:300}},
+    {id:'ab_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:2}},
+    {id:'ab_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'焦黑的石匣里一片残碑:「五灵大成,可破混沌。魔尊性属雷,烈焰咒克之。」'}}
+  ],
+  sky:[ // 第四章:云中宝匣
+    {id:'sk_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:500}},
+    {id:'sk_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:2}},
+    {id:'sk_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'云中飘来一片羽书:「大鹏振翅九万里,性属风,唯厚土可镇其翼。」'}}
+  ],
+  cavern:[ // 第五章:地心晶匣
+    {id:'cv_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:800}},
+    {id:'cv_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:3}},
+    {id:'cv_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'晶匣里一卷地脉图,末尾朱批:「后土魔君乃乱源之根,性属土。雷克土,紫雷可灭。」'}}
+  ]
+};
+// 翻第二件东西时主人的吐槽(致敬经典:进屋翻箱倒柜,主人毫无意见)
+const SNARK={
+  house1:{n:'王大娘',t:'哎哟,小侠客,你这是把我家当自家翻呢?……罢了罢了,看你顺眼,翻吧翻吧!'},
+  house2:{n:'老村长',t:'年轻人,书架轻点翻!那是老朽攒了一辈子的书……唉,拿都拿了,就当村里资助你降妖了。'},
+  house3:{n:'外婆',t:'阿萝那丫头的东西你也敢乱翻?……嗯?你就是她常念叨的师兄?那、那随便看!'},
+  house4:{n:'猎户',t:'好家伙,进门就掏人家的坛坛罐罐,跟山里的狸子一个习性!'}
+};
+
+const NPCS={
+  world:[
+    {x:34,y:43,draw:'girl',n:'阿萝',talk:()=>talkAluo()},
+    // 注意:不能站在房门(x,40)正下方,否则会堵住进屋的唯一通路
+    {x:20,y:41,draw:'vill',c:'#7a5230',n:'杂货商',talk:()=>openShop('item')},
+    {x:42,y:41,draw:'vill',c:'#3f6f8f',n:'老板娘',talk:()=>inn()},
+    {x:52,y:41,draw:'vill',c:'#555560',n:'铁匠',talk:()=>openShop('gear')}
+  ],
+  tower:[],
+  house1:[{x:8,y:3,draw:'vill',c:'#7a5230',n:'王大娘',talk:()=>showDialog([{n:'王大娘',t:'娃儿来啦?随便坐!屋里东西尽管翻,大娘藏不住啥宝贝。'}])}],
+  house2:[{x:5,y:3,draw:'vill',c:'#555560',n:'老村长',talk:()=>showDialog([{n:'老村长',t:'锁妖塔建于前朝,塔心封印千万碰不得……咳,老朽的书你随便看,可别折了页角。'}])}],
+  house3:[{x:6,y:4,draw:'vill',c:'#3f6f8f',n:'外婆',talk:()=>showDialog([{n:'外婆',t:'阿萝常念叨你哩。灶上温着汤,自己舀着喝,别客气。'}])}],
+  house4:[{x:7,y:4,draw:'vill',c:'#4a6b2a',n:'猎户',talk:()=>showDialog([{n:'猎户',t:'北边林子最近不太平,妖气重。进塔之前,把皮甲穿厚实些!'}])}],
+  // 第二章:阿萝在湖底剧情同行(战斗仍由主角单打)
+  lake:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoLake()}],
+  palace:[],
+  // 第三章:阿萝随你闯魔渊
+  abyss:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoAbyss()}],
+  hell:[],
+  // 第四章:阿萝随你上九霄
+  sky:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoSky()}],
+  shrine:[],
+  // 第五章:阿萝随你下黄泉
+  cavern:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoCave()}],
+  core:[]
+};
+
+'use strict';
+// ===== 战斗层:回合制战斗状态机 + 战斗绘制 =====
+let B=null;
+function battleUI(on){
+  $('btl').style.display=on?'flex':'none';
+  $('dpad').style.display=on?'none':'grid';
+  refreshBtns();
+}
+function refreshBtns(){
+  const en=mode==='battle'&&B&&B.phase==='cmd';
+  ['batk','bskl','bitm','bfle'].forEach(id=>{$(id).disabled=!en;});
+}
+function startBattle(key,boss){
+  const d=ENM[key];
+  const hp=d.hp+(boss?0:S.lvl*4);
+  B={
+    e:{name:d.n,el:d.el,hp:hp,maxHp:hp,atk:d.atk+(boss?0:Math.floor(S.lvl/2)),exp:d.exp,gold:d.gold,draw:d.draw,s:d.s,gw:d.gw||16,caster:d.caster},
+    key:key,boss:!!boss,phase:'cmd',hOx:0,eOx:0,fE:0,fH:0,shake:0,pops:[],anim:null,timer:0,turn:0,msg:d.n+' 出现了!'
+  };
+  mode='battle';grace=2;battleUI(true);
+  tone(90,0.3,'sawtooth',0.07,40);
+}
+function bmsg(t){if(B)B.msg=t;}
+function pop(x,y,txt,c){if(B)B.pops.push({x:x,y:y,txt:txt,c:c,t:0});}
+function advMult(a,d){if(a==='无')return 1;if(CK[a]===d)return 1.5;if(CK[d]===a)return 0.7;return 1;}
+function dealE(d,c){
+  B.e.hp-=d;B.fE=0.18;B.shake=0.22;
+  pop(330,220,'-'+d,c||'#fff');sHit();
+}
+function afterPlayer(){
+  if(B.e.hp<=0){winB();return;}
+  B.phase='wait';B.timer=0.55;refreshBtns();
+}
+function act(a){
+  if(!B||B.phase!=='cmd')return;
+  au();
+  if(a==='atk'){B.phase='anim';B.anim={k:'lunge',t:0};sSwing();}
+  else if(a==='skl')openSkillMenu();
+  else if(a==='itm')openItemMenu();
+  else if(a==='fle'){
+    if(!B.boss&&Math.random()<0.6){mode='world';B=null;battleUI(false);return;}
+    bmsg(B.boss?'强敌挡路,无法逃跑!':'逃跑失败!');
+    B.phase='wait';B.timer=0.5;
+  }
+  refreshBtns();
+}
+function openSkillMenu(){
+  let h='<h3>仙术</h3><div class="gold">灵力:'+S.mp+' / '+S.maxMp+'</div>';
+  SKILLS.forEach((s,i)=>{
+    if(skillKnown(s))h+='<div class="srow"><div><b style="color:'+ELC[s.el]+'">'+s.n+'</b><span>'+s.el+'系 · 威力×'+s.mult+'</span></div><button class="pbtn" onclick="castSkill('+i+')">'+s.mp+' 灵力</button></div>';
+  });
+  h+='<button class="pbtn" onclick="closePanel()">返回</button>';
+  openPanel(h);
+}
+function castSkill(i){
+  closePanel();
+  if(!B||B.phase!=='cmd')return;
+  const sk=SKILLS[i];
+  if(S.mp<sk.mp){bmsg('灵力不足!');return;}
+  S.mp-=sk.mp;
+  B.phase='anim';B.anim={k:'proj',x:640,t:0,sk:sk};sCast();
+  refreshBtns();
+}
+function openItemMenu(){
+  let h='<h3>物品</h3>';
+  h+='<div class="srow"><div><b>回灵丹 ×'+INV.dan+'</b><span>恢复 '+healAmt('dan')+' 气血</span></div><button class="pbtn" onclick="useItem(\'dan\')">使用</button></div>';
+  h+='<div class="srow"><div><b>大还丹 ×'+INV.dadan+'</b><span>气血全满</span></div><button class="pbtn" onclick="useItem(\'dadan\')">使用</button></div>';
+  h+='<div class="srow"><div><b>清心散 ×'+INV.qing+'</b><span>恢复 '+healAmt('qing')+' 灵力</span></div><button class="pbtn" onclick="useItem(\'qing\')">使用</button></div>';
+  h+='<button class="pbtn" onclick="closePanel()">返回</button>';
+  openPanel(h);
+}
+function useItem(k){
+  if(!B||B.phase!=='cmd')return;
+  if(INV[k]<1){toast('没有了……');return;}
+  closePanel();
+  INV[k]--;
+  if(k==='dan'){const h=Math.min(healAmt('dan'),S.maxHp-S.hp);S.hp+=h;pop(700,320,'+'+h,'#7CFC9A');bmsg('服下回灵丹。');}
+  else if(k==='dadan'){const h=S.maxHp-S.hp;S.hp=S.maxHp;pop(700,320,'+'+h,'#7CFC9A');bmsg('大还丹入腹,气血全满!');}
+  else{const m=Math.min(healAmt('qing'),S.maxMp-S.mp);S.mp+=m;pop(700,320,'+'+m+' 灵力','#bfa7ff');bmsg('服下清心散。');}
+  sHeal();
+  B.phase='wait';B.timer=0.55;refreshBtns();
+}
+function enemyAct(){
+  B.turn++;
+  if(B.e.caster&&B.turn%2===0){B.anim={k:'espell',t:0};sCast();}
+  else B.anim={k:'elunge',t:0};
+  B.phase='anim';
+}
+function hurtHero(base){
+  const d=Math.max(1,Math.round((base-defP())*hurtScale())); // 孩童模式受伤减半
+  S.hp-=d;B.fH=0.18;B.shake=0.22;
+  pop(740,280,'-'+d,'#ff6b6b');sHurt();
+}
+function winB(){
+  B.phase='over';refreshBtns();sWin();
+  bmsg('击败了 '+B.e.name+'!');
+  S.gold+=B.e.gold;S.exp+=B.e.exp;
+  const learned=[];let lv=false;
+  while(S.exp>=S.lvl*45){
+    S.exp-=S.lvl*45;S.lvl++;lv=true;
+    S.maxHp+=16;S.maxMp+=10;S.hp=S.maxHp;S.mp=S.maxMp;
+    const ns=SKILLS.find(s=>s.lvl===S.lvl&&(!s.flag||flags[s.flag]));
+    if(ns)learned.push(ns.n);
+  }
+  if(lv){setTimeout(sLvl,500);pop(660,220,'升级!Lv'+S.lvl,'#ffd23f');}
+  const wasBoss=B.boss,key=B.key;
+  setTimeout(()=>{
+    mode='world';B=null;battleUI(false);
+    if(key==='snakeKing'){
+      flags.mini=true;
+      showDialog(['蛇妖王哀鸣一声,化作白雾散去。断桥畅通了!',learned.length?'你领悟了新仙术:'+learned.join('、'):'(已自动保存)']);
+    }else if(key==='king'){
+      flags.boss=true;
+      showEnding();
+    }else if(key==='dragon'){
+      flags.dragon=true;
+      showEnding2();
+    }else if(key==='demon'){
+      flags.demon=true;
+      showEnding3();
+    }else if(key==='peng'){
+      flags.peng=true;
+      showEnding4();
+    }else if(key==='sovereign'){
+      flags.sovereign=true;
+      showEnding5();
+    }else if(learned.length){
+      showDialog(['你领悟了新仙术:'+learned.join('、')+'!']);
+    }
+    save();
+  },1100);
+}
+function loseB(){
+  B.phase='over';refreshBtns();
+  setTimeout(()=>{
+    mode='world';B=null;battleUI(false);
+    S.hp=Math.round(S.maxHp/2);S.mp=S.maxMp;
+    switchMap('world',31,44);
+    showDialog(['眼前一黑……','再睁眼时,阿萝正守在客栈床边。',{n:'阿萝',t:'别逞强了!多练几级、备好丹药再去。'}]);
+  },800);
+}
+function updBattle(dt){
+  if(B.fE>0)B.fE-=dt;if(B.fH>0)B.fH-=dt;if(B.shake>0)B.shake-=dt;
+  for(let i=B.pops.length-1;i>=0;i--){B.pops[i].t+=dt;B.pops[i].y-=34*dt;if(B.pops[i].t>1)B.pops.splice(i,1);}
+  if(B.anim){
+    const a=B.anim;a.t+=dt;
+    if(a.k==='lunge'){
+      B.hOx=-Math.sin(Math.min(a.t/0.38,1)*Math.PI)*300;
+      if(!a.hit&&a.t>=0.18){a.hit=1;dealE(rnd(atkP()-3,atkP()+4));}
+      if(a.t>=0.42){B.hOx=0;B.anim=null;afterPlayer();}
+    }else if(a.k==='proj'){
+      a.x-=1150*dt;
+      if(a.x<=330){
+        const adv=advMult(a.sk.el,B.e.el);
+        const base=atkP()*a.sk.mult;
+        const d=Math.max(1,Math.round(rnd(base-4,base+6)*adv));
+        dealE(d,ELC[a.sk.el]);
+        if(adv>1)pop(310,170,'效果拔群!','#ffd23f');
+        else if(adv<1)pop(310,170,'效果不佳…','#9aa3ad');
+        B.anim=null;afterPlayer();
+      }
+    }else if(a.k==='elunge'){
+      B.eOx=Math.sin(Math.min(a.t/0.38,1)*Math.PI)*300;
+      if(!a.hit&&a.t>=0.18){a.hit=1;hurtHero(rnd(B.e.atk-2,B.e.atk+3));}
+      if(a.t>=0.42){
+        B.eOx=0;B.anim=null;
+        if(S.hp<=0)loseB();else{B.phase='cmd';refreshBtns();}
+      }
+    }else if(a.k==='espell'){
+      if(!a.hit&&a.t>=0.35){a.hit=1;hurtHero(Math.round(rnd(B.e.atk-2,B.e.atk+3)*1.3));}
+      if(a.t>=0.7){
+        B.anim=null;
+        if(S.hp<=0)loseB();else{B.phase='cmd';refreshBtns();}
+      }
+    }
+  }else if(B.phase==='wait'){
+    B.timer-=dt;
+    if(B.timer<=0)enemyAct();
+  }
+}
+function drawBattle(){
+  const towerBg=cur.bg==='tower'||B.key==='king';
+  const waterBg=cur.bg==='lake'||cur.bg==='palace'||B.key==='dragon';
+  const hellBg=cur.bg==='abyss'||cur.bg==='hell'||B.key==='demon';
+  const skyBg=cur.bg==='sky'||cur.bg==='shrine'||B.key==='peng';
+  const caveBg=cur.bg==='cavern'||cur.bg==='core'||B.key==='sovereign';
+  if(caveBg){
+    // 地心战场:深褐岩窟 + 矿脉微光 + 地火裂隙
+    r(0,0,SW,430,'#241608');r(0,430,SW,210,'#1a0e06');
+    g.fillStyle='#3a2410';
+    g.beginPath();g.moveTo(0,430);g.lineTo(240,330);g.lineTo(480,430);g.closePath();g.fill();
+    g.beginPath();g.moveTo(440,430);g.lineTo(700,340);g.lineTo(960,430);g.closePath();g.fill();
+    r(0,470,SW,40,'#5a2a10'); // 地火裂隙
+    g.fillStyle='rgba(255,150,50,0.45)';for(let k=0;k<6;k++)r((k*170+(frame)%170),474+((frame>>2)+k)%4,44,4,'rgba(255,170,60,0.45)');
+    g.fillStyle='#c47a30';for(let k=0;k<12;k++){const ex=(k*151+frame)%960,ey=430-((frame+k*80)%440);g.fillRect(ex,ey,2,2);}
+    if(B.key==='sovereign'){r(360,50,240,390,'#1a0e06');r(450,110,60,120,'#3a2410');r(462,122,36,14,'#ffae40');}
+  }else if(skyBg){
+    // 云端战场:高空蓝 + 远山云峰 + 飘流云絮
+    r(0,0,SW,360,'#8ec0e6');r(0,360,SW,280,'#cfe2f2');
+    g.fillStyle='#a8cae8';
+    g.beginPath();g.moveTo(0,360);g.lineTo(260,250);g.lineTo(520,360);g.closePath();g.fill();
+    g.beginPath();g.moveTo(440,360);g.lineTo(720,260);g.lineTo(960,360);g.closePath();g.fill();
+    g.fillStyle='rgba(255,255,255,0.85)';
+    for(let k=0;k<5;k++){const cx=((k*230+frame)%1100)-80,cy=70+((k*53)%140);r(cx,cy,90,16,'rgba(255,255,255,0.8)');r(cx+20,cy-10,60,16,'rgba(255,255,255,0.7)');}
+    r(0,470,SW,170,'#eaf4ff');
+    if(B.key==='peng'){g.fillStyle='#aac4e0';g.beginPath();g.moveTo(360,90);g.lineTo(600,90);g.lineTo(540,300);g.lineTo(420,300);g.closePath();g.fill();r(450,120,60,40,'#ffd23f');}
+  }else if(hellBg){
+    // 魔渊战场:暗红夜空 + 翻涌岩浆 + 飞散余烬
+    r(0,0,SW,430,'#1c0810');r(0,430,SW,210,'#2a0c08');
+    g.fillStyle='#3a0e0a';
+    g.beginPath();g.moveTo(0,430);g.lineTo(240,330);g.lineTo(480,430);g.closePath();g.fill();
+    g.beginPath();g.moveTo(420,430);g.lineTo(700,340);g.lineTo(960,430);g.closePath();g.fill();
+    r(0,560,SW,80,'#6a1810'); // 岩浆河
+    g.fillStyle='rgba(255,120,40,0.5)';for(let k=0;k<6;k++)r((k*170+(frame*2)%170),566+((frame>>2)+k)%6,40,5,'rgba(255,150,50,0.5)');
+    g.fillStyle='#ffb030';for(let k=0;k<16;k++){const ex=(k*131+frame)%960,ey=560-((frame*2+k*70)%460);g.fillRect(ex,ey,3,3);}
+    if(B.key==='demon'){r(360,40,240,400,'#1a0610');r(450,110,60,130,'#3a0e1a');r(462,122,36,16,'#ff4040');}
+  }else if(waterBg){
+    // 水下战场:深蓝水体 + 焦散光柱 + 上浮气泡
+    r(0,0,SW,420,'#0f3a48');r(0,420,SW,220,'#0a2a34');
+    g.fillStyle='rgba(120,220,230,0.10)';
+    [120,360,600,840].forEach((x,i)=>{g.beginPath();g.moveTo(x,0);g.lineTo(x+60,0);g.lineTo(x+120,420);g.lineTo(x+40,420);g.closePath();g.fill();});
+    g.fillStyle='rgba(190,240,250,0.5)';
+    for(let k=0;k<14;k++){const bx=(k*137+(frame*2))%960,by=420-((frame*3+k*90)%440);g.fillRect(bx,by,3,3);}
+    if(B.key==='dragon'){r(360,60,240,360,'#0a2a34');r(450,120,60,120,'#06181e');r(462,132,36,14,'#5dded6');}
+  }else if(towerBg){
+    r(0,0,SW,420,'#1d1530');r(0,420,SW,220,'#3a2f4a');
+    r(80,120,36,300,'#251a3a');r(844,120,36,300,'#251a3a');
+    r(90,130,8,280,'#332450');r(854,130,8,280,'#332450');
+    if(B.key==='king'){r(340,70,280,350,'#251a3a');r(440,130,80,140,'#120c1e');r(452,142,56,16,'#e24b4a');}
+  }else{
+    r(0,0,SW,340,'#a8d8ea');
+    g.fillStyle='#cfe8f4';g.beginPath();g.arc(820,84,42,0,Math.PI*2);g.fill();
+    g.fillStyle='#8fb8a0';
+    g.beginPath();g.moveTo(0,340);g.lineTo(220,230);g.lineTo(470,340);g.closePath();g.fill();
+    g.beginPath();g.moveTo(380,340);g.lineTo(660,250);g.lineTo(960,340);g.closePath();g.fill();
+    r(0,340,SW,300,'#6aa84f');r(0,420,SW,40,'#d9b97f');
+  }
+  g.save();
+  if(B.shake>0)g.translate(rnd(-5,5),rnd(-5,5));
+  const m=SPRM[B.e.draw]||{w:20,h:20,s:8};
+  const ew=m.w*m.s,eh=m.h*m.s;
+  const ex=140+B.eOx,ey=480-eh;
+  SPR[B.e.draw](ex,ey,m.s);
+  if(B.fE>0){g.globalAlpha=0.7;r(ex,ey,ew,eh,'#ffffff');g.globalAlpha=1;}
+  const hs=8,hw=16*hs,hh=20*hs;
+  const hx=640+B.hOx,hy=480-hh;
+  drawHero(hx,hy,hs,Math.floor(frame/10)%2);
+  if(B.fH>0){g.globalAlpha=0.55;r(hx,hy,hw,hh,'#ff3030');g.globalAlpha=1;}
+  if(B.anim&&B.anim.k==='proj'){
+    const px=B.anim.x,c=ELC[B.anim.sk.el];
+    r(px,392,70,10,'#cdd6e0');r(px,394,70,3,'#f0f4f8');
+    r(px+66,388,14,18,'#c9a227');
+    r(px-12,384,84,4,c);r(px-12,406,84,4,c);
+  }
+  if(B.anim&&B.anim.k==='espell'){
+    const t=B.anim.t,rad=Math.round(t*260),c=ELC[B.e.el];
+    g.globalAlpha=Math.max(0,0.8-t);
+    g.strokeStyle=c;g.lineWidth=9;
+    g.beginPath();g.arc(hx+hw/2,hy+hh/2,rad,0,Math.PI*2);g.stroke();
+    g.beginPath();g.arc(hx+hw/2,hy+hh/2,Math.max(0,rad-36),0,Math.PI*2);g.stroke();
+    g.globalAlpha=1;
+  }
+  if(B.anim&&B.anim.k==='lunge'&&B.anim.hit&&B.anim.t<0.3){
+    g.strokeStyle='#fff';g.lineWidth=6;
+    g.beginPath();g.moveTo(ex+ew-18,ey+18);g.lineTo(ex+26,ey+eh-26);g.stroke();
+  }
+  for(const w of B.pops){
+    g.globalAlpha=Math.max(0,1-w.t);
+    g.font='bold 30px monospace';g.strokeStyle='#000';g.lineWidth=5;
+    g.strokeText(w.txt,w.x,w.y);g.fillStyle=w.c;g.fillText(w.txt,w.x,w.y);
+    g.globalAlpha=1;
+  }
+  g.restore();
+  r(20,18,430,74,'rgba(0,0,0,0.55)');
+  g.font='21px monospace';g.fillStyle='#fff';g.fillText(B.e.name,36,46);
+  g.fillStyle=ELC[B.e.el];g.fillText('['+B.e.el+']',36+B.e.name.length*21+14,46);
+  r(36,58,380,15,'#3a2f3a');
+  r(36,58,Math.max(0,Math.min(380,Math.round(B.e.hp/B.e.maxHp*380))),15,'#E24B4A');
+  r(596,500,344,118,'rgba(18,14,26,0.78)');
+  g.font='19px monospace';g.fillStyle='#ffd76a';
+  g.fillText('云无衣 Lv'+S.lvl,612,528);
+  r(612,540,230,13,'#3a2f3a');r(612,540,Math.max(0,Math.min(230,Math.round(S.hp/S.maxHp*230))),13,'#1D9E75');
+  r(612,562,230,13,'#3a2f3a');r(612,562,Math.max(0,Math.min(230,Math.round(S.mp/S.maxMp*230))),13,'#7F77DD');
+  g.font='14px monospace';g.fillStyle='#cdd6e0';
+  g.fillText(S.hp+'/'+S.maxHp,850,552);g.fillText(S.mp+'/'+S.maxMp,850,574);
+  if(B.msg){
+    r(20,576,480,42,'rgba(0,0,0,0.55)');
+    g.font='20px monospace';g.fillStyle='#fff';g.fillText(B.msg,36,604);
+  }
+}
+
+'use strict';
+// ===== 引擎层:画布、音频、地图行走、对话、商店、存档、主循环 =====
+const $=id=>document.getElementById(id);
+const cv=$('cv'),g=cv.getContext('2d');
+const T=32,SW=960,SH=640,VW=31,VH=21;
+let mode='title',frame=0,grace=0;
+let curName='world',cur=MAPS.world;
+const p={tx:31,ty:44,x:31*T,y:44*T,mv:null};
+const K={up:0,down:0,left:0,right:0};
+const wpops=[];
+function wpop(txt,c){wpops.push({x:p.x,y:p.y,txt,c,t:0});}
+
+let AC=null;
+function au(){
+  if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+  if(AC&&AC.state==='suspended'){try{AC.resume();}catch(e){}}
+}
+function tone(f,d,type,v,slide){
+  if(!AC)return;
+  try{
+    const o=AC.createOscillator(),ga=AC.createGain();
+    o.type=type||'square';o.frequency.setValueAtTime(f,AC.currentTime);
+    if(slide)o.frequency.exponentialRampToValueAtTime(slide,AC.currentTime+d);
+    ga.gain.setValueAtTime(v||0.05,AC.currentTime);
+    ga.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+d);
+    o.connect(ga);ga.connect(AC.destination);o.start();o.stop(AC.currentTime+d);
+  }catch(e){}
+}
+const sSwing=()=>tone(620,0.1,'square',0.04,180);
+const sHit=()=>tone(160,0.16,'sawtooth',0.07,55);
+const sHurt=()=>tone(110,0.22,'sawtooth',0.07,45);
+const sHeal=()=>tone(480,0.18,'sine',0.05,950);
+const sCast=()=>tone(280,0.3,'triangle',0.05,1300);
+const sWin=()=>[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,0.18,'square',0.04),i*110));
+const sDing=()=>[784,1175,1568].forEach((f,i)=>setTimeout(()=>tone(f,0.09,'square',0.05),i*70));
+const sLvl=()=>[440,554,659,880].forEach((f,i)=>setTimeout(()=>tone(f,0.14,'triangle',0.05),i*90));
+let musicOn=false,mi=0,mTimer=null,melKey='field';
+// BGM 变奏:每个篇章一段主题(村野明快 / 塔内幽暗 / 水府流动 / 魔渊压抑)
+const MELS={
+  field:[392,440,523,0,587,523,440,392,330,392,440,523,587,0,659,587,523,440,392,330,392,0,440,523,440,392,330,294,330,392,440,0],
+  tower:[294,0,349,392,294,0,262,294,220,0,262,294,349,0,330,294,262,0,294,349,392,0,349,294,262,247,220,0,247,262,294,0],
+  lake:[330,392,440,523,440,392,0,440,494,587,494,440,0,392,440,494,392,330,294,330,392,0,440,392,330,294,262,0,294,330,392,0],
+  abyss:[247,0,262,233,196,0,233,196,175,0,208,247,262,0,233,208,196,175,165,0,196,208,233,0,220,196,175,165,0,185,208,0],
+  sky:[523,587,659,784,659,587,523,0,587,659,784,880,784,659,587,0,659,784,880,784,659,587,523,494,523,587,659,0,784,659,587,0],
+  earth:[196,0,220,196,165,0,147,165,196,0,220,247,220,196,0,175,165,147,131,0,147,165,196,0,220,196,165,147,0,165,196,0]
+};
+const MUSCFG={
+  field:{wave:'triangle',rest:250,bv:0.018},
+  tower:{wave:'square',rest:280,bv:0.020},
+  lake:{wave:'sine',rest:235,bv:0.016},
+  abyss:{wave:'sawtooth',rest:300,bv:0.024},
+  sky:{wave:'sine',rest:220,bv:0.014},
+  earth:{wave:'triangle',rest:300,bv:0.026}
+};
+function melForBg(bg){return bg==='tower'?'tower':(bg==='lake'||bg==='palace')?'lake':(bg==='abyss'||bg==='hell')?'abyss':(bg==='sky'||bg==='shrine')?'sky':(bg==='cavern'||bg==='core')?'earth':'field';}
+function startMusicLoop(){
+  if(mTimer){clearInterval(mTimer);mTimer=null;}
+  const cfg=MUSCFG[melKey],mel=MELS[melKey];
+  mTimer=setInterval(()=>{
+    const f=mel[mi%mel.length];mi++;
+    if(f)tone(f,cfg.rest/1000*0.88,cfg.wave,0.025);
+    if(mi%4===0)tone(f?f/2:98,cfg.rest/1000*1.2,'sine',cfg.bv);
+  },cfg.rest);
+}
+function setMusic(on){
+  musicOn=on;$('btnMus').textContent='音乐:'+(on?'开':'关');
+  if(!on){if(mTimer){clearInterval(mTimer);mTimer=null;}return;}
+  au();mi=0;startMusicLoop();
+}
+// 切图时按场景切换 BGM 主题(变奏);音乐开着才即时重启
+function setMelodyForMap(){
+  const k=melForBg(cur.bg);
+  if(k!==melKey){melKey=k;mi=0;if(musicOn)startMusicLoop();}
+}
+
+function r(x,y,w,h,c){g.fillStyle=c;g.fillRect(x,y,w,h);}
+
+function tileAt(x,y){if(x<0||y<0||x>=cur.w||y>=cur.h)return 'T';return cur.m[y][x];}
+function npcAt(x,y){return (NPCS[curName]||[]).find(n=>n.x===x&&n.y===y);}
+function poiAt(x,y){return (POIS[curName]||[]).find(q=>q.x===x&&q.y===y);}
+function canWalk(x,y){
+  if(npcAt(x,y)||poiAt(x,y))return false;
+  if(curName==='world'&&!flags.mini&&y===13&&(x===31||x===32))return false;
+  if(tileAt(x,y)==='V'&&!flags.ch2)return false; // 漩涡未显现前如同湖水,不可入
+  return !('TWXHR'.includes(tileAt(x,y)));
+}
+function switchMap(name,x,y){curName=name;cur=MAPS[name];p.tx=x;p.ty=y;p.x=x*T;p.y=y*T;p.mv=null;setMelodyForMap();}
+
+function drawTile(i,j,sx,sy){
+  const c=cur.m[j][i];
+  if(cur.bg==='house'){
+    if(c==='H'){
+      r(sx,sy,T,T,'#5a3a22');r(sx,sy,T,4,'#3e2814');r(sx,sy,2,T,'#3e2814');r(sx+30,sy,2,T,'#3e2814');
+      if(j===1&&i%3===1){r(sx+6,sy+8,20,18,'#2a1c10');r(sx+8,sy+10,16,14,'#e8d8a8');r(sx+15,sy+10,2,14,'#5a3a22');r(sx+8,sy+16,16,2,'#5a3a22');}
+      return;
+    }
+    r(sx,sy,T,T,'#b9854f');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.05)');
+    r(sx,sy+15,T,1,'#9a6a3a');r(sx,sy+31,T,1,'#9a6a3a');
+    r(sx+((i+j)%2?8:22),sy,1,15,'#9a6a3a');r(sx+((i+j)%2?22:8),sy+16,1,15,'#9a6a3a');
+    if(c==='O'){r(sx+4,sy+6,24,22,'#8a5e32');r(sx+6,sy+8,20,18,'#a8744a');r(sx,sy+28,T,4,'#3e2814');}
+    return;
+  }
+  if(cur.bg==='lake'){
+    if(c==='R'){r(sx,sy,T,T,'#1a3340');r(sx+3,sy+4,12,12,'#27505f');r(sx+16,sy+14,12,12,'#27505f');r(sx+18,sy+3,9,9,'#16303a');r(sx+4,sy+19,9,9,'#16303a');return;}
+    // 水底:幽蓝水体 + 流动焦散光纹
+    r(sx,sy,T,T,'#1d5566');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.06)');
+    const o=(frame>>4)%2,o2=(frame>>3)%3;
+    r(sx+4+o*6,sy+6,9,2,'rgba(150,230,240,0.30)');r(sx+18-o*6,sy+20,8,2,'rgba(150,230,240,0.24)');
+    r(sx+24,sy+5+o2*3,2,2,'rgba(210,250,255,0.5)'); // 上浮气泡
+    if(c==='c'){[[5,20],[11,24],[18,18],[23,22],[8,12]].forEach(b=>{r(sx+b[0],sy+b[1],3,T-b[1]-1,'#2f7f6a');r(sx+b[0],sy+b[1],1,6,'#54b594');});}
+    else if(c==='S'){r(sx+4,sy+4,24,24,'#3aa0a8');r(sx+8,sy+8,16,16,'#7fe6e0');const k=(frame>>3)%4;r(sx+10+k*3,sy+6+(k*4)%16,3,3,'#ffffff');r(sx+6,sy+18,2,3,'#cffcff');r(sx+24,sy+10,2,3,'#cffcff');}
+    else if(c==='O'){r(sx+3,sy+3,26,26,'#2a7a8c');r(sx+8,sy+8,16,16,'#aef0ff');const k=(frame>>2)%3;r(sx+12,sy+4+k*2,8,4,'#e8feff');g.fillStyle='#0c2a33';g.font='12px monospace';g.fillText('↑',sx+12,sy+22);}
+    else if(c==='D'){r(sx,sy,T,T,'#16303a');r(sx+3,sy+2,26,30,'#1c4f5e');r(sx+6,sy+5,20,27,'#0e2630');r(sx+10,sy+8,12,24,'#2f7f93');r(sx+14,sy+3,4,4,'#5dded6');r(sx+8,sy+14,3,3,'#9fe1cb');r(sx+21,sy+14,3,3,'#9fe1cb');}
+    return;
+  }
+  if(cur.bg==='palace'){
+    if(c==='X'){r(sx,sy,T,T,'#13313a');r(sx+3,sy+2,26,28,'#1d4a57');r(sx+6,sy+5,20,22,'#163a45');r(sx+13,sy+2,6,28,'#2f7f93');r(sx+14,sy+6,4,6,'#5dded6');r(sx+14,sy+18,4,6,'#5dded6');return;}
+    r(sx,sy,T,T,'#0e2a33');if((i+j)%2)r(sx,sy,T,T,'rgba(95,222,214,0.05)');
+    r(sx,sy,T,1,'#14424d');r(sx,sy,1,T,'#14424d');
+    if(c==='O'){r(sx+3,sy+3,26,26,'#16303a');r(sx+8,sy+8,16,16,'#2a7a8c');r(sx+11,sy+12,10,8,'#aef0ff');g.fillStyle='#0c2a33';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='Z'){const gl=flags.dragon?'#9fe1cb':'#ffd76a';r(sx+6,sy+2,20,28,'#10333d');r(sx+9,sy+5,14,22,'#1d4a57');r(sx+8,sy+4,4,6,gl);r(sx+20,sy+4,4,6,gl);r(sx+13,sy+12,6,10,gl);r(sx+10,sy+24,12,4,'#0a2229');}
+    return;
+  }
+  if(cur.bg==='abyss'){
+    if(c==='X'){r(sx,sy,T,T,'#1a1018');r(sx+2,sy+2,12,12,'#2a1622');r(sx+18,sy+18,12,12,'#2a1622');r(sx+18,sy+3,10,10,'#140a12');r(sx+3,sy+18,10,10,'#140a12');return;}
+    if(c==='R'){ // 岩浆:暗红熔流 + 翻涌亮斑
+      r(sx,sy,T,T,'#5a1410');const o=(frame>>3)%3;r(sx+4+o*5,sy+8,8,3,'#ff6a20');r(sx+16-o*4,sy+20,7,3,'#ffb030');r(sx+10,sy+4,4,2,'#ffd23f');return;}
+    r(sx,sy,T,T,'#241420');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.10)');
+    const e=(frame>>4)%2;
+    r(sx+22,sy+6,2,2,'rgba(255,120,80,0.45)');r(sx+6+e*4,sy+22,2,2,'rgba(200,80,140,0.4)'); // 余烬
+    if(c==='m'){r(sx,sy,T,T,'#321826');[[8,8],[20,18],[12,22],[22,7],[5,16]].forEach(b=>{r(sx+b[0],sy+b[1],3,3,'#a8324f');r(sx+b[0]+1,sy+b[1]+1,1,1,'#ff5a7a');});}
+    else if(c==='S'){r(sx+4,sy+4,24,24,'#7a2a4a');r(sx+8,sy+8,16,16,'#c45a7a');const k=(frame>>3)%4;r(sx+10+k*3,sy+6+(k*4)%16,3,3,'#ffd0e0');}
+    else if(c==='O'){r(sx+3,sy+3,26,26,'#3a1822');r(sx+8,sy+8,16,16,'#7a2a3a');r(sx+11,sy+12,10,8,'#ffb0a0');g.fillStyle='#1a0a0e';g.font='12px monospace';g.fillText('↑',sx+13,sy+22);}
+    else if(c==='D'){r(sx,sy,T,T,'#160a12');r(sx+3,sy+2,26,30,'#3a1428');r(sx+6,sy+5,20,27,'#1a0810');r(sx+10,sy+8,12,24,'#7a1c3a');r(sx+13,sy+3,6,5,'#ff4040');r(sx+8,sy+14,3,3,'#ff6a8a');r(sx+21,sy+14,3,3,'#ff6a8a');}
+    return;
+  }
+  if(cur.bg==='hell'){
+    if(c==='X'){r(sx,sy,T,T,'#1a0c14');r(sx+3,sy+2,26,28,'#34121f');r(sx+6,sy+5,20,22,'#220a14');r(sx+13,sy+2,6,28,'#7a1c2e');r(sx+14,sy+6,4,6,'#ff4040');r(sx+14,sy+18,4,6,'#ff4040');return;}
+    r(sx,sy,T,T,'#180810');if((i+j)%2)r(sx,sy,T,T,'rgba(255,60,60,0.05)');
+    r(sx,sy,T,1,'#3a121e');r(sx,sy,1,T,'#3a121e');
+    if(c==='O'){r(sx+3,sy+3,26,26,'#2a0e16');r(sx+8,sy+8,16,16,'#5a1a26');r(sx+11,sy+12,10,8,'#ffb0a0');g.fillStyle='#1a0a0e';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='M'){const gl=flags.demon?'#9a9aa8':'#ff4040';r(sx+6,sy+2,20,28,'#1e0a14');r(sx+9,sy+5,14,22,'#34121f');r(sx+7,sy+3,4,7,gl);r(sx+21,sy+3,4,7,gl);r(sx+13,sy+11,6,12,gl);r(sx+10,sy+25,12,4,'#0e0610');}
+    return;
+  }
+  if(cur.bg==='sky'){
+    if(c==='R'){ // 云隙(虚空):透出深空
+      r(sx,sy,T,T,'#1a2640');r(sx+4,sy+5,8,3,'rgba(180,210,255,0.12)');r(sx+18,sy+18,8,3,'rgba(180,210,255,0.10)');return;}
+    // 云路:柔白云海 + 飘动流云
+    r(sx,sy,T,T,'#bcd4ea');if((i+j)%2)r(sx,sy,T,T,'rgba(255,255,255,0.10)');
+    const o=(frame>>4)%2;r(sx+4+o*6,sy+7,11,3,'#eaf4ff');r(sx+16-o*5,sy+21,9,3,'#d4e6f7');
+    if(c==='c'){[[5,18],[12,22],[19,16],[23,21],[8,12]].forEach(b=>{r(sx+b[0],sy+b[1],6,2,'#9fb8d8');r(sx+b[0]+1,sy+b[1]-2,4,2,'rgba(255,255,255,0.6)');});}
+    else if(c==='S'){r(sx+4,sy+4,24,24,'#9fd0ec');r(sx+8,sy+8,16,16,'#eaf6ff');const k=(frame>>3)%4;r(sx+10+k*3,sy+6+(k*4)%16,3,3,'#ffffff');}
+    else if(c==='O'){r(sx+3,sy+3,26,26,'#9fd0ec');r(sx+8,sy+8,16,16,'#eaf6ff');g.fillStyle='#2a4a6a';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='D'){r(sx,sy,T,T,'#8aa8cc');r(sx+3,sy+2,26,30,'#d4e6f7');r(sx+6,sy+5,20,27,'#aac4e0');r(sx+10,sy+8,12,24,'#eaf6ff');r(sx+13,sy+3,6,4,'#ffd23f');r(sx+8,sy+14,3,3,'#ffffff');r(sx+21,sy+14,3,3,'#ffffff');}
+    return;
+  }
+  if(cur.bg==='shrine'){
+    if(c==='X'){r(sx,sy,T,T,'#5a708e');r(sx+3,sy+2,26,28,'#7a92b0');r(sx+6,sy+5,20,22,'#6a82a0');r(sx+13,sy+2,6,28,'#d4e6f7');r(sx+14,sy+6,4,6,'#ffffff');r(sx+14,sy+18,4,6,'#ffffff');return;}
+    r(sx,sy,T,T,'#cdddf0');if((i+j)%2)r(sx,sy,T,T,'rgba(90,120,160,0.08)');
+    r(sx,sy,T,1,'#aac0da');r(sx,sy,1,T,'#aac0da');
+    if(c==='O'){r(sx+3,sy+3,26,26,'#aac4e0');r(sx+8,sy+8,16,16,'#eaf6ff');g.fillStyle='#2a4a6a';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='N'){const gl=flags.peng?'#b9c2cc':'#ffd23f';r(sx+6,sy+2,20,28,'#8aa8cc');r(sx+9,sy+5,14,22,'#aac4e0');r(sx+8,sy+4,4,6,gl);r(sx+20,sy+4,4,6,gl);r(sx+13,sy+12,6,10,gl);r(sx+10,sy+24,12,4,'#6a82a0');}
+    return;
+  }
+  if(cur.bg==='cavern'){
+    if(c==='R'){r(sx,sy,T,T,'#241608');r(sx+3,sy+4,12,12,'#3e2814');r(sx+16,sy+14,12,12,'#3e2814');r(sx+18,sy+3,9,9,'#1a0e06');r(sx+4,sy+19,9,9,'#1a0e06');return;}
+    // 地脉:深褐岩地 + 矿脉微光
+    r(sx,sy,T,T,'#332010');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.10)');
+    const e=(frame>>4)%2;
+    r(sx+22,sy+6,2,2,'rgba(255,160,60,0.4)');r(sx+6+e*4,sy+22,2,2,'rgba(255,200,90,0.35)');
+    if(c==='m'){r(sx,sy,T,T,'#3e2810');[[8,8],[20,18],[12,22],[22,7],[5,16]].forEach(b=>{r(sx+b[0],sy+b[1],3,3,'#c47a30');r(sx+b[0]+1,sy+b[1]+1,1,1,'#ffd23f');});}
+    else if(c==='S'){r(sx+4,sy+4,24,24,'#6a4a20');r(sx+8,sy+8,16,16,'#caa44a');const k=(frame>>3)%4;r(sx+10+k*3,sy+6+(k*4)%16,3,3,'#ffe8a0');}
+    else if(c==='O'){r(sx+3,sy+3,26,26,'#3a2410');r(sx+8,sy+8,16,16,'#7a5a28');r(sx+11,sy+12,10,8,'#ffe0a0');g.fillStyle='#1a0e06';g.font='12px monospace';g.fillText('↑',sx+13,sy+22);}
+    else if(c==='D'){r(sx,sy,T,T,'#160c04');r(sx+3,sy+2,26,30,'#3a2410');r(sx+6,sy+5,20,27,'#1a0e06');r(sx+10,sy+8,12,24,'#7a4a1c');r(sx+13,sy+3,6,5,'#ffae40');r(sx+8,sy+14,3,3,'#ffd23f');r(sx+21,sy+14,3,3,'#ffd23f');}
+    return;
+  }
+  if(cur.bg==='core'){
+    if(c==='X'){r(sx,sy,T,T,'#1a0e06');r(sx+3,sy+2,26,28,'#3a2410');r(sx+6,sy+5,20,22,'#241608');r(sx+13,sy+2,6,28,'#7a4a1c');r(sx+14,sy+6,4,6,'#ffae40');r(sx+14,sy+18,4,6,'#ffae40');return;}
+    r(sx,sy,T,T,'#221408');if((i+j)%2)r(sx,sy,T,T,'rgba(255,150,50,0.05)');
+    r(sx,sy,T,1,'#3a2410');r(sx,sy,1,T,'#3a2410');
+    if(c==='O'){r(sx+3,sy+3,26,26,'#2a1808');r(sx+8,sy+8,16,16,'#5a3a18');r(sx+11,sy+12,10,8,'#ffe0a0');g.fillStyle='#1a0e06';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='U'){const gl=flags.sovereign?'#9a8a6a':'#ffd23f';r(sx+6,sy+2,20,28,'#1e1206');r(sx+9,sy+5,14,22,'#3a2410');r(sx+7,sy+3,4,7,gl);r(sx+21,sy+3,4,7,gl);r(sx+13,sy+11,6,12,gl);r(sx+10,sy+25,12,4,'#0e0804');}
+    return;
+  }
+  if(curName==='tower'){
+    if(c==='X'){r(sx,sy,T,T,'#2c2638');r(sx+2,sy+2,12,12,'#241f30');r(sx+18,sy+18,12,12,'#241f30');r(sx+18,sy+2,12,12,'#332b42');r(sx+2,sy+18,12,12,'#332b42');return;}
+    r(sx,sy,T,T,'#4a4356');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.07)');
+    r(sx,sy,T,1,'#3d374a');r(sx,sy,1,T,'#3d374a');
+    if(c==='e'){r(sx,sy,T,T,'#423a52');r(sx+8,sy+8,4,4,'#6e5a9e');r(sx+20,sy+18,4,4,'#6e5a9e');r(sx+12,sy+22,4,4,'#6e5a9e');r(sx+22,sy+6,3,3,'#8a74c4');}
+    else if(c==='O'){r(sx+4,sy+4,24,24,'#1c1726');r(sx+8,sy+14,16,4,'#6a6f78');r(sx+8,sy+22,16,4,'#6a6f78');}
+    else if(c==='B'){
+      if(flags.ch3&&!flags.demon){ // 鬼门:封印裂开,腥红雾气翻涌
+        r(sx+4,sy+3,24,26,'#1a0810');r(sx+7,sy+6,18,20,'#3a1424');
+        const o=(frame>>3)%3;r(sx+10+o*2,sy+10,5,3,'#ff4a4a');r(sx+16-o*2,sy+18,5,3,'#c43a5a');r(sx+13,sy+14,4,4,'#ff8080');
+      }else{const gl=flags.boss?'#ffd76a':'#e24b4a';r(sx+4,sy+14,24,4,gl);r(sx+14,sy+4,4,24,gl);r(sx+8,sy+8,4,4,gl);r(sx+20,sy+20,4,4,gl);}
+    }
+    return;
+  }
+  r(sx,sy,T,T,'#7ab648');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.04)');
+  r(sx+6,sy+8,2,4,'#8fcc5e');r(sx+22,sy+20,2,4,'#8fcc5e');r(sx+14,sy+26,2,3,'#69a342');
+  if(c==='t'){r(sx,sy,T,T,'#4e8c2f');[[4,12],[10,6],[16,14],[24,8],[20,22],[8,22]].forEach(b=>{r(sx+b[0],sy+b[1],3,T-b[1]-2,'#3c7022');r(sx+b[0],sy+b[1],1,5,'#5fa53c');});}
+  else if(c==='P'){r(sx,sy,T,T,'#d9b97f');r(sx+6,sy+10,6,4,'#c7a76d');r(sx+20,sy+22,6,4,'#c7a76d');r(sx+22,sy+6,4,3,'#e6cc96');}
+  else if(c==='W'){r(sx,sy,T,T,'#3f7fbf');const o=(frame>>4)%2;r(sx+4+o*8,sy+8,10,2,'#7fb2e0');r(sx+16-o*6,sy+22,10,2,'#7fb2e0');r(sx+24,sy+4,3,2,'#a8d4f0');}
+  else if(c==='b'){r(sx,sy,T,T,'#3f7fbf');r(sx,sy+2,T,8,'#9a6a3a');r(sx,sy+12,T,8,'#8a5e32');r(sx,sy+22,T,8,'#9a6a3a');r(sx,sy,4,T,'#6e4a26');r(sx+28,sy,4,T,'#6e4a26');r(sx+14,sy+5,2,2,'#5a3a1e');r(sx+14,sy+25,2,2,'#5a3a1e');}
+  else if(c==='T'){r(sx+13,sy+20,6,12,'#5d4327');r(sx+14,sy+20,2,12,'#7a5a36');r(sx+6,sy+12,20,10,'#2f6b1e');r(sx+2,sy+7,28,9,'#2f6b1e');r(sx+8,sy+2,16,8,'#2f6b1e');r(sx+10,sy+4,12,8,'#3f8429');r(sx+6,sy+9,18,6,'#3f8429');r(sx+11,sy+5,6,4,'#52a338');}
+  else if(c==='R'){r(sx,sy,T,T,'#8a3b2c');for(let k=0;k<4;k++)r(sx,sy+k*8+6,T,2,'#6e2e22');r(sx+10,sy,2,T,'#6e2e22');r(sx+22,sy,2,T,'#6e2e22');}
+  else if(c==='H'){r(sx,sy,T,T,'#caa46a');r(sx,sy,T,3,'#a8854f');r(sx,sy,2,T,'#8a6a3e');r(sx+30,sy,2,T,'#8a6a3e');if(j===39){r(sx+8,sy+10,16,14,'#5d4327');r(sx+10,sy+12,12,10,'#8fb8d0');r(sx+15,sy+12,2,10,'#5d4327');r(sx+10,sy+16,12,2,'#5d4327');}}
+  else if(c==='d'){r(sx,sy,T,T,'#caa46a');r(sx,sy,T,3,'#a8854f');r(sx+8,sy+4,16,28,'#5d4327');r(sx+10,sy+6,12,26,'#4a3520');r(sx+19,sy+18,2,3,'#d9aa3c');}
+  else if(c==='X'){r(sx,sy,T,T,'#7d7f8a');r(sx,sy,16,16,'#8a8c97');r(sx+16,sy+16,16,16,'#8a8c97');r(sx,sy,T,1,'#5f616c');r(sx,sy+15,T,1,'#5f616c');r(sx+2,sy+26,4,3,'#6f8a5a');}
+  else if(c==='D'){r(sx,sy,T,T,'#7d7f8a');r(sx+4,sy+4,24,28,flags.boss?'#ffd76a':'#2a2233');r(sx+6,sy+6,20,26,flags.boss?'#e8c050':'#1c1726');r(sx+14,sy+2,4,3,'#e24b4a');}
+  else if(c==='S'){r(sx+4,sy+4,24,24,'#6fcfc6');r(sx+8,sy+8,16,16,'#9fe7e0');const o=(frame>>3)%4;r(sx+8+o*4,sy+8+(o*5)%14,4,4,'#ffffff');r(sx+2,sy+14,2,4,'#8a8c97');r(sx+28,sy+10,2,4,'#8a8c97');}
+  else if(c==='V'){
+    if(!flags.ch2){ // 未开启第二章时与湖水无异
+      r(sx,sy,T,T,'#3f7fbf');const o=(frame>>4)%2;r(sx+4+o*8,sy+8,10,2,'#7fb2e0');r(sx+16-o*6,sy+22,10,2,'#7fb2e0');
+    }else{ // 漩涡:双臂螺旋 + 幽暗涡心(第二章入口,需醒目)
+      r(sx,sy,T,T,'#1d4f78');const a=frame*0.14;
+      for(let k=1;k<=4;k++){
+        const rad=2+k*3.4,an=a+k*0.9;
+        g.fillStyle=k%2?'#cdeeff':'#3f7fbf';
+        g.fillRect(sx+16+Math.cos(an)*rad-2,sy+16+Math.sin(an)*rad-2,4,4);
+        g.fillRect(sx+16-Math.cos(an)*rad-2,sy+16-Math.sin(an)*rad-2,4,4);
+      }
+      r(sx+13,sy+13,6,6,'#0a1d2e');
+    }
+  }
+  else if(c==='Y'){ // 第四章:风口(开启前如常草地)
+    r(sx,sy,T,T,'#7ab648');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.04)');
+    if(flags.ch4&&!flags.peng){ // 旋风柱
+      const a=frame*0.16;
+      for(let k=1;k<=4;k++){const rad=2+k*3.2,an=a+k*1.1;g.fillStyle=k%2?'#eaf6ff':'#9fb8d8';
+        g.fillRect(sx+16+Math.cos(an)*rad-2,sy+9+k*4,4,3);}
+      r(sx+12,sy+24,8,4,'#cdddf0');
+    }
+  }
+  else if(c==='q'){ // 第五章:地缝(开启前如常草地)
+    r(sx,sy,T,T,'#7ab648');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.04)');
+    if(flags.ch5&&!flags.sovereign){ // 裂开的地缝,透出地火
+      r(sx+12,sy+2,8,28,'#1a0e08');r(sx+13,sy+4,6,24,'#3a1808');
+      const o=(frame>>3)%3;r(sx+14,sy+8+o*4,4,4,'#ff6a20');r(sx+15,sy+18-o*3,3,3,'#ffb030');
+    }
+  }
+}
+function label(n,sx,sy){
+  g.font='13px monospace';
+  const w=n.length*13+12;
+  g.fillStyle='rgba(0,0,0,0.55)';g.fillRect(sx+16-w/2,sy-17,w,15);
+  g.fillStyle='#fff';g.fillText(n,sx+22-w/2,sy-5);
+}
+function drawHUD(){
+  r(14,14,300,76,'rgba(18,14,26,0.75)');
+  g.font='17px monospace';g.fillStyle='#ffd76a';
+  g.fillText('云无衣 Lv'+S.lvl+'  '+S.gold+'两',26,38);
+  r(26,48,190,11,'#3a2f3a');r(26,48,Math.max(0,Math.min(190,Math.round(S.hp/S.maxHp*190))),11,'#1D9E75');
+  r(26,66,190,11,'#3a2f3a');r(26,66,Math.max(0,Math.min(190,Math.round(S.mp/S.maxMp*190))),11,'#7F77DD');
+  g.font='13px monospace';g.fillStyle='#cdd6e0';
+  g.fillText(S.hp+'/'+S.maxHp,224,58);g.fillText(S.mp+'/'+S.maxMp,224,76);
+}
+function drawWorld(){
+  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':cur.bg==='abyss'?'#1a0c14':cur.bg==='hell'?'#140610':cur.bg==='sky'?'#7fa8d0':cur.bg==='shrine'?'#6a8ab0':cur.bg==='cavern'?'#1a0e06':cur.bg==='core'?'#140a04':'#234d1e');
+  const mw=cur.w*T,mh=cur.h*T;
+  const camX=mw<=SW?(mw-SW)/2:Math.max(0,Math.min(mw-SW,p.x-SW/2+16));
+  const camY=mh<=SH?(mh-SH)/2:Math.max(0,Math.min(mh-SH,p.y-SH/2+16));
+  const x0=Math.max(0,Math.floor(camX/T)),y0=Math.max(0,Math.floor(camY/T));
+  for(let j=y0;j<=Math.min(cur.h-1,y0+VH);j++)for(let i=x0;i<=Math.min(cur.w-1,x0+VW);i++)drawTile(i,j,i*T-camX,j*T-camY);
+  (POIS[curName]||[]).forEach(q=>{
+    const sx=q.x*T-camX,sy=q.y*T-camY;
+    if(sx<-T||sy<-T||sx>SW||sy>SH)return;
+    pix(q.kind,sx,sy,2);
+    if(!looted[q.id]&&(frame>>4)%3===0){r(sx+22,sy+2,3,3,'#fff3c0');r(sx+23,sy+3,1,1,'#ffffff');}
+  });
+  (NPCS[curName]||[]).forEach(n=>{
+    const sx=n.x*T-camX,sy=n.y*T-camY;
+    if(sx<-T||sy<-T||sx>SW||sy>SH)return;
+    SPR[n.draw](sx,sy-8,2,n.c);label(n.n,sx,sy-8);
+  });
+  if(curName==='world'&&!flags.mini){
+    const sx=31*T-camX,sy=13*T-camY;
+    if(sx>-48&&sy>-48&&sx<SW&&sy<SH){drawSnakeK(sx,sy-12,2);label('蛇妖王',sx,sy-12);}
+  }
+  drawHero(p.x-camX,p.y-camY-8,2,p.mv?Math.floor(frame/8)%2:0);
+  for(const w of wpops){
+    g.globalAlpha=Math.max(0,1-w.t);
+    g.font='bold 16px monospace';g.strokeStyle='#000';g.lineWidth=3;
+    g.strokeText(w.txt,w.x-camX-30,w.y-camY);
+    g.fillStyle=w.c;g.fillText(w.txt,w.x-camX-30,w.y-camY);
+    g.globalAlpha=1;
+  }
+  drawHUD();
+  if(CFG.kidMode){ // 右上角小标:让家长一眼看到孩童模式开着
+    r(SW-92,16,78,24,'rgba(20,16,30,0.72)');
+    g.font='14px monospace';g.fillStyle='#9fe7a0';g.fillText('孩童·护',SW-86,33);
+  }
+}
+function updWorld(dt){
+  if(!p.mv){
+    let dx=0,dy=0;
+    if(K.up)dy=-1;else if(K.down)dy=1;else if(K.left)dx=-1;else if(K.right)dx=1;
+    if(dx||dy){
+      const nx=p.tx+dx,ny=p.ty+dy;
+      const n=npcAt(nx,ny),q=n?null:poiAt(nx,ny);
+      if(n){K.up=K.down=K.left=K.right=0;n.talk();}
+      else if(q){K.up=K.down=K.left=K.right=0;investigate(q);}
+      else if(canWalk(nx,ny)){p.mv={fx:p.tx*T,fy:p.ty*T,gx:nx*T,gy:ny*T,t:0};p.tx=nx;p.ty=ny;}
+    }
+  }else{
+    p.mv.t+=dt/0.14;
+    if(p.mv.t>=1){p.x=p.mv.gx;p.y=p.mv.gy;p.mv=null;onStep();}
+    else{p.x=p.mv.fx+(p.mv.gx-p.mv.fx)*p.mv.t;p.y=p.mv.fy+(p.mv.gy-p.mv.fy)*p.mv.t;}
+  }
+  for(let i=wpops.length-1;i>=0;i--){wpops[i].t+=dt;wpops[i].y-=24*dt;if(wpops[i].t>1.2)wpops.splice(i,1);}
+}
+function onStep(){
+  const c=tileAt(p.tx,p.ty);
+  if(c==='S'&&(S.hp<S.maxHp||S.mp<S.maxMp)){S.hp=S.maxHp;S.mp=S.maxMp;sHeal();wpop('灵泉:全恢复!','#9fe7e0');}
+  if(c==='D'&&curName==='world'){
+    showDialog(['你推开沉重的石门,塔内阴风扑面……'],()=>switchMap('tower',11,25));
+    return;
+  }
+  if(c==='V'&&flags.ch2){diveLake();return;}
+  if(c==='Y'&&flags.ch4){ascendSky();return;}
+  if(c==='q'&&flags.ch5){descendCave();return;}
+  if(c==='d'||c==='D'||c==='O'){ // 通用传送门:木门、水府门、各类出口
+    const door=DOORS[curName+':'+p.tx+','+p.ty];
+    if(door){switchMap(door.map,door.x,door.y);return;}
+    if(c==='O'){switchMap('world',31,3);return;}
+  }
+  if(c==='Z'){ // 蛟龙王座
+    if(!flags.dragon){
+      showDialog([
+        '水府深处,一条墨色蛟龙自蟠柱间昂起,鳞甲泛着幽光。',
+        {n:'阿萝',t:'师兄小心!这蛟龙性属水,快用风灵咒——御风能破它的水鳞!'},
+        {n:'墨蛟龙王',t:'谁人扰我清眠……既来了,便永沉这湖底吧!'}
+      ],()=>startBattle('dragon',true));
+    }else wpop('王座空荡荡的','#9fe1cb');
+    return;
+  }
+  if(c==='B'){
+    if(!flags.boss){
+      showDialog([
+        '封印法阵的中央,黑雾凝成一道高大的影子。',
+        {n:'千年妖王',t:'千年了……终于等到开锁的血食。小辈,纳命来!'}
+      ],()=>startBattle('king',true));
+    }else if(flags.ch3&&!flags.demon){ // 第三章:封印之下竟藏着通往妖界的鬼门
+      enterAbyss();
+    }else wpop('封印安然无恙','#ffd76a');
+    return;
+  }
+  if(c==='M'){ // 第三章:魔尊王座
+    if(!flags.demon){
+      showDialog([
+        '殿堂尽头,一尊巨影自骨座上缓缓睁眼,雷光在它角间游走。',
+        {n:'阿萝',t:'师兄,它就是操纵妖王和蛟龙的混沌魔尊!它属雷——用烈焰咒,火克雷!'},
+        {n:'混沌魔尊',t:'蝼蚁也敢登我殿堂?连同你这一身五灵,我一并吞了!'}
+      ],()=>startBattle('demon',true));
+    }else wpop('魔殿一片死寂','#9a9aa8');
+    return;
+  }
+  if(c==='N'){ // 第四章:大鹏王座
+    if(!flags.peng){
+      showDialog([
+        '殿顶罡风骤起,一只通天巨鹏抖开双翅,翅下卷起飓风。',
+        {n:'阿萝',t:'是大鹏妖王!它御风而行,寻常招式近不得身——用土灵咒,土克风,镇住它的翅!'},
+        {n:'大鹏妖王',t:'区区地行之辈,也敢登我九霄?随风去吧!'}
+      ],()=>startBattle('peng',true));
+    }else wpop('云殿风平浪静','#cdddf0');
+    return;
+  }
+  if(c==='U'){ // 第五章:后土王座(全剧终 Boss)
+    if(!flags.sovereign){
+      showDialog([
+        '地心深处,一尊以山岩为甲的巨君自王座上起身,熔岩顺着它的躯壳流淌。',
+        {n:'阿萝',t:'就是它……乱源之根,后土魔君!它属土,镇压万物——用紫雷咒,雷克土,这是最后一战了!'},
+        {n:'后土魔君',t:'妖王、蛟龙、魔尊、大鹏……皆是我之指爪。如今你也将归于尘土。'},
+        {n:'阿萝',t:'师兄,五灵在你手中圆满。我陪着你——一起,了结它!'}
+      ],()=>startBattle('sovereign',true));
+    }else wpop('地心归于沉寂','#9a8a6a');
+    return;
+  }
+  if(curName==='world'&&!flags.mini&&p.ty===14&&(p.tx===31||p.tx===32)){
+    showDialog([
+      {n:'???',t:'嘶嘶——此桥是我开,要过去,先问问我的毒牙。'},
+      '蛇妖王挡住了去路!'
+    ],()=>startBattle('snakeKing',true));
+    return;
+  }
+  if(c==='t'||c==='e'||c==='c'||c==='m'){ // 深草 / 符纹地 / 水草 / 魔纹:遇敌地形
+    if(grace>0){grace--;return;}
+    if(Math.random()<cur.rate){
+      const pool=cur.pool();
+      startBattle(pool[rnd(0,pool.length-1)],false);
+    }
+  }
+}
+// 第二章:纵身潜入水月湖底(首次潜入播一段旁白)
+function diveLake(){
+  if(!flags.lakeIntro){
+    flags.lakeIntro=true;
+    showDialog([
+      '你深吸一口气,纵身跃入漩涡。冰凉的湖水将你裹住,世界沉入一片幽蓝。',
+      {n:'阿萝',t:'师兄,我跟你一起!这水府机关重重,千万跟紧我。'},
+      '(水草丛中会遇上水妖;气泡灵泉可回满状态。北边的水府门后,便是蛟龙的巢穴。)'
+    ],()=>switchMap('lake',14,21));
+  }else switchMap('lake',14,21);
+}
+// 第三章:踏入封印之下的鬼门,坠入妖界魔渊(首次有旁白)
+function enterAbyss(){
+  if(!flags.abyssIntro){
+    flags.abyssIntro=true;
+    showDialog([
+      '封印的金光裂开一道缝隙,缝里翻涌着腥红的雾——那是一道鬼门。',
+      {n:'阿萝',t:'妖王和蛟龙,都不过是它的爪牙……师兄,这一关,我们一起闯过去!'},
+      '你与阿萝并肩跨入鬼门,脚下是望不见底的魔渊。',
+      '(魔纹地会遇上魔物;邪泉可回满状态。北面的魔殿,便是混沌魔尊的所在。)'
+    ],()=>switchMap('abyss',14,21));
+  }else switchMap('abyss',14,21);
+}
+// 第四章:乘风口直上九霄云海(首次有旁白)
+function ascendSky(){
+  if(!flags.skyIntro){
+    flags.skyIntro=true;
+    showDialog([
+      '风口卷起一道盘旋的旋风,托着你与阿萝扶摇直上,穿过云层,踏上了茫茫云海。',
+      {n:'阿萝',t:'好高啊……这就是九霄。脚下踩的都是云,可别踩空了。'},
+      '(罡风带里会遇上风妖;风眼灵泉可回满状态。云海北端的风窟,便是大鹏妖王的巢。)'
+    ],()=>switchMap('sky',14,21));
+  }else switchMap('sky',14,21);
+}
+// 第五章:坠入村西地缝,深入黄泉地心(首次有旁白)
+function descendCave(){
+  if(!flags.caveIntro){
+    flags.caveIntro=true;
+    showDialog([
+      '地缝裂开,一股灼热的地气扑面而来。你与阿萝顺着嶙峋的岩壁,一路下到黄泉地心。',
+      {n:'阿萝',t:'越往下,这股镇压万物的气息越重……乱源,就在这底下。'},
+      '(矿脉地会遇上土妖;地泉可回满状态。地心尽头的后土殿,藏着这一切的根源。)'
+    ],()=>switchMap('cavern',14,21));
+  }else switchMap('cavern',14,21);
+}
+
+// Phase 1:翻找家具。首次有宝物("叮"+金色飘字),重复调查按种类给不同文案
+function investigate(q){
+  const kd=POI_KINDS[q.kind];
+  if(looted[q.id]){showDialog([kd.again]);return;}
+  looted[q.id]=true;
+  const lt=q.loot,lines=[];
+  if(lt.t==='gold'){S.gold+=lt.n;sDing();wpop('+'+lt.n+' 两','#ffd76a');lines.push('你在'+kd.n+'里翻出了 '+lt.n+' 两银子!');}
+  else if(lt.t==='item'){const n=lt.n||1;INV[lt.k]+=n;sDing();wpop(ITEMN[lt.k]+' ×'+n,'#ffd76a');lines.push('你在'+kd.n+'里找到了'+ITEMN[lt.k]+'!');}
+  else if(lt.t==='note'){sDing();wpop('发现纸条','#ffd76a');lines.push('你在'+kd.n+'里发现一张纸条……',lt.text);}
+  else lines.push('你仔细翻了翻'+kd.n+'……什么都没有。');
+  // 翻到第二件时,屋主忍不住吐槽一句(每间屋一次)
+  const sn=SNARK[curName];
+  if(sn&&(POIS[curName]||[]).filter(x=>looted[x.id]).length===2)lines.push(sn);
+  showDialog(lines);
+  save();
+}
+
+function talkAluo(){
+  if(!flags.aluo){
+    flags.aluo=true;INV.dan++;
+    showDialog([
+      {n:'阿萝',t:'师兄!锁妖塔的封印快破了,北边过了断桥就是塔门。'},
+      {n:'阿萝',t:'这枚回灵丹你带上。桥上盘着一条蛇妖王,千万小心!'},
+      {n:'阿萝',t:'湖东边有灵泉能回满状态,杂货铺和铁匠铺也去看看。'}
+    ]);
+  }
+  else if(!flags.mini)showDialog([{n:'阿萝',t:'先在草丛练级、买好装备,再去会那蛇妖王!它属水,雷法可不好使。'}]);
+  else if(!flags.boss)showDialog([{n:'阿萝',t:'塔里阴气重,鬼火属火——练到 5 级学会水灵咒就能克它,妖王也一样!'}]);
+  else if(!flags.ch2){ // 第二章开篇:妖王残魂惊动湖底蛟龙,阿萝传授风灵咒,湖面漩涡显现
+    flags.ch2=true;flags.wind=true;
+    showDialog([
+      {n:'阿萝',t:'师兄,大事不好!妖王临死那缕妖魂沉进了水月湖,惊醒了湖底沉睡千年的蛟龙!'},
+      {n:'阿萝',t:'湖水一夜暴涨,村子要保不住了……这回,我陪你一起下湖!'},
+      {n:'阿萝',t:'湖底水妖个个属水。我把师门的「风灵咒」传给你——风能克水,正好破它们!'},
+      '【习得仙术 · 风灵咒】(战斗中选「仙术」即可施放)',
+      {n:'阿萝',t:'湖中央起了个漩涡,那就是入口。走,我在漩涡边等你!'}
+    ]);
+    save();
+  }
+  else if(!flags.dragon)showDialog([{n:'阿萝',t:'湖中漩涡通往水府。记住——水府里的妖物都属水,风灵咒打它们最疼!'}]);
+  else if(!flags.ch3){ // 第三章开篇:揭示幕后魔尊,指向锁妖塔鬼门
+    flags.ch3=true;
+    showDialog([
+      {n:'阿萝',t:'师兄,我查过古卷……妖王和蛟龙,都是被同一个东西驱使的爪牙。'},
+      {n:'阿萝',t:'锁妖塔的封印之下,藏着一道通往妖界的鬼门。幕后真凶——混沌魔尊,就困在里头。'},
+      {n:'阿萝',t:'它属雷,凶得很。你把五灵术修到大成,火灵咒会化作烈焰咒,火克雷,正好克它!'},
+      {n:'阿萝',t:'回锁妖塔,踏上塔心那道裂开的封印。这一回,我陪你闯妖界!'}
+    ]);
+    save();
+  }
+  else if(!flags.demon)showDialog([{n:'阿萝',t:'鬼门就在锁妖塔塔心的封印处。魔渊里魔物属性各异,记得换着咒法打——魔尊属雷,烈焰咒最克它!'}]);
+  else if(!flags.ch4){ // 第四章开篇:魔尊一除,九霄失镇,阿萝传授土灵咒
+    flags.ch4=true;flags.earth=true;
+    showDialog([
+      {n:'阿萝',t:'师兄,不好了!混沌魔尊一除,镇着天地的五灵失了平衡——这回是天上。'},
+      {n:'阿萝',t:'九霄之上,大鹏妖王挟着罡风,要把灵山连根掀了。它御风而行,寻常剑招近不得身。'},
+      {n:'阿萝',t:'你五灵里独缺一门土。我把祖传的「土灵咒」传你——土能克风,正好镇它的翅!'},
+      '【习得仙术 · 土灵咒】五灵自此圆满!',
+      {n:'阿萝',t:'湖畔起了道风口,能直上九霄。走,我陪你上天去会会那只大鸟!'}
+    ]);
+    save();
+  }
+  else if(!flags.peng)showDialog([{n:'阿萝',t:'风口在湖畔东边。云海里风妖都属风——土灵咒一出,个个现形!大鹏妖王也一样。'}]);
+  else if(!flags.ch5){ // 第五章开篇:乱源之根在地心,村西地缝裂开
+    flags.ch5=true;
+    showDialog([
+      {n:'阿萝',t:'师兄,我把古卷翻到了最后一页……妖王、蛟龙、魔尊、大鹏,全是同一个根上长出的爪牙。'},
+      {n:'阿萝',t:'乱源之根,叫「后土魔君」,镇在黄泉地心。它一动,五灵就乱。要彻底了结,只能下去拔掉这根。'},
+      {n:'阿萝',t:'它属土,雷克土——你那道紫雷咒,正是为它备的。村西的地,刚裂开一道地缝。'},
+      {n:'阿萝',t:'这是最后一程了。师兄……我们一起,走到底。'}
+    ]);
+    save();
+  }
+  else if(!flags.sovereign)showDialog([{n:'阿萝',t:'地缝在村子西边。地心里土妖成群,紫雷咒最克它们;那只熔岩兽属火,玄冰咒伺候。后土魔君,也属土!'}]);
+  else showDialog([{n:'阿萝',t:'五灵归位,天地重宁,再没有什么乱源了。师兄……这一路,有你真好。'}]);
+}
+// 第四章:阿萝随你闯云海
+function talkAluoSky(){
+  if(!flags.peng)showDialog([
+    {n:'阿萝',t:'顺着云路往北就是风窟。罡风鬼、云鹏、风狸王都属风——土灵咒最克它们!'},
+    {n:'阿萝',t:'只有霹雳鸟属雷,留着烈焰咒招呼它。撑不住就回风眼灵泉歇口气。'}
+  ]);
+  else showDialog([{n:'阿萝',t:'风停了,云海也静了。师兄,我们下去吧。'}]);
+}
+// 第五章:阿萝随你下黄泉
+function talkAluoCave(){
+  if(!flags.sovereign)showDialog([
+    {n:'阿萝',t:'顺着矿脉往北就是后土殿。山魈圣、石煞、地裂魔都属土——紫雷咒一道道劈下去最痛快!'},
+    {n:'阿萝',t:'熔岩兽属火,改用玄冰咒。后土魔君属土,留足灵力给紫雷咒。师兄,我就在你身边。'}
+  ]);
+  else showDialog([{n:'阿萝',t:'地心静了,腥气也散了。师兄,我们回家——回灵山。'}]);
+}
+// 第二章:阿萝在湖底剧情同行(随进度变化的台词)
+function talkAluoLake(){
+  if(!flags.dragon)showDialog([
+    {n:'阿萝',t:'顺着水草往北走就是水府门。当心,墨鱼妖最快,先用风灵咒点它!'},
+    {n:'阿萝',t:'那只龟将军壳硬属土——对它改用雷灵咒,事半功倍。'}
+  ]);
+  else showDialog([{n:'阿萝',t:'湖水退下去了,水府也安静了。师兄,我们回村报喜吧!'}]);
+}
+// 第三章:阿萝随你闯魔渊(战前提点全套克制打法)
+function talkAluoAbyss(){
+  if(!flags.demon)showDialog([
+    {n:'阿萝',t:'顺着魔纹往北就是魔殿。焰魔属火、玄阴鬼属水、魔将属土、雷狱卒属雷——挨个用克它的咒最省力!'},
+    {n:'阿萝',t:'撑不住就退回邪泉边回气。魔尊属雷,灵力留着给烈焰咒!'}
+  ]);
+  else showDialog([{n:'阿萝',t:'魔渊的腥气散尽了。师兄,我们回家吧。'}]);
+}
+function inn(){
+  const c=Math.min(10,S.gold);S.gold-=c;S.hp=S.maxHp;S.mp=S.maxMp;sHeal();save();
+  showDialog([{n:'老板娘',t:'热水烧好啦,好生歇息。(花费 '+c+' 两,气血灵力全满,已自动保存)'}]);
+}
+
+let dq=[],dcb=null;
+function showDialog(lines,cb){dq=lines.slice();dcb=cb;$('dlg').style.display='block';nextDlg();}
+function nextDlg(){
+  if(!dq.length){
+    $('dlg').style.display='none';
+    const c=dcb;dcb=null;if(c)c();
+    return;
+  }
+  const it=dq.shift();
+  if(typeof it==='string'){$('dlgName').style.display='none';$('dlgText').textContent=it;}
+  else{$('dlgName').style.display='inline-block';$('dlgName').textContent=it.n;$('dlgText').textContent=it.t;}
+}
+function openPanel(html){$('panelBody').innerHTML=html;$('panel').style.display='flex';}
+function closePanel(){$('panel').style.display='none';}
+let toastT=null;
+function toast(t){
+  $('toast').textContent=t;$('toast').style.display='block';
+  if(toastT)clearTimeout(toastT);
+  toastT=setTimeout(()=>{$('toast').style.display='none';},1400);
+}
+function shopRow(n,d,pr,fn){
+  return '<div class="srow"><div><b>'+n+'</b><span>'+d+'</span></div><button class="pbtn" onclick="'+fn+'">'+pr+' 两</button></div>';
+}
+function openShop(kind){
+  let h='<h3>'+(kind==='item'?'杂货铺':'铁匠铺')+'</h3><div class="gold">银两:'+S.gold+'</div>';
+  if(kind==='item'){
+    h+=shopRow('回灵丹','恢复 '+healAmt('dan')+' 气血(现有 '+INV.dan+')',30,"buyItem('dan',30)");
+    h+=shopRow('清心散','恢复 '+healAmt('qing')+' 灵力(现有 '+INV.qing+')',30,"buyItem('qing',30)");
+    h+=shopRow('大还丹','气血全满(现有 '+INV.dadan+')',90,"buyItem('dadan',90)");
+  }else{
+    for(let i=1;i<WPNS.length;i++)h+=shopRow(WPNS[i].n,'攻击 +'+WPNS[i].a+(EQ.wpn===i?' · 已装备':EQ.wpn>i?' · 已淘汰':''),WPNS[i].p,'buyWpn('+i+')');
+    for(let i=1;i<ARMS.length;i++)h+=shopRow(ARMS[i].n,'防御 +'+ARMS[i].d+(EQ.arm===i?' · 已装备':EQ.arm>i?' · 已淘汰':''),ARMS[i].p,'buyArm('+i+')');
+  }
+  h+='<button class="pbtn" onclick="closePanel()">离开</button>';
+  openPanel(h);
+}
+function buyItem(k,pr){
+  if(S.gold<pr){toast('银两不够……');return;}
+  S.gold-=pr;INV[k]++;sHeal();openShop('item');
+}
+function buyWpn(i){
+  if(EQ.wpn>=i){toast('已有更好的剑了');return;}
+  if(S.gold<WPNS[i].p){toast('银两不够……');return;}
+  S.gold-=WPNS[i].p;EQ.wpn=i;sLvl();toast('已装备 '+WPNS[i].n);openShop('gear');
+}
+function buyArm(i){
+  if(EQ.arm>=i){toast('已有更好的护甲了');return;}
+  if(S.gold<ARMS[i].p){toast('银两不够……');return;}
+  S.gold-=ARMS[i].p;EQ.arm=i;sLvl();toast('已装备 '+ARMS[i].n);openShop('gear');
+}
+function openStatus(){
+  const ups=Object.values(SKILL_UP);
+  const known=SKILLS.filter(skillKnown).map(s=>(ups.includes(s.n)?'↑':'')+s.n+'·'+s.el).join('  ');
+  openPanel('<h3>云无衣</h3>'+
+    '<div class="srow"><div><b>等级 '+S.lvl+'</b><span>经验 '+S.exp+' / '+(S.lvl*45)+'</span></div></div>'+
+    '<div class="srow"><div><b>气血 '+S.hp+'/'+S.maxHp+'</b><span>灵力 '+S.mp+'/'+S.maxMp+'</span></div></div>'+
+    '<div class="srow"><div><b>攻击 '+atkP()+' · 防御 '+defP()+'</b><span>'+WPNS[EQ.wpn].n+' / '+ARMS[EQ.arm].n+'</span></div></div>'+
+    '<div class="srow"><div><b>仙术</b><span>'+known+'</span></div></div>'+
+    '<div class="srow"><div><b>行囊</b><span>回灵丹×'+INV.dan+'  大还丹×'+INV.dadan+'  清心散×'+INV.qing+'  银两 '+S.gold+'</span></div></div>'+
+    '<div class="srow"><div><b>难度 · '+(CFG.kidMode?'孩童模式':'普通模式')+'</b><span>'+(CFG.kidMode?'伤害减半 · 丹药翻倍':'家长可开启孩童模式护着孩子')+'</span></div><button class="pbtn" onclick="openKidMode()">家长设置</button></div>'+
+    '<button class="pbtn" onclick="doSave()">保存进度</button> <button class="pbtn" onclick="closePanel()">关闭</button>');
+}
+function doSave(){save();toast('已保存');closePanel();}
+// 孩童模式 · 家长锁:配置存独立 key,不随存档/重开走
+function loadCfg(){try{const c=JSON.parse(localStorage.getItem('lingshan_cfg'));if(c){CFG.kidMode=!!c.kidMode;CFG.pwd=c.pwd||'';}}catch(e){}}
+function saveCfg(){try{localStorage.setItem('lingshan_cfg',JSON.stringify(CFG));}catch(e){}}
+function openKidMode(){
+  const on=CFG.kidMode,first=!CFG.pwd;
+  let h='<h3>家长设置 · 难度</h3>';
+  h+='<div class="gold">当前:'+(on?'孩童模式(伤害减半 · 丹药翻倍)':'普通模式')+'</div>';
+  if(first)h+='<div class="srow"><div><span>第一次使用:先设一个家长密码。之后要改难度,都得先输这个密码——孩子就改不动啦。</span></div></div>';
+  h+='<input id="pwIn" type="password" inputmode="numeric" autocomplete="off" placeholder="'+(first?'设置家长密码':'输入家长密码')+'">';
+  h+='<button class="pbtn" onclick="'+(first?'setKidPwd()':'applyKidMode()')+'">'+(on?'关闭孩童模式':'开启孩童模式')+(first?'(并设密码)':'')+'</button>';
+  if(!first)h+=' <span style="color:#6e6655;font-size:11px;">忘了密码?清除浏览器网站数据可重置</span>';
+  h+='<div style="margin-top:6px;"><button class="pbtn" onclick="openStatus()">返回</button></div>';
+  openPanel(h);
+  setTimeout(()=>{const e=$('pwIn');if(e&&e.focus)e.focus();},60);
+}
+function setKidPwd(){
+  const v=(($('pwIn')||{}).value||'').trim();
+  if(!v){toast('密码不能为空');return;}
+  CFG.pwd=v;CFG.kidMode=!CFG.kidMode;saveCfg();
+  toast(CFG.kidMode?'已开启孩童模式':'已关闭孩童模式');openStatus();
+}
+function applyKidMode(){
+  const v=(($('pwIn')||{}).value||'').trim();
+  if(v!==CFG.pwd){toast('密码不对,未改动');return;}
+  CFG.kidMode=!CFG.kidMode;saveCfg();
+  toast(CFG.kidMode?'已开启孩童模式':'已关闭孩童模式');openStatus();
+}
+function save(){
+  try{localStorage.setItem('lingshan1',JSON.stringify({S:S,INV:INV,EQ:EQ,flags:flags,looted:looted,map:curName,x:p.tx,y:p.ty}));}catch(e){}
+}
+function loadSave(){
+  try{
+    const d=JSON.parse(localStorage.getItem('lingshan1'));
+    if(!d)return false;
+    Object.assign(S,d.S);Object.assign(INV,d.INV);Object.assign(EQ,d.EQ);Object.assign(flags,d.flags);
+    for(const k in looted)delete looted[k];
+    Object.assign(looted,d.looted||{});
+    switchMap(d.map||'world',d.x,d.y);
+    return true;
+  }catch(e){return false;}
+}
+function hasSave(){try{return !!localStorage.getItem('lingshan1');}catch(e){return false;}}
+function resetState(){
+  Object.assign(S,{hp:70,maxHp:70,mp:36,maxMp:36,lvl:1,exp:0,gold:80});
+  Object.assign(INV,{dan:3,dadan:0,qing:1});
+  EQ.wpn=0;EQ.arm=0;
+  flags.aluo=false;flags.mini=false;flags.boss=false;
+  flags.ch2=false;flags.wind=false;flags.lakeIntro=false;flags.dragon=false;
+  flags.ch3=false;flags.abyssIntro=false;flags.demon=false;
+  flags.ch4=false;flags.earth=false;flags.skyIntro=false;flags.peng=false;
+  flags.ch5=false;flags.caveIntro=false;flags.sovereign=false;
+  for(const k in looted)delete looted[k];
+  switchMap('world',31,44);
+}
+
+function showEnding(){
+  if($('endTitle'))$('endTitle').textContent='第一章 · 完';
+  $('endText').textContent='千年妖王哀嚎着被吸回封印,法阵重新亮起金光。阿萝在塔外迎着晨光向你奔来——回到村里找她,水月湖那边,似乎又起了波澜……';
+  $('endov').style.display='flex';
+  sWin();
+}
+function showEnding2(){
+  if($('endTitle'))$('endTitle').textContent='第二章 · 完';
+  $('endText').textContent='墨蛟龙王化作一池清水,湖面重归平静,月影粼粼。阿萝挽住你的衣袖,笑着说还要陪你走更远的路——灵山的传说,仍未完待续。';
+  $('endov').style.display='flex';
+  sWin();
+}
+function showEnding3(){
+  if($('endTitle'))$('endTitle').textContent='第三章 · 完';
+  $('endText').textContent='混沌魔尊在五灵齐轰下崩散成漫天流光,鬼门轰然闭合。云无衣与阿萝并肩走出锁妖塔——可妖魂散尽时,大地却隐隐震颤,镇压天地的五灵失了平衡。新的风波,正在天地之间酝酿……';
+  $('endov').style.display='flex';
+  sWin();
+}
+function showEnding4(){
+  if($('endTitle'))$('endTitle').textContent='第四章 · 完';
+  $('endText').textContent='大鹏妖王折翼坠落,化作一缕清风消散,云海重归澄澈。云无衣与阿萝乘风而下、脚踏实地——可阿萝总望着脚下的土地出神,仿佛深处还有什么,正在低低地轰鸣。';
+  $('endov').style.display='flex';
+  sWin();
+}
+function showEnding5(){
+  if($('endTitle'))$('endTitle').textContent='全 剧 终';
+  $('endText').textContent='后土魔君在五灵齐鸣中崩解为漫天尘光,地心的轰鸣终于止息,黄泉重归沉寂——乱源之根,断了。云无衣与阿萝一路升回地面,灵山的春风迎面而来。火、水、雷、风、土,五灵归位,天地太平。从锁妖塔到黄泉地心,这一整段传说,在此圆满落幕。多谢你,陪云无衣和阿萝走完了整条路。';
+  $('endov').style.display='flex';
+  sWin();
+}
+$('btnRoam').onclick=()=>{$('endov').style.display='none';};
+$('btnRestart').onclick=()=>{$('endov').style.display='none';resetState();save();};
+
+const petals=[];
+for(let i=0;i<26;i++)petals.push({x:Math.random()*SW,y:Math.random()*SH,vx:24+Math.random()*36,vy:30+Math.random()*42,s:4+Math.round(Math.random()*2)});
+function drawTitleBg(dt){
+  r(0,0,SW,SH,'#181426');
+  g.fillStyle='#f3e6c8';g.beginPath();g.arc(780,124,60,0,Math.PI*2);g.fill();
+  g.fillStyle='#181426';g.beginPath();g.arc(804,108,52,0,Math.PI*2);g.fill();
+  g.fillStyle='#241d38';
+  g.beginPath();g.moveTo(0,500);g.lineTo(180,280);g.lineTo(400,500);g.closePath();g.fill();
+  g.beginPath();g.moveTo(260,520);g.lineTo(520,240);g.lineTo(800,520);g.closePath();g.fill();
+  g.fillStyle='#2e2547';
+  g.beginPath();g.moveTo(600,540);g.lineTo(840,320);g.lineTo(960,540);g.closePath();g.fill();
+  r(0,500,SW,140,'#100d1c');
+  r(456,300,48,200,'#0c0a16');r(444,288,72,16,'#0c0a16');r(464,240,32,60,'#0c0a16');r(470,226,20,16,'#0c0a16');
+  for(const f of petals){
+    f.x-=f.vx*dt;f.y+=f.vy*dt;
+    if(f.y>SH||f.x<-6){f.x=SW+Math.random()*60;f.y=-12;}
+    r(f.x,f.y,f.s,f.s,'#ED93B1');
+  }
+}
+document.querySelectorAll('#dpad button').forEach(b=>{
+  const d=b.dataset.d;
+  if(!d)return;
+  b.addEventListener('pointerdown',e=>{e.preventDefault();au();K[d]=1;try{b.setPointerCapture(e.pointerId);}catch(err){}});
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>{K[d]=0;}));
+});
+const KM={ArrowUp:'up',w:'up',ArrowDown:'down',s:'down',ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right'};
+window.addEventListener('keydown',e=>{
+  au();
+  if(KM[e.key]!==undefined){K[KM[e.key]]=1;e.preventDefault();}
+  if((e.key==='Enter'||e.key===' '||e.key==='z')&&$('dlg').style.display==='block'){nextDlg();e.preventDefault();}
+});
+window.addEventListener('keyup',e=>{if(KM[e.key]!==undefined)K[KM[e.key]]=0;});
+$('dlg').onclick=()=>{au();nextDlg();};
+$('batk').onclick=()=>act('atk');
+$('bskl').onclick=()=>act('skl');
+$('bitm').onclick=()=>act('itm');
+$('bfle').onclick=()=>act('fle');
+$('btnBag').onclick=()=>{au();if(mode==='world')openStatus();};
+$('btnMus').onclick=()=>{au();setMusic(!musicOn);};
+$('btnNew').onclick=()=>{
+  au();resetState();
+  $('title').style.display='none';mode='world';
+  showDialog([
+    '第一章 · 锁妖塔',
+    {n:'阿萝',t:'师兄!出大事了,快来村口找我!'},
+    '(撞上村民即可对话;先去找阿萝吧)'
+  ]);
+};
+$('btnCont').onclick=()=>{
+  au();
+  if(loadSave()){$('title').style.display='none';mode='world';}
+  else toast('没有找到存档');
+};
+loadCfg();
+if(!hasSave())$('btnCont').disabled=true;
+battleUI(false);
+
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(0.05,(now-last)/1000);
+  last=now;frame++;
+  if(mode==='title')drawTitleBg(dt);
+  else if(mode==='world'){
+    if($('dlg').style.display!=='block'&&$('panel').style.display!=='flex'&&$('endov').style.display!=='flex')updWorld(dt);
+    drawWorld();
+  }
+  else if(mode==='battle'&&B){updBattle(dt);drawBattle();}
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

@@ -12,4 +12,8 @@ const start=html.indexOf(first[0]),end=html.indexOf(lastTag[0])+lastTag[0].lengt
 const out=html.slice(0,start)+'<script>\n'+js+'</script>\n'+html.slice(end);
 fs.mkdirSync(path.join(root,'dist'),{recursive:true});
 fs.writeFileSync(path.join(root,'dist/lingshan-rpg.html'),out);
-console.log('build: dist/lingshan-rpg.html ('+(out.length/1024).toFixed(1)+' KB)');
+// 同步输出到 docs/index.html —— GitHub Pages 直接把它当站点首页(孩子用链接就能玩)
+fs.mkdirSync(path.join(root,'docs'),{recursive:true});
+fs.writeFileSync(path.join(root,'docs/index.html'),out);
+fs.writeFileSync(path.join(root,'docs/.nojekyll'),''); // 关掉 Jekyll,原样静态托管
+console.log('build: dist/lingshan-rpg.html + docs/index.html ('+(out.length/1024).toFixed(1)+' KB)');
