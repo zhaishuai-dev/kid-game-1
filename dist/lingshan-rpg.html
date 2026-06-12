@@ -105,7 +105,9 @@
     <button id="bfle">🏃 逃跑</button>
   </div>
   <div id="menubar">
-    <button id="btnBag">🎒 背包 · 状态</button>
+    <button id="btnBag">🎒 背包</button>
+    <button id="btnStat">⭐ 状态</button>
+    <button id="btnSave">💾 保存</button>
     <button id="btnMus">🎵 关</button>
   </div>
 </div>
@@ -1530,16 +1532,37 @@ function buyArm(i){
 function openStatus(){
   const ups=Object.values(SKILL_UP);
   const known=SKILLS.filter(skillKnown).map(s=>ELEMOJI[s.el]+s.n+(ups.includes(s.n)?'↑':'')).join('  ');
-  openPanel('<h3>云无衣</h3>'+
+  openPanel('<h3>⭐ 状态</h3>'+
     '<div class="srow"><div><b>⭐ 等级 '+S.lvl+'</b><span>经验 '+S.exp+' / '+(S.lvl*45)+'</span></div></div>'+
     '<div class="srow"><div><b>❤️ 气血 '+S.hp+'/'+S.maxHp+'</b><span>💙 灵力 '+S.mp+'/'+S.maxMp+'</span></div></div>'+
     '<div class="srow"><div><b>⚔️ 攻击 '+atkP()+' · 🛡️ 防御 '+defP()+'</b><span>'+WPNS[EQ.wpn].n+' / '+ARMS[EQ.arm].n+'</span></div></div>'+
     '<div class="srow"><div><b>✨ 仙术</b><span>'+known+'</span></div></div>'+
-    '<div class="srow"><div><b>🎒 行囊</b><span>❤️'+INV.dan+'  💖'+INV.dadan+'  💙'+INV.qing+'  🪙'+S.gold+'</span></div></div>'+
     '<div class="srow"><div><b>难度 · '+(CFG.kidMode?'孩童模式':'普通模式')+'</b><span>'+(CFG.kidMode?'伤害减半 · 丹药翻倍':'家长可开启孩童模式护着孩子')+'</span></div><button class="pbtn" onclick="openKidMode()">家长设置</button></div>'+
-    '<button class="pbtn" onclick="doSave()">保存进度</button> <button class="pbtn" onclick="closePanel()">关闭</button>');
+    '<button class="pbtn" onclick="closePanel()">🔙 关闭</button>');
 }
-function doSave(){save();toast('已保存');closePanel();}
+// 背包:大图标看物品,场外也能吃药回血/回灵力(给小朋友)
+function openBag(){
+  const useBtn=(k,full)=>'<button class="pbtn" onclick="useField(\''+k+'\')">'+(full?'喝':'用')+'</button>';
+  openPanel('<h3>🎒 背包</h3>'+
+    '<div class="srow"><div><b><span style="font-size:21px">❤️</span> 回灵丹 ×'+INV.dan+'</b><span>恢复 '+healAmt('dan')+' 气血</span></div>'+useBtn('dan')+'</div>'+
+    '<div class="srow"><div><b><span style="font-size:21px">💖</span> 大还丹 ×'+INV.dadan+'</b><span>气血全满</span></div>'+useBtn('dadan')+'</div>'+
+    '<div class="srow"><div><b><span style="font-size:21px">💙</span> 清心散 ×'+INV.qing+'</b><span>恢复 '+healAmt('qing')+' 灵力</span></div>'+useBtn('qing')+'</div>'+
+    '<div class="srow"><div><b><span style="font-size:21px">⚔️</span> '+WPNS[EQ.wpn].n+'</b><span>攻击 +'+WPNS[EQ.wpn].a+'</span></div></div>'+
+    '<div class="srow"><div><b><span style="font-size:21px">🛡️</span> '+ARMS[EQ.arm].n+'</b><span>防御 +'+ARMS[EQ.arm].d+'</span></div></div>'+
+    '<div class="srow"><div><b><span style="font-size:21px">🪙</span> 银两</b><span>买东西用的钱</span></div><b style="font-size:17px">'+S.gold+'</b></div>'+
+    '<button class="pbtn" onclick="closePanel()">🔙 关闭</button>');
+}
+// 场外用药(战斗外回血/回灵力)
+function useField(k){
+  if((INV[k]||0)<1){toast('没有了……');return;}
+  if(k==='dan'){if(S.hp>=S.maxHp){toast('气血已经满了');return;}INV.dan--;const h=Math.min(healAmt('dan'),S.maxHp-S.hp);S.hp+=h;wpop('+'+h,'#7CFC9A');}
+  else if(k==='dadan'){if(S.hp>=S.maxHp){toast('气血已经满了');return;}INV.dadan--;const h=S.maxHp-S.hp;S.hp=S.maxHp;wpop('+'+h,'#7CFC9A');}
+  else{if(S.mp>=S.maxMp){toast('灵力已经满了');return;}INV.qing--;const m=Math.min(healAmt('qing'),S.maxMp-S.mp);S.mp+=m;wpop('+'+m+' 灵力','#bfa7ff');}
+  sHeal();save();openBag();
+}
+// 一键保存(菜单大按钮,给小朋友看得见的反馈)
+function quickSave(){save();toast('💾 已保存!');}
+function doSave(){save();toast('💾 已保存!');closePanel();}
 // 孩童模式 · 家长锁:配置存独立 key,不随存档/重开走
 function loadCfg(){try{const c=JSON.parse(localStorage.getItem('lingshan_cfg'));if(c){CFG.kidMode=!!c.kidMode;CFG.pwd=c.pwd||'';}}catch(e){}}
 function saveCfg(){try{localStorage.setItem('lingshan_cfg',JSON.stringify(CFG));}catch(e){}}
@@ -1677,7 +1700,9 @@ $('batk').onclick=()=>act('atk');
 $('bskl').onclick=()=>act('skl');
 $('bitm').onclick=()=>act('itm');
 $('bfle').onclick=()=>act('fle');
-$('btnBag').onclick=()=>{au();if(mode==='world')openStatus();};
+$('btnBag').onclick=()=>{au();if(mode==='world')openBag();};
+$('btnStat').onclick=()=>{au();if(mode==='world')openStatus();};
+$('btnSave').onclick=()=>{au();if(mode==='world')quickSave();};
 $('btnMus').onclick=()=>{au();setMusic(!musicOn);};
 $('btnNew').onclick=()=>{
   au();resetState();

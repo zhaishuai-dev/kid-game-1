@@ -679,6 +679,30 @@ t('五灵 / 物品 emoji 映射齐备',()=>{
   ['水','火','雷','风','土','无'].forEach(e=>ok(E(`ELEMOJI['${e}']`),e+' 应有 emoji'));
   ok(E(`ITEMOJI.dan&&ITEMOJI.qing&&ITEMOJI.dadan`),'物品 emoji 齐备');
 });
+t('背包/状态分开:背包列物品可场外用药、状态只看属性',()=>{
+  E('resetState();S.hp=10;S.maxHp=70;INV.dan=2;mode="world"');
+  E('openBag()');
+  const bag=E(`$('panelBody').innerHTML`);
+  ok(bag.includes('🎒')&&bag.includes('回灵丹')&&bag.includes('护甲')===false,'背包应列物品/装备');
+  E(`useField('dan')`);                       // 战斗外吃药回血
+  ok(E('S.hp')>10,'场外用回灵丹应回血');eq(E('INV.dan'),1,'应消耗一颗');
+  E('openStatus()');
+  const st=E(`$('panelBody').innerHTML`);
+  ok(st.includes('攻击')&&!st.includes('行囊'),'状态面板只看属性,行囊已移到背包');
+  E('closePanel()');
+});
+t('场外用药:满血不浪费、没药给提示',()=>{
+  E('resetState();S.hp=S.maxHp;INV.dan=1');
+  E(`useField('dan')`);
+  eq(E('INV.dan'),1,'气血满时不应消耗');
+  E('INV.dan=0;S.hp=1;useField("dan")');
+  eq(E('S.hp'),1,'没药不应回血');
+});
+t('一键保存写入存档,菜单四键绑定齐备',()=>{
+  E('resetState();S.gold=321;quickSave()');
+  eq(E(`JSON.parse(localStorage.getItem('lingshan1')).S.gold`),321,'保存应写入存档');
+  ['btnBag','btnStat','btnSave','btnMus'].forEach(id=>ok(E(`typeof $('${id}').onclick==='function'`),id+' 应已绑定'));
+});
 t('商店 / 技能 / 物品菜单带图标',()=>{
   E('S.gold=999;openShop("item")');
   let html=E(`$('panelBody').innerHTML`);
