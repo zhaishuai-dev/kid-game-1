@@ -200,7 +200,7 @@ t('物品/纸条/空手三类宝物都生效',()=>{
   E('investigate(poiAt(9,2))');E('while(dq.length||dcb)nextDlg()');
   eq(E('INV.dadan'),dadan+1,'柜子应翻出大还丹');
   E('investigate(poiAt(2,2))');
-  ok(E(`dq.length&&String(dq[0]).includes('爱莎')`),'书架纸条应是三个孩子的彩蛋');
+  ok(E(`dq.length&&String(dq[0]).includes('小侠客')`),'书架纸条应是三个小侠客的彩蛋');
   E('while(dq.length||dcb)nextDlg()');
   E(`switchMap('house3',4,3)`);
   E('investigate(poiAt(4,2))');
