@@ -45,11 +45,11 @@ function act(a){
   refreshBtns();
 }
 function openSkillMenu(){
-  let h='<h3>仙术</h3><div class="gold">灵力:'+S.mp+' / '+S.maxMp+'</div>';
+  let h='<h3>✨ 仙术</h3><div class="gold">💙 灵力:'+S.mp+' / '+S.maxMp+'</div>';
   SKILLS.forEach((s,i)=>{
-    if(skillKnown(s))h+='<div class="srow"><div><b style="color:'+ELC[s.el]+'">'+s.n+'</b><span>'+s.el+'系 · 威力×'+s.mult+'</span></div><button class="pbtn" onclick="castSkill('+i+')">'+s.mp+' 灵力</button></div>';
+    if(skillKnown(s))h+='<div class="srow"><div><b style="color:'+ELC[s.el]+'"><span style="font-size:19px">'+ELEMOJI[s.el]+'</span> '+s.n+'</b><span>'+s.el+'系 · 威力×'+s.mult+'</span></div><button class="pbtn" onclick="castSkill('+i+')">💙 '+s.mp+'</button></div>';
   });
-  h+='<button class="pbtn" onclick="closePanel()">返回</button>';
+  h+='<button class="pbtn" onclick="closePanel()">🔙 返回</button>';
   openPanel(h);
 }
 function castSkill(i){
@@ -62,11 +62,11 @@ function castSkill(i){
   refreshBtns();
 }
 function openItemMenu(){
-  let h='<h3>物品</h3>';
-  h+='<div class="srow"><div><b>回灵丹 ×'+INV.dan+'</b><span>恢复 '+healAmt('dan')+' 气血</span></div><button class="pbtn" onclick="useItem(\'dan\')">使用</button></div>';
-  h+='<div class="srow"><div><b>大还丹 ×'+INV.dadan+'</b><span>气血全满</span></div><button class="pbtn" onclick="useItem(\'dadan\')">使用</button></div>';
-  h+='<div class="srow"><div><b>清心散 ×'+INV.qing+'</b><span>恢复 '+healAmt('qing')+' 灵力</span></div><button class="pbtn" onclick="useItem(\'qing\')">使用</button></div>';
-  h+='<button class="pbtn" onclick="closePanel()">返回</button>';
+  let h='<h3>🎒 物品</h3>';
+  h+='<div class="srow"><div><b><span style="font-size:19px">❤️</span> 回灵丹 ×'+INV.dan+'</b><span>恢复 '+healAmt('dan')+' 气血</span></div><button class="pbtn" onclick="useItem(\'dan\')">使用</button></div>';
+  h+='<div class="srow"><div><b><span style="font-size:19px">💖</span> 大还丹 ×'+INV.dadan+'</b><span>气血全满</span></div><button class="pbtn" onclick="useItem(\'dadan\')">使用</button></div>';
+  h+='<div class="srow"><div><b><span style="font-size:19px">💙</span> 清心散 ×'+INV.qing+'</b><span>恢复 '+healAmt('qing')+' 灵力</span></div><button class="pbtn" onclick="useItem(\'qing\')">使用</button></div>';
+  h+='<button class="pbtn" onclick="closePanel()">🔙 返回</button>';
   openPanel(h);
 }
 function useItem(k){
@@ -279,10 +279,12 @@ function drawBattle(){
   r(596,500,344,118,'rgba(18,14,26,0.78)');
   g.font='19px monospace';g.fillStyle='#ffd76a';
   g.fillText('云无衣 Lv'+S.lvl,612,528);
-  r(612,540,230,13,'#3a2f3a');r(612,540,Math.max(0,Math.min(230,Math.round(S.hp/S.maxHp*230))),13,'#1D9E75');
-  r(612,562,230,13,'#3a2f3a');r(612,562,Math.max(0,Math.min(230,Math.round(S.mp/S.maxMp*230))),13,'#7F77DD');
-  g.font='14px monospace';g.fillStyle='#cdd6e0';
-  g.fillText(S.hp+'/'+S.maxHp,850,552);g.fillText(S.mp+'/'+S.maxMp,850,574);
+  drawHeart(610,539);
+  r(630,540,212,13,'#3a2f3a');r(630,540,Math.max(0,Math.min(212,Math.round(S.hp/S.maxHp*212))),13,'#1D9E75');
+  drawDrop(610,561);
+  r(630,562,212,13,'#3a2f3a');r(630,562,Math.max(0,Math.min(212,Math.round(S.mp/S.maxMp*212))),13,'#7F77DD');
+  g.font='13px monospace';g.fillStyle='#cdd6e0';
+  g.fillText(S.hp+'/'+S.maxHp,848,552);g.fillText(S.mp+'/'+S.maxMp,848,574);
   if(B.msg){
     r(20,576,480,42,'rgba(0,0,0,0.55)');
     g.font='20px monospace';g.fillStyle='#fff';g.fillText(B.msg,36,604);

@@ -38,6 +38,9 @@ const SKILL_UP={'火灵咒':'烈焰咒','水灵咒':'玄冰咒','风灵咒':'罡
 // 是否已习得某仙术:够等级 且(无 flag 要求或该 flag 已解锁)
 function skillKnown(s){return S.lvl>=(s.lvl||1)&&(!s.flag||flags[s.flag]);}
 const ELC={'水':'#56b9ff','火':'#ff7a45','雷':'#ffe24a','风':'#9fe7a0','土':'#d2a86a','无':'#cdd6e0'};
+// 给不识字的小朋友:五灵 / 物品 / 操作的 emoji 图标
+const ELEMOJI={'水':'💧','火':'🔥','雷':'⚡','风':'🍃','土':'🪨','无':'🗡️'};
+const ITEMOJI={dan:'❤️',dadan:'💖',qing:'💙'};
 const CK={'水':'火','火':'雷','雷':'土','土':'风','风':'水'};
 function atkP(){return 10+S.lvl*4+WPNS[EQ.wpn].a;}
 function defP(){return ARMS[EQ.arm].d;}

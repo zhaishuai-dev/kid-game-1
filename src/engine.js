@@ -7,6 +7,7 @@ let mode='title',frame=0,grace=0;
 let curName='world',cur=MAPS.world;
 const p={tx:31,ty:44,x:31*T,y:44*T,mv:null};
 const K={up:0,down:0,left:0,right:0};
+let navTouch=null,heroSX=480,heroSY=320; // 触屏寻路:手指落点(画布坐标)+ 主角屏幕坐标
 const wpops=[];
 function wpop(txt,c){wpops.push({x:p.x,y:p.y,txt,c,t:0});}
 
@@ -63,7 +64,7 @@ function startMusicLoop(){
   },cfg.rest);
 }
 function setMusic(on){
-  musicOn=on;$('btnMus').textContent='音乐:'+(on?'开':'关');
+  musicOn=on;$('btnMus').textContent='🎵 '+(on?'开':'关');
   if(!on){if(mTimer){clearInterval(mTimer);mTimer=null;}return;}
   au();mi=0;startMusicLoop();
 }
@@ -246,14 +247,21 @@ function label(n,sx,sy){
   g.fillStyle='rgba(0,0,0,0.55)';g.fillRect(sx+16-w/2,sy-17,w,15);
   g.fillStyle='#fff';g.fillText(n,sx+22-w/2,sy-5);
 }
+// 小朋友看图识意:❤气血 💧灵力 🪙金币(画成形状,保证各平台一致渲染)
+function drawHeart(x,y){g.fillStyle='#e24b4a';g.beginPath();g.arc(x+3,y+3,3.2,0,Math.PI*2);g.arc(x+9,y+3,3.2,0,Math.PI*2);g.fill();g.beginPath();g.moveTo(x-0.5,y+4);g.lineTo(x+6,y+11);g.lineTo(x+12.5,y+4);g.closePath();g.fill();}
+function drawDrop(x,y){g.fillStyle='#7F77DD';g.beginPath();g.arc(x+6,y+7,4.6,0,Math.PI*2);g.fill();g.beginPath();g.moveTo(x+6,y-1);g.lineTo(x+1.5,y+6);g.lineTo(x+10.5,y+6);g.closePath();g.fill();g.fillStyle='#cfc8f5';g.beginPath();g.arc(x+4,y+6,1.4,0,Math.PI*2);g.fill();}
+function drawCoin(x,y){g.fillStyle='#c79a1e';g.beginPath();g.arc(x+6,y+6,6,0,Math.PI*2);g.fill();g.fillStyle='#ffd23f';g.beginPath();g.arc(x+6,y+6,4.6,0,Math.PI*2);g.fill();g.fillStyle='#ffe98a';g.beginPath();g.arc(x+4.2,y+4.2,1.6,0,Math.PI*2);g.fill();}
 function drawHUD(){
-  r(14,14,300,76,'rgba(18,14,26,0.75)');
-  g.font='17px monospace';g.fillStyle='#ffd76a';
-  g.fillText('云无衣 Lv'+S.lvl+'  '+S.gold+'两',26,38);
-  r(26,48,190,11,'#3a2f3a');r(26,48,Math.max(0,Math.min(190,Math.round(S.hp/S.maxHp*190))),11,'#1D9E75');
-  r(26,66,190,11,'#3a2f3a');r(26,66,Math.max(0,Math.min(190,Math.round(S.mp/S.maxMp*190))),11,'#7F77DD');
-  g.font='13px monospace';g.fillStyle='#cdd6e0';
-  g.fillText(S.hp+'/'+S.maxHp,224,58);g.fillText(S.mp+'/'+S.maxMp,224,76);
+  r(14,14,306,84,'rgba(18,14,26,0.78)');
+  g.font='16px monospace';g.fillStyle='#ffd76a';
+  g.fillText('云无衣 Lv'+S.lvl,26,35);
+  drawCoin(212,24);g.fillStyle='#ffd76a';g.font='15px monospace';g.fillText(''+S.gold,230,35);
+  drawHeart(22,46);
+  r(40,46,176,12,'#3a2f3a');r(40,46,Math.max(0,Math.min(176,Math.round(S.hp/S.maxHp*176))),12,'#1D9E75');
+  drawDrop(22,64);
+  r(40,66,176,12,'#3a2f3a');r(40,66,Math.max(0,Math.min(176,Math.round(S.mp/S.maxMp*176))),12,'#7F77DD');
+  g.font='12px monospace';g.fillStyle='#cdd6e0';
+  g.fillText(S.hp+'/'+S.maxHp,222,56);g.fillText(S.mp+'/'+S.maxMp,222,76);
 }
 function drawWorld(){
   r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':cur.bg==='abyss'?'#1a0c14':cur.bg==='hell'?'#140610':cur.bg==='sky'?'#7fa8d0':cur.bg==='shrine'?'#6a8ab0':cur.bg==='cavern'?'#1a0e06':cur.bg==='core'?'#140a04':'#234d1e');
@@ -277,6 +285,7 @@ function drawWorld(){
     const sx=31*T-camX,sy=13*T-camY;
     if(sx>-48&&sy>-48&&sx<SW&&sy<SH){drawSnakeK(sx,sy-12,2);label('蛇妖王',sx,sy-12);}
   }
+  heroSX=p.x-camX+16;heroSY=p.y-camY+16; // 记录主角屏幕位置,供触屏寻路算方向
   drawHero(p.x-camX,p.y-camY-8,2,p.mv?Math.floor(frame/8)%2:0);
   for(const w of wpops){
     g.globalAlpha=Math.max(0,1-w.t);
@@ -295,6 +304,11 @@ function updWorld(dt){
   if(!p.mv){
     let dx=0,dy=0;
     if(K.up)dy=-1;else if(K.down)dy=1;else if(K.left)dx=-1;else if(K.right)dx=1;
+    if(!dx&&!dy&&navTouch){ // 触屏:朝手指方向走一步(主轴优先,留死区防抖)
+      const ddx=navTouch.x-heroSX,ddy=navTouch.y-heroSY,dead=14;
+      if(Math.abs(ddx)>Math.abs(ddy)){if(Math.abs(ddx)>dead)dx=ddx>0?1:-1;}
+      else{if(Math.abs(ddy)>dead)dy=ddy>0?1:-1;}
+    }
     if(dx||dy){
       const nx=p.tx+dx,ny=p.ty+dy;
       const n=npcAt(nx,ny),q=n?null:poiAt(nx,ny);
@@ -570,20 +584,20 @@ function toast(t){
   if(toastT)clearTimeout(toastT);
   toastT=setTimeout(()=>{$('toast').style.display='none';},1400);
 }
-function shopRow(n,d,pr,fn){
-  return '<div class="srow"><div><b>'+n+'</b><span>'+d+'</span></div><button class="pbtn" onclick="'+fn+'">'+pr+' 两</button></div>';
+function shopRow(icon,n,d,pr,fn){
+  return '<div class="srow"><div><b><span style="font-size:19px">'+icon+'</span> '+n+'</b><span>'+d+'</span></div><button class="pbtn" onclick="'+fn+'">🪙 '+pr+'</button></div>';
 }
 function openShop(kind){
-  let h='<h3>'+(kind==='item'?'杂货铺':'铁匠铺')+'</h3><div class="gold">银两:'+S.gold+'</div>';
+  let h='<h3>'+(kind==='item'?'🛒 杂货铺':'⚒️ 铁匠铺')+'</h3><div class="gold">🪙 银两:'+S.gold+'</div>';
   if(kind==='item'){
-    h+=shopRow('回灵丹','恢复 '+healAmt('dan')+' 气血(现有 '+INV.dan+')',30,"buyItem('dan',30)");
-    h+=shopRow('清心散','恢复 '+healAmt('qing')+' 灵力(现有 '+INV.qing+')',30,"buyItem('qing',30)");
-    h+=shopRow('大还丹','气血全满(现有 '+INV.dadan+')',90,"buyItem('dadan',90)");
+    h+=shopRow('❤️','回灵丹','恢复 '+healAmt('dan')+' 气血(现有 '+INV.dan+')',30,"buyItem('dan',30)");
+    h+=shopRow('💙','清心散','恢复 '+healAmt('qing')+' 灵力(现有 '+INV.qing+')',30,"buyItem('qing',30)");
+    h+=shopRow('💖','大还丹','气血全满(现有 '+INV.dadan+')',90,"buyItem('dadan',90)");
   }else{
-    for(let i=1;i<WPNS.length;i++)h+=shopRow(WPNS[i].n,'攻击 +'+WPNS[i].a+(EQ.wpn===i?' · 已装备':EQ.wpn>i?' · 已淘汰':''),WPNS[i].p,'buyWpn('+i+')');
-    for(let i=1;i<ARMS.length;i++)h+=shopRow(ARMS[i].n,'防御 +'+ARMS[i].d+(EQ.arm===i?' · 已装备':EQ.arm>i?' · 已淘汰':''),ARMS[i].p,'buyArm('+i+')');
+    for(let i=1;i<WPNS.length;i++)h+=shopRow('⚔️',WPNS[i].n,'攻击 +'+WPNS[i].a+(EQ.wpn===i?' · 已装备':EQ.wpn>i?' · 已淘汰':''),WPNS[i].p,'buyWpn('+i+')');
+    for(let i=1;i<ARMS.length;i++)h+=shopRow('🛡️',ARMS[i].n,'防御 +'+ARMS[i].d+(EQ.arm===i?' · 已装备':EQ.arm>i?' · 已淘汰':''),ARMS[i].p,'buyArm('+i+')');
   }
-  h+='<button class="pbtn" onclick="closePanel()">离开</button>';
+  h+='<button class="pbtn" onclick="closePanel()">🚪 离开</button>';
   openPanel(h);
 }
 function buyItem(k,pr){
@@ -602,13 +616,13 @@ function buyArm(i){
 }
 function openStatus(){
   const ups=Object.values(SKILL_UP);
-  const known=SKILLS.filter(skillKnown).map(s=>(ups.includes(s.n)?'↑':'')+s.n+'·'+s.el).join('  ');
+  const known=SKILLS.filter(skillKnown).map(s=>ELEMOJI[s.el]+s.n+(ups.includes(s.n)?'↑':'')).join('  ');
   openPanel('<h3>云无衣</h3>'+
-    '<div class="srow"><div><b>等级 '+S.lvl+'</b><span>经验 '+S.exp+' / '+(S.lvl*45)+'</span></div></div>'+
-    '<div class="srow"><div><b>气血 '+S.hp+'/'+S.maxHp+'</b><span>灵力 '+S.mp+'/'+S.maxMp+'</span></div></div>'+
-    '<div class="srow"><div><b>攻击 '+atkP()+' · 防御 '+defP()+'</b><span>'+WPNS[EQ.wpn].n+' / '+ARMS[EQ.arm].n+'</span></div></div>'+
-    '<div class="srow"><div><b>仙术</b><span>'+known+'</span></div></div>'+
-    '<div class="srow"><div><b>行囊</b><span>回灵丹×'+INV.dan+'  大还丹×'+INV.dadan+'  清心散×'+INV.qing+'  银两 '+S.gold+'</span></div></div>'+
+    '<div class="srow"><div><b>⭐ 等级 '+S.lvl+'</b><span>经验 '+S.exp+' / '+(S.lvl*45)+'</span></div></div>'+
+    '<div class="srow"><div><b>❤️ 气血 '+S.hp+'/'+S.maxHp+'</b><span>💙 灵力 '+S.mp+'/'+S.maxMp+'</span></div></div>'+
+    '<div class="srow"><div><b>⚔️ 攻击 '+atkP()+' · 🛡️ 防御 '+defP()+'</b><span>'+WPNS[EQ.wpn].n+' / '+ARMS[EQ.arm].n+'</span></div></div>'+
+    '<div class="srow"><div><b>✨ 仙术</b><span>'+known+'</span></div></div>'+
+    '<div class="srow"><div><b>🎒 行囊</b><span>❤️'+INV.dan+'  💖'+INV.dadan+'  💙'+INV.qing+'  🪙'+S.gold+'</span></div></div>'+
     '<div class="srow"><div><b>难度 · '+(CFG.kidMode?'孩童模式':'普通模式')+'</b><span>'+(CFG.kidMode?'伤害减半 · 丹药翻倍':'家长可开启孩童模式护着孩子')+'</span></div><button class="pbtn" onclick="openKidMode()">家长设置</button></div>'+
     '<button class="pbtn" onclick="doSave()">保存进度</button> <button class="pbtn" onclick="closePanel()">关闭</button>');
 }
@@ -726,6 +740,18 @@ document.querySelectorAll('#dpad button').forEach(b=>{
   b.addEventListener('pointerdown',e=>{e.preventDefault();au();K[d]=1;try{b.setPointerCapture(e.pointerId);}catch(err){}});
   ['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>{K[d]=0;}));
 });
+// 触屏寻路:在画布上按住,主角朝手指方向走;对话时点屏幕任意处翻页(给不会用方向键的小朋友)
+function canvasXY(e){const r=cv.getBoundingClientRect();return {x:(e.clientX-r.left)/r.width*SW,y:(e.clientY-r.top)/r.height*SH};}
+cv.addEventListener('pointerdown',e=>{
+  au();
+  if($('panel').style.display==='flex'||$('endov').style.display==='flex')return; // 面板/结局自有按钮
+  if($('dlg').style.display==='block'){nextDlg();e.preventDefault();return;}        // 点哪都能推进对话
+  if(mode!=='world')return;
+  navTouch=canvasXY(e);e.preventDefault();
+  try{cv.setPointerCapture(e.pointerId);}catch(err){}
+});
+cv.addEventListener('pointermove',e=>{if(navTouch)navTouch=canvasXY(e);});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>cv.addEventListener(ev,()=>{navTouch=null;}));
 const KM={ArrowUp:'up',w:'up',ArrowDown:'down',s:'down',ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right'};
 window.addEventListener('keydown',e=>{
   au();

@@ -649,6 +649,50 @@ t('loadCfg 从独立 key 恢复配置',()=>{
   E('CFG.kidMode=false;CFG.pwd="";saveCfg()');
 });
 
+console.log('— 幼儿友好:触屏寻路 + 图标 —');
+t('触屏:朝手指方向自动走一格(上下左右)',()=>{
+  E('resetState();switchMap("world",31,41);K.up=K.down=K.left=K.right=0');
+  E('heroSX=480;heroSY=320;navTouch={x:480,y:470}');   // 手指在主角下方
+  E('updWorld(0.05)');
+  eq(E('p.ty'),42,'应朝下走一格');
+  for(let i=0;i<10&&E('p.mv');i++)E('updWorld(0.05)');
+  E('heroSX=480;heroSY=320;navTouch={x:610,y:320}');   // 手指在主角右边
+  E('updWorld(0.05)');
+  eq(E('p.tx'),32,'应朝右走一格');
+  E('navTouch=null');
+});
+t('手指落在主角身上(死区内)不乱走',()=>{
+  E('resetState();switchMap("world",31,41);K.up=K.down=K.left=K.right=0');
+  E('heroSX=480;heroSY=320;navTouch={x:484,y:326}');   // 几乎重合
+  E('updWorld(0.05)');
+  eq(E('p.tx'),31);eq(E('p.ty'),41);eq(E('p.mv'),null);
+  E('navTouch=null');
+});
+t('方向键 / dpad 优先于触屏',()=>{
+  E('resetState();switchMap("world",31,41)');
+  E('heroSX=480;heroSY=320;navTouch={x:480,y:470};K.up=1'); // 触屏向下但按上
+  E('updWorld(0.05)');
+  eq(E('p.ty'),40,'方向键(上)应优先');
+  E('K.up=0;navTouch=null');
+});
+t('五灵 / 物品 emoji 映射齐备',()=>{
+  ['水','火','雷','风','土','无'].forEach(e=>ok(E(`ELEMOJI['${e}']`),e+' 应有 emoji'));
+  ok(E(`ITEMOJI.dan&&ITEMOJI.qing&&ITEMOJI.dadan`),'物品 emoji 齐备');
+});
+t('商店 / 技能 / 物品菜单带图标',()=>{
+  E('S.gold=999;openShop("item")');
+  let html=E(`$('panelBody').innerHTML`);
+  ok(html.includes('❤️')&&html.includes('🪙'),'杂货铺应有图标');
+  E('openShop("gear")');html=E(`$('panelBody').innerHTML`);
+  ok(html.includes('⚔️')&&html.includes('🛡️'),'铁匠铺应有武器/护甲图标');
+  E('S.lvl=5;startBattle("ghost",false);openSkillMenu()');
+  html=E(`$('panelBody').innerHTML`);
+  ok(html.includes('💧')||html.includes('🔥'),'技能菜单应有五灵图标');
+  E('openItemMenu()');html=E(`$('panelBody').innerHTML`);
+  ok(html.includes('❤️'),'物品菜单应有图标');
+  E('closePanel();mode="world";B=null;battleUI(false)');
+});
+
 console.log('— dist 单文件 —');
 t('dist/lingshan-rpg.html 内联脚本可独立启动',()=>{
   const D=createGame(loadDistSource());
