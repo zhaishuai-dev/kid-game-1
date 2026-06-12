@@ -13,7 +13,8 @@ const curDir=path.join(__dirname,'shots-current');
 const baseDir=path.join(__dirname,'shots-baseline');
 fs.mkdirSync(curDir,{recursive:true});
 
-const canvas=Canvas.createCanvas(960,640);
+const SSX=2,CW=960*SSX,CH=640*SSX; // 与引擎超采样(SS=2)一致,渲染到高分画布
+const canvas=Canvas.createCanvas(CW,CH);
 const ctx=canvas.getContext('2d');
 // 带真画布的沙箱:先建空沙箱,把 cv 的 2d 上下文换成 node-canvas,再载入游戏脚本
 const G=createGame([]);
@@ -34,14 +35,14 @@ function snap(name){
 }
 async function diffRatio(fileA,fileB){
   const imgA=await Canvas.loadImage(fileA),imgB=await Canvas.loadImage(fileB);
-  const ca=Canvas.createCanvas(960,640).getContext('2d');ca.drawImage(imgA,0,0);
-  const cb=Canvas.createCanvas(960,640).getContext('2d');cb.drawImage(imgB,0,0);
-  const da=ca.getImageData(0,0,960,640).data,db=cb.getImageData(0,0,960,640).data;
+  const ca=Canvas.createCanvas(CW,CH).getContext('2d');ca.drawImage(imgA,0,0);
+  const cb=Canvas.createCanvas(CW,CH).getContext('2d');cb.drawImage(imgB,0,0);
+  const da=ca.getImageData(0,0,CW,CH).data,db=cb.getImageData(0,0,CW,CH).data;
   let diff=0;
   for(let i=0;i<da.length;i+=4){
     if(Math.abs(da[i]-db[i])+Math.abs(da[i+1]-db[i+1])+Math.abs(da[i+2]-db[i+2])>30)diff++;
   }
-  return diff/(960*640);
+  return diff/(CW*CH);
 }
 (async()=>{
   const shots=[];

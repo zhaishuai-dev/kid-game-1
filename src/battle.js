@@ -238,12 +238,13 @@ function drawBattle(){
   g.save();
   if(B.shake>0)g.translate(rnd(-5,5),rnd(-5,5));
   const m=SPRM[B.e.draw]||{w:20,h:20,s:8};
-  const ew=m.w*m.s,eh=m.h*m.s;
-  const ex=140+B.eOx,ey=480-eh;
-  SPR[B.e.draw](ex,ey,m.s);
+  const es=Math.max(1,Math.round(m.s*1.3)); // 妖怪放大 ~30%,更大更清楚
+  const ew=m.w*es,eh=m.h*es;
+  const ex=150+B.eOx,ey=486-eh;
+  SPR[B.e.draw](ex,ey,es);
   if(B.fE>0){g.globalAlpha=0.7;r(ex,ey,ew,eh,'#ffffff');g.globalAlpha=1;}
-  const hs=8,hw=16*hs,hh=20*hs;
-  const hx=640+B.hOx,hy=480-hh;
+  const hs=10,hw=16*hs,hh=20*hs; // 主角放大(8→10)
+  const hx=648+B.hOx,hy=486-hh;
   drawHero(hx,hy,hs,Math.floor(frame/10)%2);
   if(B.fH>0){g.globalAlpha=0.55;r(hx,hy,hw,hh,'#ff3030');g.globalAlpha=1;}
   if(B.anim&&B.anim.k==='proj'){

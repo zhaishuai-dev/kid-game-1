@@ -3,6 +3,12 @@
 const $=id=>document.getElementById(id);
 const cv=$('cv'),g=cv.getContext('2d');
 const T=32,SW=960,SH=640,VW=31,VH=21;
+// iPad 清晰化:把画布后备分辨率提到逻辑尺寸的 SS 倍(超采样),逻辑坐标仍是 960×640
+// 每帧在主循环用 setTransform(SS) 重置基准;像素图按整数倍放大,边缘锐利不糊
+const SS=(typeof window!=='undefined'&&Math.min(3,Math.max(2,Math.round(window.devicePixelRatio||2))))||2;
+try{cv.width=SW*SS;cv.height=SH*SS;g.imageSmoothingEnabled=false;}catch(e){}
+// 大地图镜头拉近倍数:角色与世界都更大一点(iPad 上看得清)
+const WZOOM=1.25;
 let mode='title',frame=0,grace=0;
 let curName='world',cur=MAPS.world;
 const p={tx:31,ty:44,x:31*T,y:44*T,mv:null};
@@ -266,34 +272,30 @@ function drawHUD(){
 function drawWorld(){
   r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':cur.bg==='abyss'?'#1a0c14':cur.bg==='hell'?'#140610':cur.bg==='sky'?'#7fa8d0':cur.bg==='shrine'?'#6a8ab0':cur.bg==='cavern'?'#1a0e06':cur.bg==='core'?'#140a04':'#234d1e');
   const mw=cur.w*T,mh=cur.h*T;
-  const camX=mw<=SW?(mw-SW)/2:Math.max(0,Math.min(mw-SW,p.x-SW/2+16));
-  const camY=mh<=SH?(mh-SH)/2:Math.max(0,Math.min(mh-SH,p.y-SH/2+16));
+  const vw=SW/WZOOM,vh=SH/WZOOM; // 镜头拉近后实际可见的世界范围
+  const camX=mw<=vw?(mw-vw)/2:Math.max(0,Math.min(mw-vw,p.x-vw/2+16));
+  const camY=mh<=vh?(mh-vh)/2:Math.max(0,Math.min(mh-vh,p.y-vh/2+16));
+  g.save();g.scale(WZOOM,WZOOM);g.translate(-camX,-camY); // 世界层:拉近 + 跟随镜头
   const x0=Math.max(0,Math.floor(camX/T)),y0=Math.max(0,Math.floor(camY/T));
-  for(let j=y0;j<=Math.min(cur.h-1,y0+VH);j++)for(let i=x0;i<=Math.min(cur.w-1,x0+VW);i++)drawTile(i,j,i*T-camX,j*T-camY);
+  for(let j=y0;j<=Math.min(cur.h-1,y0+VH);j++)for(let i=x0;i<=Math.min(cur.w-1,x0+VW);i++)drawTile(i,j,i*T,j*T);
   (POIS[curName]||[]).forEach(q=>{
-    const sx=q.x*T-camX,sy=q.y*T-camY;
-    if(sx<-T||sy<-T||sx>SW||sy>SH)return;
-    pix(q.kind,sx,sy,2);
-    if(!looted[q.id]&&(frame>>4)%3===0){r(sx+22,sy+2,3,3,'#fff3c0');r(sx+23,sy+3,1,1,'#ffffff');}
+    pix(q.kind,q.x*T,q.y*T,2);
+    if(!looted[q.id]&&(frame>>4)%3===0){r(q.x*T+22,q.y*T+2,3,3,'#fff3c0');r(q.x*T+23,q.y*T+3,1,1,'#ffffff');}
   });
   (NPCS[curName]||[]).forEach(n=>{
-    const sx=n.x*T-camX,sy=n.y*T-camY;
-    if(sx<-T||sy<-T||sx>SW||sy>SH)return;
-    SPR[n.draw](sx,sy-8,2,n.c);label(n.n,sx,sy-8);
+    SPR[n.draw](n.x*T,n.y*T-8,2,n.c);label(n.n,n.x*T,n.y*T-8);
   });
-  if(curName==='world'&&!flags.mini){
-    const sx=31*T-camX,sy=13*T-camY;
-    if(sx>-48&&sy>-48&&sx<SW&&sy<SH){drawSnakeK(sx,sy-12,2);label('蛇妖王',sx,sy-12);}
-  }
-  heroSX=p.x-camX+16;heroSY=p.y-camY+16; // 记录主角屏幕位置,供触屏寻路算方向
-  drawHero(p.x-camX,p.y-camY-8,2,p.mv?Math.floor(frame/8)%2:0);
+  if(curName==='world'&&!flags.mini){drawSnakeK(31*T,13*T-12,2);label('蛇妖王',31*T,13*T-12);}
+  drawHero(p.x,p.y-8,2,p.mv?Math.floor(frame/8)%2:0);
   for(const w of wpops){
     g.globalAlpha=Math.max(0,1-w.t);
     g.font='bold 16px monospace';g.strokeStyle='#000';g.lineWidth=3;
-    g.strokeText(w.txt,w.x-camX-30,w.y-camY);
-    g.fillStyle=w.c;g.fillText(w.txt,w.x-camX-30,w.y-camY);
+    g.strokeText(w.txt,w.x-30,w.y);
+    g.fillStyle=w.c;g.fillText(w.txt,w.x-30,w.y);
     g.globalAlpha=1;
   }
+  g.restore();
+  heroSX=(p.x+16-camX)*WZOOM;heroSY=(p.y+16-camY)*WZOOM; // 触屏寻路:主角的逻辑屏幕坐标(含镜头缩放)
   drawHUD();
   if(CFG.kidMode){ // 右上角小标:让家长一眼看到孩童模式开着
     r(SW-92,16,78,24,'rgba(20,16,30,0.72)');
@@ -811,6 +813,7 @@ let last=performance.now();
 function loop(now){
   const dt=Math.min(0.05,(now-last)/1000);
   last=now;frame++;
+  g.setTransform(SS,0,0,SS,0,0); // 每帧重置为超采样基准变换(逻辑 960×640 → 高分后备画布)
   if(mode==='title')drawTitleBg(dt);
   else if(mode==='world'){
     if($('dlg').style.display!=='block'&&$('panel').style.display!=='flex'&&$('endov').style.display!=='flex')updWorld(dt);
