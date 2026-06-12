@@ -22,7 +22,7 @@ t('标题画面渲染一帧不崩溃',()=>{G.frame();G.frame();});
 
 console.log('— 新游戏与对话 —');
 t('开始新游戏进入大地图,开场对话弹出',()=>{
-  E(`$('btnNew').onclick()`);
+  E('confirmNewProfile(0)');
   eq(E('mode'),'world');
   eq(E(`$('dlg').style.display`),'block');
 });
@@ -61,7 +61,7 @@ t('客栈歇息回满并自动保存',()=>{
   E('S.hp=1;S.mp=1;S.gold=50');
   E('inn()');
   eq(E('S.hp'),E('S.maxHp'));eq(E('S.mp'),E('S.maxMp'));eq(E('S.gold'),40);
-  ok(G.store['lingshan1'],'应已写入存档');
+  ok(G.store[E('saveKey()')],'应已写入存档');
   E('while(dq.length||dcb)nextDlg()');
 });
 
@@ -210,7 +210,7 @@ t('物品/纸条/空手三类宝物都生效',()=>{
 });
 t('验收:已翻过的点写入存档,读档恢复,重新开始清空',()=>{
   E('save()');
-  ok(JSON.parse(G.store['lingshan1']).looted['h1_cab'],'存档应含 looted');
+  ok(JSON.parse(G.store[E('saveKey()')]).looted['h1_cab'],'存档应含 looted');
   E(`looted['h1_cab']=false;delete looted['h4_cab']`);
   ok(E('loadSave()'));
   ok(E(`looted['h1_cab']===true&&looted['h4_cab']===true`),'读档应恢复已翻过的点');
@@ -700,7 +700,7 @@ t('场外用药:满血不浪费、没药给提示',()=>{
 });
 t('一键保存写入存档,菜单四键绑定齐备',()=>{
   E('resetState();S.gold=321;quickSave()');
-  eq(E(`JSON.parse(localStorage.getItem('lingshan1')).S.gold`),321,'保存应写入存档');
+  eq(E(`JSON.parse(localStorage.getItem(saveKey())).S.gold`),321,'保存应写入存档');
   ['btnBag','btnStat','btnSave','btnMus'].forEach(id=>ok(E(`typeof $('${id}').onclick==='function'`),id+' 应已绑定'));
 });
 t('商店 / 技能 / 物品菜单带图标',()=>{
@@ -717,11 +717,57 @@ t('商店 / 技能 / 物品菜单带图标',()=>{
   E('closePanel();mode="world";B=null;battleUI(false)');
 });
 
+console.log('— 多档案:分开存档(给每个孩子)—');
+t('三档独立存档,互不串',()=>{
+  // 清掉所有档
+  for(let i=0;i<3;i++)delete G.store['lingshan1_p'+i];
+  // 档0:命名「甲」,gold 100
+  E('profNames=["","",""];profNames[0]="甲";slot=0;resetState();S.gold=100;save()');
+  // 档1:命名「乙」,gold 500
+  E('profNames[1]="乙";slot=1;resetState();S.gold=500;save()');
+  // 回到档0读档:应是 100,不是 500
+  E('slot=0');ok(E('loadSave()'));eq(E('S.gold'),100,'档0 应读回自己的 100');
+  E('slot=1');ok(E('loadSave()'));eq(E('S.gold'),500,'档1 应读回自己的 500');
+  ok(E('hasSave(0)')&&E('hasSave(1)')&&!E('hasSave(2)'),'有无存档按档判断');
+});
+t('档案概要:等级 + 第几章',()=>{
+  E('slot=0;resetState();S.lvl=20;Object.assign(flags,{boss:true,ch2:true,dragon:true,ch3:true,demon:true,ch4:true,peng:true});save()');
+  const m=E('slotMeta(0)');
+  eq(m.lvl,20);eq(m.chap,5,'打到第四章 boss 后应显示第5章入口');
+});
+t('档名只存本机配置,不写进游戏存档',()=>{
+  E('profNames[0]="测试名";saveProfiles()');
+  ok(E(`JSON.parse(localStorage.getItem('lingshan_profiles')).names[0]==='测试名'`),'档名存独立 key');
+  // 游戏存档体里不含档名
+  E('slot=0;resetState();save()');
+  ok(!E(`localStorage.getItem(saveKey()).includes('测试名')`),'存档体不含档名(隐私)');
+});
+t('家长锁/孩童模式是设备级,跨档案共享',()=>{
+  E('CFG.kidMode=true;CFG.pwd="9";saveCfg()');
+  E('slot=2;resetState();save();slot=0;loadSave()');
+  ok(E('CFG.kidMode')&&E(`CFG.pwd==='9'`),'切档不影响家长设置');
+  E('CFG.kidMode=false;CFG.pwd="";saveCfg()');
+});
+t('迁移:旧单一存档自动进第一档',()=>{
+  for(let i=0;i<3;i++)delete G.store['lingshan1_p'+i];
+  E('profNames=["","",""]');
+  G.store['lingshan1']=JSON.stringify({S:{gold:77,lvl:3},INV:{},EQ:{},flags:{},looted:{},map:'world',x:31,y:44});
+  E('loadProfiles()');
+  ok(E('hasSave(0)'),'旧存档应迁到第一档');
+  ok(E('profNames[0].length>0'),'第一档应有默认名');
+  E('slot=0');ok(E('loadSave()'));eq(E('S.gold'),77,'迁移后能读回旧进度');
+});
+t('档案卡渲染含头像与名字',()=>{
+  E('profNames=["阿宝","",""];renderProfiles()');
+  const html=E(`$('profSlots').innerHTML`);
+  ok(html.includes('🦊')&&html.includes('阿宝')&&html.includes('➕ 新玩家'),'卡片应有头像/名字/空位');
+});
+
 console.log('— dist 单文件 —');
 t('dist/lingshan-rpg.html 内联脚本可独立启动',()=>{
   const D=createGame(loadDistSource());
   eq(D.eval('mode'),'title');
-  D.eval(`$('btnNew').onclick()`);
+  D.eval('confirmNewProfile(0)');
   eq(D.eval('mode'),'world');
 });
 

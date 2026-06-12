@@ -677,12 +677,18 @@ function applyKidMode(){
   CFG.kidMode=!CFG.kidMode;saveCfg();
   toast(CFG.kidMode?'已开启孩童模式':'已关闭孩童模式');openStatus();
 }
+// 多档案(分开存档,给每个孩子一份):每个档位一个存档 key
+let slot=0;                                  // 当前档位 0..2
+const PROFAV=['🦊','🐰','🐻'];               // 每档固定小动物头像(不识字也能认出自己那档)
+const PROFCOL=['#e7913a','#4f9fd8','#9a7ad0'];
+let profNames=['','',''];                    // 各档名字(家长在 iPad 上自己起,只存本机,不进源码)
+function saveKey(i){return 'lingshan1_p'+(i==null?slot:i);}
 function save(){
-  try{localStorage.setItem('lingshan1',JSON.stringify({S:S,INV:INV,EQ:EQ,flags:flags,looted:looted,map:curName,x:p.tx,y:p.ty}));}catch(e){}
+  try{localStorage.setItem(saveKey(),JSON.stringify({S:S,INV:INV,EQ:EQ,flags:flags,looted:looted,map:curName,x:p.tx,y:p.ty}));}catch(e){}
 }
 function loadSave(){
   try{
-    const d=JSON.parse(localStorage.getItem('lingshan1'));
+    const d=JSON.parse(localStorage.getItem(saveKey()));
     if(!d)return false;
     Object.assign(S,d.S);Object.assign(INV,d.INV);Object.assign(EQ,d.EQ);Object.assign(flags,d.flags);
     for(const k in looted)delete looted[k];
@@ -691,7 +697,79 @@ function loadSave(){
     return true;
   }catch(e){return false;}
 }
-function hasSave(){try{return !!localStorage.getItem('lingshan1');}catch(e){return false;}}
+function hasSave(i){try{return !!localStorage.getItem(saveKey(i));}catch(e){return false;}}
+// 读取某档进度概要(等级 / 第几章),用于档案卡显示
+function slotMeta(i){
+  try{const d=JSON.parse(localStorage.getItem(saveKey(i)));if(!d)return null;
+    const f=d.flags||{},ch=f.sovereign?5:f.demon||f.ch5?5:f.peng||f.ch4?4:f.dragon||f.ch3?3:f.boss||f.ch2?2:1;
+    return {lvl:(d.S&&d.S.lvl)||1,chap:ch};}catch(e){return null;}
+}
+function loadProfiles(){
+  try{const c=JSON.parse(localStorage.getItem('lingshan_profiles'));if(c&&c.names)profNames=c.names.slice(0,3);}catch(e){}
+  while(profNames.length<3)profNames.push('');
+  // 迁移:旧的单一存档 lingshan1 → 第一档,免得之前的进度丢了
+  try{if(localStorage.getItem('lingshan1')&&!localStorage.getItem('lingshan1_p0')){
+    localStorage.setItem('lingshan1_p0',localStorage.getItem('lingshan1'));
+    if(!profNames[0])profNames[0]='小侠客';saveProfiles();
+  }}catch(e){}
+}
+function saveProfiles(){try{localStorage.setItem('lingshan_profiles',JSON.stringify({names:profNames}));}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+// 渲染标题页的「谁在玩」三张档案卡
+function renderProfiles(){
+  let h='';
+  for(let i=0;i<3;i++){
+    const meta=slotMeta(i),named=!!profNames[i];
+    const sub=meta?('Lv'+meta.lvl+' · 第'+meta.chap+'章'):(named?'新的冒险':'➕ 新玩家');
+    h+='<div class="pslot" style="border-color:'+PROFCOL[i]+'">'+
+       '<button class="pslot-go" onclick="pickProfile('+i+')">'+
+       '<span class="pav" style="background:'+PROFCOL[i]+'">'+PROFAV[i]+'</span>'+
+       '<span class="pinfo"><b>'+(named?esc(profNames[i]):'空位')+'</b><span>'+sub+'</span></span>'+
+       '</button><button class="pslot-edit" onclick="manageProfile('+i+')" aria-label="设置">✏️</button></div>';
+  }
+  if($('profSlots'))$('profSlots').innerHTML=h;
+}
+function enterGame(fresh){
+  au();$('title').style.display='none';mode='world';
+  if(fresh)showDialog(['第一章 · 锁妖塔',{n:'阿萝',t:'师兄!出大事了,快来村口找我!'},'(撞上村民即可对话;先去找阿萝吧)']);
+}
+function pickProfile(i){
+  au();slot=i;
+  if(hasSave(i)){loadSave();enterGame(false);}
+  else if(profNames[i]){resetState();save();enterGame(true);}  // 已命名但无存档 → 开新档
+  else openNameProfile(i);                                      // 空档 → 先起名
+}
+function openNameProfile(i){
+  openPanel('<h3>'+PROFAV[i]+' 新玩家</h3><div class="gold">给小侠客起个名字(给爸爸妈妈填):</div>'+
+    '<input id="pnameIn" type="text" maxlength="8" autocomplete="off" placeholder="名字">'+
+    '<button class="pbtn" onclick="confirmNewProfile('+i+')">▶ 开始冒险</button> '+
+    '<button class="pbtn" onclick="closePanel()">返回</button>');
+  setTimeout(()=>{const e=$('pnameIn');if(e&&e.focus)e.focus();},60);
+}
+function confirmNewProfile(i){
+  const v=(($('pnameIn')||{}).value||'').trim().slice(0,8)||PROFAV[i];
+  profNames[i]=v;saveProfiles();closePanel();
+  slot=i;resetState();save();enterGame(true);
+}
+function manageProfile(i){
+  const meta=slotMeta(i);
+  openPanel('<h3>'+PROFAV[i]+' '+esc(profNames[i]||'空档')+'</h3>'+
+    (meta?'<div class="gold">进度:Lv'+meta.lvl+' · 第'+meta.chap+'章</div>':'<div class="gold">还没开始冒险</div>')+
+    '<input id="pnameIn" type="text" maxlength="8" autocomplete="off" placeholder="名字" value="'+esc(profNames[i]||'')+'">'+
+    '<button class="pbtn" onclick="renameProfile('+i+')">✏️ 改名</button>'+
+    (meta?' <button class="pbtn" onclick="restartProfile('+i+')">🔄 这档重来(家长)</button>':'')+
+    '<div style="margin-top:6px;"><button class="pbtn" onclick="closePanel();renderProfiles()">返回</button></div>');
+  setTimeout(()=>{const e=$('pnameIn');if(e&&e.focus)e.focus();},60);
+}
+function renameProfile(i){
+  const v=(($('pnameIn')||{}).value||'').trim().slice(0,8);if(!v){toast('名字不能空');return;}
+  profNames[i]=v;saveProfiles();closePanel();renderProfiles();
+}
+function restartProfile(i){
+  if(CFG.pwd){const p=prompt('请输入家长密码:');if(p==null)return;if(p!==CFG.pwd){toast('密码不对,未改动');return;}}
+  try{localStorage.removeItem(saveKey(i));}catch(e){}
+  toast('已清空这档进度');closePanel();renderProfiles();
+}
 function resetState(){
   Object.assign(S,{hp:70,maxHp:70,mp:36,maxMp:36,lvl:1,exp:0,gold:80});
   Object.assign(INV,{dan:3,dadan:0,qing:1});
@@ -791,22 +869,8 @@ $('btnBag').onclick=()=>{au();if(mode==='world')openBag();};
 $('btnStat').onclick=()=>{au();if(mode==='world')openStatus();};
 $('btnSave').onclick=()=>{au();if(mode==='world')quickSave();};
 $('btnMus').onclick=()=>{au();setMusic(!musicOn);};
-$('btnNew').onclick=()=>{
-  au();resetState();
-  $('title').style.display='none';mode='world';
-  showDialog([
-    '第一章 · 锁妖塔',
-    {n:'阿萝',t:'师兄!出大事了,快来村口找我!'},
-    '(撞上村民即可对话;先去找阿萝吧)'
-  ]);
-};
-$('btnCont').onclick=()=>{
-  au();
-  if(loadSave()){$('title').style.display='none';mode='world';}
-  else toast('没有找到存档');
-};
 loadCfg();
-if(!hasSave())$('btnCont').disabled=true;
+loadProfiles();renderProfiles(); // 标题页显示三张档案卡(谁在玩)
 battleUI(false);
 
 let last=performance.now();

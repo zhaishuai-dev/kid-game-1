@@ -52,6 +52,20 @@
   .pbtn:hover { background: #322a47; }
   #panelBody input { font-family: inherit; font-size: 16px; padding: 10px 12px; width: 100%; margin: 8px 0;
           background: #120f1c; color: #f3e6c8; border: 1px solid #8a6d3b; border-radius: 4px; letter-spacing: 0.15em; }
+  #who { color: #c9b98f; font-size: 15px; letter-spacing: 0.3em; margin-top: 4px; }
+  #profSlots { display: flex; flex-direction: column; gap: 10px; width: min(360px, 86%); }
+  .pslot { display: flex; align-items: stretch; background: rgba(20,16,30,0.78); border: 2px solid #8a6d3b;
+           border-radius: 10px; overflow: hidden; }
+  .pslot-go { flex: 1; display: flex; align-items: center; gap: 12px; background: transparent; border: 0;
+           cursor: pointer; padding: 10px 12px; color: #f3e6c8; font-family: inherit; text-align: left; }
+  .pav { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+         font-size: 26px; flex: none; }
+  .pinfo { display: flex; flex-direction: column; }
+  .pinfo b { font-size: 18px; letter-spacing: 0.05em; }
+  .pinfo span { color: #9a917e; font-size: 12px; margin-top: 2px; }
+  .pslot-edit { background: transparent; border: 0; border-left: 1px solid #3a3148; color: #c9b98f;
+           font-size: 18px; padding: 0 14px; cursor: pointer; }
+  .pslot-go:active, .pslot-edit:active { background: rgba(255,255,255,0.06); }
   #toast { position: absolute; top: 8%; left: 50%; transform: translateX(-50%); background: rgba(16,13,26,0.92);
            border: 1px solid #8a6d3b; border-radius: 4px; padding: 6px 18px; font-size: 14px; display: none; }
   #endov { background: rgba(10,8,16,0.88); display: none; text-align: center; padding: 20px; }
@@ -78,8 +92,8 @@
   <div id="title" class="ovl">
     <h1>灵山剑侠录</h1>
     <div class="sub">五灵 · 全五章</div>
-    <button id="btnNew" class="gbtn">开始新游戏</button>
-    <button id="btnCont" class="gbtn">继续游戏</button>
+    <div id="who">谁在玩呢?</div>
+    <div id="profSlots"></div>
   </div>
   <div id="dlg"><span id="dlgName"></span><span id="dlgText"></span><span class="cue">▾ 点击 / 回车</span></div>
   <div id="panel"><div id="panelBody"></div></div>

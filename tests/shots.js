@@ -47,7 +47,7 @@ async function diffRatio(fileA,fileB){
 (async()=>{
   const shots=[];
   E(`mode='title'`);G.frame(16);shots.push(snap('01-title'));
-  E(`$('btnNew').onclick();while(dq.length||dcb)nextDlg()`);
+  E(`confirmNewProfile(0);while(dq.length||dcb)nextDlg()`);
   E(`switchMap('world',31,41)`);G.frame(16);shots.push(snap('02-village'));
   E(`switchMap('tower',11,20)`);G.frame(16);shots.push(snap('03-tower'));
   E(`switchMap('world',31,44);startBattle('shan',false)`);G.frame(16);shots.push(snap('04-battle'));
