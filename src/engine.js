@@ -83,6 +83,19 @@ function setMelodyForMap(){
 }
 
 function r(x,y,w,h,c){g.fillStyle=c;g.fillRect(x,y,w,h);}
+// ===== 视觉打磨:投影 / 粒子 / 辉光 / 氛围 =====
+function shadowEllipse(cx,by,rw){g.fillStyle='rgba(0,0,0,0.22)';g.beginPath();g.ellipse(cx,by,rw,Math.max(2,rw*0.32),0,0,Math.PI*2);g.fill();}
+function glowDot(x,y,rad,c){const gr=g.createRadialGradient(x,y,0,x,y,rad);gr.addColorStop(0,c);gr.addColorStop(0.6,c);gr.addColorStop(1,'rgba(0,0,0,0)');const o=g.globalCompositeOperation;g.globalCompositeOperation='lighter';g.globalAlpha=0.5;g.fillStyle=gr;g.beginPath();g.arc(x,y,rad,0,Math.PI*2);g.fill();g.globalAlpha=1;g.globalCompositeOperation=o;}
+const bfx=[]; // 战斗粒子(打击/法术爆发)
+function burst(arr,x,y,c,n,spd,grav){for(let i=0;i<n;i++){const a=Math.random()*6.283,s=spd*(0.35+Math.random()*0.9);arr.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-spd*0.4,life:0.4+Math.random()*0.45,t:0,c,sz:2+Math.round(Math.random()*3),gr:grav==null?460:grav});}}
+function updFx(arr,dt){for(let i=arr.length-1;i>=0;i--){const p=arr[i];p.t+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=p.gr*dt;if(p.t>=p.life)arr.splice(i,1);}}
+function drawFx(arr){for(const p of arr){g.globalAlpha=Math.max(0,1-p.t/p.life);g.fillStyle=p.c;g.fillRect(p.x-p.sz/2,p.y-p.sz/2,p.sz,p.sz);}g.globalAlpha=1;}
+// 氛围浮粒(随场景变色,前景慢飘=视差感);用固定种子,保证截图可复现
+let _ms=98765;const mrnd=()=>{_ms=(_ms*9301+49297)%233280;return _ms/233280;};
+const motes=[];for(let i=0;i<18;i++)motes.push({x:mrnd()*SW,y:mrnd()*SH,vx:-6-mrnd()*14,vy:-4+mrnd()*8,ph:mrnd()*6.28,sz:2+Math.round(mrnd()*2)});
+function moteColor(){const b=cur.bg;return (b==='abyss'||b==='hell')?'rgba(255,140,60,':(b==='heaven'||b==='celestial')?'rgba(255,233,138,':(b==='lake'||b==='palace')?'rgba(190,240,250,':(b==='cavern'||b==='core')?'rgba(255,170,60,':b==='tower'?'rgba(160,140,210,':(b==='sky'||b==='shrine')?'rgba(255,255,255,':'rgba(255,245,180,';}
+function updMotes(dt){for(const m of motes){m.x+=m.vx*dt;m.ph+=dt;m.y+=(Math.sin(m.ph)*7+m.vy)*dt;if(m.x<-6)m.x=SW+6;if(m.y<-6)m.y=SH+6;if(m.y>SH+6)m.y=-6;}}
+function drawMotes(){if(cur.bg==='house')return;const c=moteColor();for(const m of motes){g.globalAlpha=0.18+0.22*(0.5+0.5*Math.sin(m.ph*2));g.fillStyle=c+'1)';g.fillRect(m.x,m.y,m.sz,m.sz);}g.globalAlpha=1;}
 
 function tileAt(x,y){if(x<0||y<0||x>=cur.w||y>=cur.h)return 'T';return cur.m[y][x];}
 function npcAt(x,y){return (NPCS[curName]||[]).find(n=>n.x===x&&n.y===y);}
@@ -311,9 +324,11 @@ function drawWorld(){
     if(!looted[q.id]&&(frame>>4)%3===0){r(q.x*T+22,q.y*T+2,3,3,'#fff3c0');r(q.x*T+23,q.y*T+3,1,1,'#ffffff');}
   });
   (NPCS[curName]||[]).forEach(n=>{
+    shadowEllipse(n.x*T+16,n.y*T+27,11);
     SPR[n.draw](n.x*T,n.y*T-8,2,n.c);label(n.n,n.x*T,n.y*T-8);
   });
-  if(curName==='world'&&!flags.mini){drawSnakeK(31*T,13*T-12,2);label('蛇妖王',31*T,13*T-12);}
+  if(curName==='world'&&!flags.mini){shadowEllipse(31*T+16,13*T+22,13);drawSnakeK(31*T,13*T-12,2);label('蛇妖王',31*T,13*T-12);}
+  shadowEllipse(p.x+16,p.y+27,10);
   drawHero(p.x,p.y-8,2,p.mv?Math.floor(frame/8)%2:0);
   for(const w of wpops){
     g.globalAlpha=Math.max(0,1-w.t);
@@ -323,6 +338,7 @@ function drawWorld(){
     g.globalAlpha=1;
   }
   g.restore();
+  drawMotes(); // 前景氛围浮粒(屏幕空间,慢飘,视差感)
   heroSX=(p.x+16-camX)*WZOOM;heroSY=(p.y+16-camY)*WZOOM; // 触屏寻路:主角的逻辑屏幕坐标(含镜头缩放)
   drawHUD();
   if(CFG.kidMode){ // 右上角小标:让家长一眼看到孩童模式开着
@@ -352,6 +368,7 @@ function updWorld(dt){
     else{p.x=p.mv.fx+(p.mv.gx-p.mv.fx)*p.mv.t;p.y=p.mv.fy+(p.mv.gy-p.mv.fy)*p.mv.t;}
   }
   for(let i=wpops.length-1;i>=0;i--){wpops[i].t+=dt;wpops[i].y-=24*dt;if(wpops[i].t>1.2)wpops.splice(i,1);}
+  updMotes(dt);
 }
 function onStep(){
   const c=tileAt(p.tx,p.ty);

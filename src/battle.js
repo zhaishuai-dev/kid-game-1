@@ -25,6 +25,7 @@ function pop(x,y,txt,c){if(B)B.pops.push({x:x,y:y,txt:txt,c:c,t:0});}
 function advMult(a,d){if(a==='无')return 1;if(CK[a]===d)return 1.5;if(CK[d]===a)return 0.7;return 1;}
 function dealE(d,c){
   B.e.hp-=d;B.fE=0.18;B.shake=0.22;
+  burst(bfx,B.ex||250,B.ey||380,c||'#fff',12,300); // 命中粒子爆发
   pop(330,220,'-'+d,c||'#fff');sHit();
 }
 function afterPlayer(){
@@ -94,10 +95,12 @@ function enemyAct(){
 function hurtHero(base){
   const d=Math.max(1,Math.round((base-defP())*hurtScale())); // 孩童模式受伤减半
   S.hp-=d;B.fH=0.18;B.shake=0.22;
+  burst(bfx,700,360,'#ff6b6b',9,260);
   pop(740,280,'-'+d,'#ff6b6b');sHurt();
 }
 function winB(){
   B.phase='over';refreshBtns();sWin();
+  burst(bfx,B.ex||250,B.ey||380,'#ffd76a',28,300);burst(bfx,B.ex||250,B.ey||380,'#fff8e6',16,220); // 胜利金光
   bmsg('击败了 '+B.e.name+'!');
   S.gold+=B.e.gold;S.exp+=B.e.exp;
   const learned=[];let lv=false;
@@ -149,6 +152,8 @@ function loseB(){
 }
 function updBattle(dt){
   if(B.fE>0)B.fE-=dt;if(B.fH>0)B.fH-=dt;if(B.shake>0)B.shake-=dt;
+  if(B.flash){B.flash.a-=dt*1.8;if(B.flash.a<=0)B.flash=null;}
+  updFx(bfx,dt);
   for(let i=B.pops.length-1;i>=0;i--){B.pops[i].t+=dt;B.pops[i].y-=34*dt;if(B.pops[i].t>1)B.pops.splice(i,1);}
   if(B.anim){
     const a=B.anim;a.t+=dt;
@@ -163,6 +168,8 @@ function updBattle(dt){
         const base=atkP()*a.sk.mult;
         const d=Math.max(1,Math.round(rnd(base-4,base+6)*adv));
         dealE(d,ELC[a.sk.el]);
+        burst(bfx,B.ex||250,B.ey||380,ELC[a.sk.el],adv>1?24:16,adv>1?380:300); // 法术爆发
+        B.flash={c:ELC[a.sk.el],a:adv>1?0.55:0.32};                              // 屏幕闪光
         if(adv>1)pop(310,170,'效果拔群!','#ffd23f');
         else if(adv<1)pop(310,170,'效果不佳…','#9aa3ad');
         B.anim=null;afterPlayer();
@@ -258,15 +265,20 @@ function drawBattle(){
   const m=SPRM[B.e.draw]||{w:20,h:20,s:8};
   const es=Math.max(1,Math.round(m.s*1.3)); // 妖怪放大 ~30%,更大更清楚
   const ew=m.w*es,eh=m.h*es;
+  const eb=Math.sin(frame*0.09)*3,hb=Math.sin(frame*0.09+1.6)*2; // 待机轻微浮动
   const ex=150+B.eOx,ey=486-eh;
-  SPR[B.e.draw](ex,ey,es);
-  if(B.fE>0){g.globalAlpha=0.7;r(ex,ey,ew,eh,'#ffffff');g.globalAlpha=1;}
+  B.ex=ex+ew/2;B.ey=ey+eh/2; // 记录妖怪中心,供命中粒子定位
+  shadowEllipse(ex+ew/2,490,ew*0.4);
+  SPR[B.e.draw](ex,ey+eb,es);
+  if(B.fE>0){g.globalAlpha=0.7;r(ex,ey+eb,ew,eh,'#ffffff');g.globalAlpha=1;}
   const hs=10,hw=16*hs,hh=20*hs; // 主角放大(8→10)
   const hx=648+B.hOx,hy=486-hh;
-  drawHero(hx,hy,hs,Math.floor(frame/10)%2);
-  if(B.fH>0){g.globalAlpha=0.55;r(hx,hy,hw,hh,'#ff3030');g.globalAlpha=1;}
+  shadowEllipse(hx+hw/2,490,hw*0.4);
+  drawHero(hx,hy+hb,hs,Math.floor(frame/10)%2);
+  if(B.fH>0){g.globalAlpha=0.55;r(hx,hy+hb,hw,hh,'#ff3030');g.globalAlpha=1;}
   if(B.anim&&B.anim.k==='proj'){
     const px=B.anim.x,c=ELC[B.anim.sk.el];
+    glowDot(px+35,397,46,c); // 法术弹辉光
     r(px,392,70,10,'#cdd6e0');r(px,394,70,3,'#f0f4f8');
     r(px+66,388,14,18,'#c9a227');
     r(px-12,384,84,4,c);r(px-12,406,84,4,c);
@@ -283,6 +295,7 @@ function drawBattle(){
     g.strokeStyle='#fff';g.lineWidth=6;
     g.beginPath();g.moveTo(ex+ew-18,ey+18);g.lineTo(ex+26,ey+eh-26);g.stroke();
   }
+  drawFx(bfx); // 打击/法术粒子
   for(const w of B.pops){
     g.globalAlpha=Math.max(0,1-w.t);
     g.font='bold 30px monospace';g.strokeStyle='#000';g.lineWidth=5;
@@ -290,6 +303,7 @@ function drawBattle(){
     g.globalAlpha=1;
   }
   g.restore();
+  if(B.flash){g.globalAlpha=Math.max(0,B.flash.a);r(0,0,SW,SH,B.flash.c);g.globalAlpha=1;} // 法术命中屏幕闪光
   r(20,18,430,74,'rgba(0,0,0,0.55)');
   g.font='21px monospace';g.fillStyle='#fff';g.fillText(B.e.name,36,46);
   g.fillStyle=ELC[B.e.el];g.fillText('['+B.e.el+']',36+B.e.name.length*21+14,46);

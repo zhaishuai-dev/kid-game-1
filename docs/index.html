@@ -725,6 +725,7 @@ function pop(x,y,txt,c){if(B)B.pops.push({x:x,y:y,txt:txt,c:c,t:0});}
 function advMult(a,d){if(a==='无')return 1;if(CK[a]===d)return 1.5;if(CK[d]===a)return 0.7;return 1;}
 function dealE(d,c){
   B.e.hp-=d;B.fE=0.18;B.shake=0.22;
+  burst(bfx,B.ex||250,B.ey||380,c||'#fff',12,300); // 命中粒子爆发
   pop(330,220,'-'+d,c||'#fff');sHit();
 }
 function afterPlayer(){
@@ -794,10 +795,12 @@ function enemyAct(){
 function hurtHero(base){
   const d=Math.max(1,Math.round((base-defP())*hurtScale())); // 孩童模式受伤减半
   S.hp-=d;B.fH=0.18;B.shake=0.22;
+  burst(bfx,700,360,'#ff6b6b',9,260);
   pop(740,280,'-'+d,'#ff6b6b');sHurt();
 }
 function winB(){
   B.phase='over';refreshBtns();sWin();
+  burst(bfx,B.ex||250,B.ey||380,'#ffd76a',28,300);burst(bfx,B.ex||250,B.ey||380,'#fff8e6',16,220); // 胜利金光
   bmsg('击败了 '+B.e.name+'!');
   S.gold+=B.e.gold;S.exp+=B.e.exp;
   const learned=[];let lv=false;
@@ -849,6 +852,8 @@ function loseB(){
 }
 function updBattle(dt){
   if(B.fE>0)B.fE-=dt;if(B.fH>0)B.fH-=dt;if(B.shake>0)B.shake-=dt;
+  if(B.flash){B.flash.a-=dt*1.8;if(B.flash.a<=0)B.flash=null;}
+  updFx(bfx,dt);
   for(let i=B.pops.length-1;i>=0;i--){B.pops[i].t+=dt;B.pops[i].y-=34*dt;if(B.pops[i].t>1)B.pops.splice(i,1);}
   if(B.anim){
     const a=B.anim;a.t+=dt;
@@ -863,6 +868,8 @@ function updBattle(dt){
         const base=atkP()*a.sk.mult;
         const d=Math.max(1,Math.round(rnd(base-4,base+6)*adv));
         dealE(d,ELC[a.sk.el]);
+        burst(bfx,B.ex||250,B.ey||380,ELC[a.sk.el],adv>1?24:16,adv>1?380:300); // 法术爆发
+        B.flash={c:ELC[a.sk.el],a:adv>1?0.55:0.32};                              // 屏幕闪光
         if(adv>1)pop(310,170,'效果拔群!','#ffd23f');
         else if(adv<1)pop(310,170,'效果不佳…','#9aa3ad');
         B.anim=null;afterPlayer();
@@ -958,15 +965,20 @@ function drawBattle(){
   const m=SPRM[B.e.draw]||{w:20,h:20,s:8};
   const es=Math.max(1,Math.round(m.s*1.3)); // 妖怪放大 ~30%,更大更清楚
   const ew=m.w*es,eh=m.h*es;
+  const eb=Math.sin(frame*0.09)*3,hb=Math.sin(frame*0.09+1.6)*2; // 待机轻微浮动
   const ex=150+B.eOx,ey=486-eh;
-  SPR[B.e.draw](ex,ey,es);
-  if(B.fE>0){g.globalAlpha=0.7;r(ex,ey,ew,eh,'#ffffff');g.globalAlpha=1;}
+  B.ex=ex+ew/2;B.ey=ey+eh/2; // 记录妖怪中心,供命中粒子定位
+  shadowEllipse(ex+ew/2,490,ew*0.4);
+  SPR[B.e.draw](ex,ey+eb,es);
+  if(B.fE>0){g.globalAlpha=0.7;r(ex,ey+eb,ew,eh,'#ffffff');g.globalAlpha=1;}
   const hs=10,hw=16*hs,hh=20*hs; // 主角放大(8→10)
   const hx=648+B.hOx,hy=486-hh;
-  drawHero(hx,hy,hs,Math.floor(frame/10)%2);
-  if(B.fH>0){g.globalAlpha=0.55;r(hx,hy,hw,hh,'#ff3030');g.globalAlpha=1;}
+  shadowEllipse(hx+hw/2,490,hw*0.4);
+  drawHero(hx,hy+hb,hs,Math.floor(frame/10)%2);
+  if(B.fH>0){g.globalAlpha=0.55;r(hx,hy+hb,hw,hh,'#ff3030');g.globalAlpha=1;}
   if(B.anim&&B.anim.k==='proj'){
     const px=B.anim.x,c=ELC[B.anim.sk.el];
+    glowDot(px+35,397,46,c); // 法术弹辉光
     r(px,392,70,10,'#cdd6e0');r(px,394,70,3,'#f0f4f8');
     r(px+66,388,14,18,'#c9a227');
     r(px-12,384,84,4,c);r(px-12,406,84,4,c);
@@ -983,6 +995,7 @@ function drawBattle(){
     g.strokeStyle='#fff';g.lineWidth=6;
     g.beginPath();g.moveTo(ex+ew-18,ey+18);g.lineTo(ex+26,ey+eh-26);g.stroke();
   }
+  drawFx(bfx); // 打击/法术粒子
   for(const w of B.pops){
     g.globalAlpha=Math.max(0,1-w.t);
     g.font='bold 30px monospace';g.strokeStyle='#000';g.lineWidth=5;
@@ -990,6 +1003,7 @@ function drawBattle(){
     g.globalAlpha=1;
   }
   g.restore();
+  if(B.flash){g.globalAlpha=Math.max(0,B.flash.a);r(0,0,SW,SH,B.flash.c);g.globalAlpha=1;} // 法术命中屏幕闪光
   r(20,18,430,74,'rgba(0,0,0,0.55)');
   g.font='21px monospace';g.fillStyle='#fff';g.fillText(B.e.name,36,46);
   g.fillStyle=ELC[B.e.el];g.fillText('['+B.e.el+']',36+B.e.name.length*21+14,46);
@@ -1095,6 +1109,19 @@ function setMelodyForMap(){
 }
 
 function r(x,y,w,h,c){g.fillStyle=c;g.fillRect(x,y,w,h);}
+// ===== 视觉打磨:投影 / 粒子 / 辉光 / 氛围 =====
+function shadowEllipse(cx,by,rw){g.fillStyle='rgba(0,0,0,0.22)';g.beginPath();g.ellipse(cx,by,rw,Math.max(2,rw*0.32),0,0,Math.PI*2);g.fill();}
+function glowDot(x,y,rad,c){const gr=g.createRadialGradient(x,y,0,x,y,rad);gr.addColorStop(0,c);gr.addColorStop(0.6,c);gr.addColorStop(1,'rgba(0,0,0,0)');const o=g.globalCompositeOperation;g.globalCompositeOperation='lighter';g.globalAlpha=0.5;g.fillStyle=gr;g.beginPath();g.arc(x,y,rad,0,Math.PI*2);g.fill();g.globalAlpha=1;g.globalCompositeOperation=o;}
+const bfx=[]; // 战斗粒子(打击/法术爆发)
+function burst(arr,x,y,c,n,spd,grav){for(let i=0;i<n;i++){const a=Math.random()*6.283,s=spd*(0.35+Math.random()*0.9);arr.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-spd*0.4,life:0.4+Math.random()*0.45,t:0,c,sz:2+Math.round(Math.random()*3),gr:grav==null?460:grav});}}
+function updFx(arr,dt){for(let i=arr.length-1;i>=0;i--){const p=arr[i];p.t+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=p.gr*dt;if(p.t>=p.life)arr.splice(i,1);}}
+function drawFx(arr){for(const p of arr){g.globalAlpha=Math.max(0,1-p.t/p.life);g.fillStyle=p.c;g.fillRect(p.x-p.sz/2,p.y-p.sz/2,p.sz,p.sz);}g.globalAlpha=1;}
+// 氛围浮粒(随场景变色,前景慢飘=视差感);用固定种子,保证截图可复现
+let _ms=98765;const mrnd=()=>{_ms=(_ms*9301+49297)%233280;return _ms/233280;};
+const motes=[];for(let i=0;i<18;i++)motes.push({x:mrnd()*SW,y:mrnd()*SH,vx:-6-mrnd()*14,vy:-4+mrnd()*8,ph:mrnd()*6.28,sz:2+Math.round(mrnd()*2)});
+function moteColor(){const b=cur.bg;return (b==='abyss'||b==='hell')?'rgba(255,140,60,':(b==='heaven'||b==='celestial')?'rgba(255,233,138,':(b==='lake'||b==='palace')?'rgba(190,240,250,':(b==='cavern'||b==='core')?'rgba(255,170,60,':b==='tower'?'rgba(160,140,210,':(b==='sky'||b==='shrine')?'rgba(255,255,255,':'rgba(255,245,180,';}
+function updMotes(dt){for(const m of motes){m.x+=m.vx*dt;m.ph+=dt;m.y+=(Math.sin(m.ph)*7+m.vy)*dt;if(m.x<-6)m.x=SW+6;if(m.y<-6)m.y=SH+6;if(m.y>SH+6)m.y=-6;}}
+function drawMotes(){if(cur.bg==='house')return;const c=moteColor();for(const m of motes){g.globalAlpha=0.18+0.22*(0.5+0.5*Math.sin(m.ph*2));g.fillStyle=c+'1)';g.fillRect(m.x,m.y,m.sz,m.sz);}g.globalAlpha=1;}
 
 function tileAt(x,y){if(x<0||y<0||x>=cur.w||y>=cur.h)return 'T';return cur.m[y][x];}
 function npcAt(x,y){return (NPCS[curName]||[]).find(n=>n.x===x&&n.y===y);}
@@ -1323,9 +1350,11 @@ function drawWorld(){
     if(!looted[q.id]&&(frame>>4)%3===0){r(q.x*T+22,q.y*T+2,3,3,'#fff3c0');r(q.x*T+23,q.y*T+3,1,1,'#ffffff');}
   });
   (NPCS[curName]||[]).forEach(n=>{
+    shadowEllipse(n.x*T+16,n.y*T+27,11);
     SPR[n.draw](n.x*T,n.y*T-8,2,n.c);label(n.n,n.x*T,n.y*T-8);
   });
-  if(curName==='world'&&!flags.mini){drawSnakeK(31*T,13*T-12,2);label('蛇妖王',31*T,13*T-12);}
+  if(curName==='world'&&!flags.mini){shadowEllipse(31*T+16,13*T+22,13);drawSnakeK(31*T,13*T-12,2);label('蛇妖王',31*T,13*T-12);}
+  shadowEllipse(p.x+16,p.y+27,10);
   drawHero(p.x,p.y-8,2,p.mv?Math.floor(frame/8)%2:0);
   for(const w of wpops){
     g.globalAlpha=Math.max(0,1-w.t);
@@ -1335,6 +1364,7 @@ function drawWorld(){
     g.globalAlpha=1;
   }
   g.restore();
+  drawMotes(); // 前景氛围浮粒(屏幕空间,慢飘,视差感)
   heroSX=(p.x+16-camX)*WZOOM;heroSY=(p.y+16-camY)*WZOOM; // 触屏寻路:主角的逻辑屏幕坐标(含镜头缩放)
   drawHUD();
   if(CFG.kidMode){ // 右上角小标:让家长一眼看到孩童模式开着
@@ -1364,6 +1394,7 @@ function updWorld(dt){
     else{p.x=p.mv.fx+(p.mv.gx-p.mv.fx)*p.mv.t;p.y=p.mv.fy+(p.mv.gy-p.mv.fy)*p.mv.t;}
   }
   for(let i=wpops.length-1;i>=0;i--){wpops[i].t+=dt;wpops[i].y-=24*dt;if(wpops[i].t>1.2)wpops.splice(i,1);}
+  updMotes(dt);
 }
 function onStep(){
   const c=tileAt(p.tx,p.ty);

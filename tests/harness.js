@@ -7,8 +7,9 @@ function makeCtx2d(){
   const noop=()=>{};
   return {fillRect:noop,fillText:noop,strokeText:noop,beginPath:noop,arc:noop,fill:noop,
           moveTo:noop,lineTo:noop,closePath:noop,stroke:noop,save:noop,restore:noop,translate:noop,
-          scale:noop,setTransform:noop,rect:noop,clip:noop,
-          fillStyle:'',strokeStyle:'',font:'',lineWidth:1,globalAlpha:1,imageSmoothingEnabled:true};
+          scale:noop,setTransform:noop,rect:noop,clip:noop,ellipse:noop,
+          createRadialGradient:()=>({addColorStop:noop}),createLinearGradient:()=>({addColorStop:noop}),
+          fillStyle:'',strokeStyle:'',font:'',lineWidth:1,globalAlpha:1,globalCompositeOperation:'source-over',imageSmoothingEnabled:true};
 }
 function makeEl(id){
   return {id,style:{},textContent:'',innerHTML:'',value:'',disabled:false,onclick:null,dataset:{},
