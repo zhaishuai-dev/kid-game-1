@@ -5,7 +5,8 @@ let seed=20260610;const srnd=()=>{seed=(seed*9301+49297)%233280;return seed/2332
 
 // 剧情位:aluo/mini/boss=第一章;ch2/wind/lakeIntro/dragon=第二章;ch3/abyssIntro/demon=第三章
 //        ch4/earth/skyIntro/peng=第四章;ch5/caveIntro/sovereign=第五章
-const flags={aluo:false,mini:false,boss:false,ch2:false,wind:false,lakeIntro:false,dragon:false,ch3:false,abyssIntro:false,demon:false,ch4:false,earth:false,skyIntro:false,peng:false,ch5:false,caveIntro:false,sovereign:false};
+//        第二部 · 天界篇:ch6/wuling(五灵归元)/tianIntro/emperor=第六章
+const flags={aluo:false,mini:false,boss:false,ch2:false,wind:false,lakeIntro:false,dragon:false,ch3:false,abyssIntro:false,demon:false,ch4:false,earth:false,skyIntro:false,peng:false,ch5:false,caveIntro:false,sovereign:false,ch6:false,wuling:false,tianIntro:false,emperor:false};
 const S={hp:70,maxHp:70,mp:36,maxMp:36,lvl:1,exp:0,gold:80};
 const INV={dan:3,dadan:0,qing:1};
 const EQ={wpn:0,arm:0};
@@ -31,7 +32,9 @@ const SKILLS=[
   {n:'玄冰咒',el:'水',mp:26,mult:3.2,lvl:18},
   {n:'罡风咒',el:'风',mp:30,mult:3.6,lvl:20,flag:'wind'},
   {n:'紫雷咒',el:'雷',mp:38,mult:4.0,lvl:22},
-  {n:'厚土咒',el:'土',mp:34,mult:3.8,lvl:26,flag:'earth'}
+  {n:'厚土咒',el:'土',mp:34,mult:3.8,lvl:26,flag:'earth'},
+  // 第二部 · 天界篇:五灵归元(无属性大招,阿萝传授)——打变属性的天帝时永远 1.0 倍,稳
+  {n:'五灵归元',el:'无',mp:50,mult:4.6,lvl:1,flag:'wuling'}
 ];
 // 升级链:基础咒 → 大成咒(状态面板里用「↑」标注已进阶)
 const SKILL_UP={'火灵咒':'烈焰咒','水灵咒':'玄冰咒','风灵咒':'罡风咒','雷灵咒':'紫雷咒','土灵咒':'厚土咒'};
@@ -90,5 +93,11 @@ const ENM={
   shisha:{n:'石煞',el:'土',hp:360,atk:34,exp:360,gold:240,draw:'shisha',s:6},
   rongyan:{n:'熔岩兽',el:'火',hp:290,atk:40,exp:340,gold:225,draw:'rongyan',s:6},
   dilie:{n:'地裂魔',el:'土',hp:340,atk:38,exp:355,gold:235,draw:'dilie',s:6},
-  sovereign:{n:'后土魔君',el:'土',hp:1380,atk:48,exp:3600,gold:5000,draw:'sovereign',s:6,gw:24,caster:true}
+  sovereign:{n:'后土魔君',el:'土',hp:1380,atk:48,exp:3600,gold:5000,draw:'sovereign',s:6,gw:24,caster:true},
+  // 第二部 · 天界篇:天将属性各异(逼玩家轮用整套大成咒);天帝每回合变属性(见 battle.js enemyAct)
+  tianhuo:{n:'天火神兵',el:'火',hp:360,atk:44,exp:420,gold:280,draw:'tianhuo',s:6},
+  xuanshui:{n:'玄水仙官',el:'水',hp:340,atk:46,exp:440,gold:300,draw:'xuanshui',s:6},
+  zilei:{n:'紫雷天君',el:'雷',hp:380,atk:48,exp:460,gold:310,draw:'zilei',s:6},
+  jingang:{n:'金刚神将',el:'土',hp:440,atk:45,exp:520,gold:360,draw:'jingang',s:6},
+  emperor:{n:'玄穹天帝',el:'火',hp:1800,atk:56,exp:6000,gold:9000,draw:'emperor',s:6,gw:24,caster:true,shift:true}
 };

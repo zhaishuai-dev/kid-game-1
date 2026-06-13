@@ -14,7 +14,7 @@ function startBattle(key,boss){
   const d=ENM[key];
   const hp=d.hp+(boss?0:S.lvl*4);
   B={
-    e:{name:d.n,el:d.el,hp:hp,maxHp:hp,atk:d.atk+(boss?0:Math.floor(S.lvl/2)),exp:d.exp,gold:d.gold,draw:d.draw,s:d.s,gw:d.gw||16,caster:d.caster},
+    e:{name:d.n,el:d.el,hp:hp,maxHp:hp,atk:d.atk+(boss?0:Math.floor(S.lvl/2)),exp:d.exp,gold:d.gold,draw:d.draw,s:d.s,gw:d.gw||16,caster:d.caster,shift:d.shift},
     key:key,boss:!!boss,phase:'cmd',hOx:0,eOx:0,fE:0,fH:0,shake:0,pops:[],anim:null,timer:0,turn:0,msg:d.n+' 出现了!'
   };
   mode='battle';grace=2;battleUI(true);
@@ -80,8 +80,13 @@ function useItem(k){
   sHeal();
   B.phase='wait';B.timer=0.55;refreshBtns();
 }
+const SHIFTELS=['火','水','雷','风','土'];
 function enemyAct(){
   B.turn++;
+  if(B.e.shift){ // 天帝:每回合变属性,逼玩家用五灵归元或看准了再克
+    B.e.el=SHIFTELS[B.turn%5];
+    pop(330,150,'化作'+B.e.el+'!',ELC[B.e.el]);
+  }
   if(B.e.caster&&B.turn%2===0){B.anim={k:'espell',t:0};sCast();}
   else B.anim={k:'elunge',t:0};
   B.phase='anim';
@@ -124,6 +129,9 @@ function winB(){
     }else if(key==='sovereign'){
       flags.sovereign=true;
       showEnding5();
+    }else if(key==='emperor'){
+      flags.emperor=true;
+      showEnding6();
     }else if(learned.length){
       showDialog(['你领悟了新仙术:'+learned.join('、')+'!']);
     }
@@ -184,7 +192,17 @@ function drawBattle(){
   const hellBg=cur.bg==='abyss'||cur.bg==='hell'||B.key==='demon';
   const skyBg=cur.bg==='sky'||cur.bg==='shrine'||B.key==='peng';
   const caveBg=cur.bg==='cavern'||cur.bg==='core'||B.key==='sovereign';
-  if(caveBg){
+  const heavenBg=cur.bg==='heaven'||cur.bg==='celestial'||B.key==='emperor';
+  if(heavenBg){
+    // 天界战场:金白云霄 + 金光垂幕 + 流金
+    r(0,0,SW,420,'#dfeaf8');r(0,420,SW,220,'#cfe0f4');
+    g.fillStyle='rgba(255,233,138,0.22)';
+    [120,360,600,840].forEach(x=>{g.beginPath();g.moveTo(x,0);g.lineTo(x+70,0);g.lineTo(x+130,420);g.lineTo(x+50,420);g.closePath();g.fill();});
+    g.fillStyle='#fff';for(let k=0;k<5;k++){const cx=((k*230+frame)%1100)-80,cy=60+((k*61)%150);r(cx,cy,96,18,'rgba(255,255,255,0.9)');r(cx+22,cy-10,62,18,'rgba(255,255,255,0.8)');}
+    g.fillStyle='#ffd23f';for(let k=0;k<14;k++){const ex=(k*139+frame)%960,ey=420-((frame*2+k*70)%440);g.fillRect(ex,ey,3,3);}
+    r(0,470,SW,170,'#eef5ff');
+    if(B.key==='emperor'){g.fillStyle='#ffe98a';g.beginPath();g.moveTo(360,70);g.lineTo(600,70);g.lineTo(540,300);g.lineTo(420,300);g.closePath();g.fill();r(450,110,60,44,'#fffce6');}
+  }else if(caveBg){
     // 地心战场:深褐岩窟 + 矿脉微光 + 地火裂隙
     r(0,0,SW,430,'#241608');r(0,430,SW,210,'#1a0e06');
     g.fillStyle='#3a2410';

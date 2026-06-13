@@ -49,7 +49,8 @@ const MELS={
   lake:[330,392,440,523,440,392,0,440,494,587,494,440,0,392,440,494,392,330,294,330,392,0,440,392,330,294,262,0,294,330,392,0],
   abyss:[247,0,262,233,196,0,233,196,175,0,208,247,262,0,233,208,196,175,165,0,196,208,233,0,220,196,175,165,0,185,208,0],
   sky:[523,587,659,784,659,587,523,0,587,659,784,880,784,659,587,0,659,784,880,784,659,587,523,494,523,587,659,0,784,659,587,0],
-  earth:[196,0,220,196,165,0,147,165,196,0,220,247,220,196,0,175,165,147,131,0,147,165,196,0,220,196,165,147,0,165,196,0]
+  earth:[196,0,220,196,165,0,147,165,196,0,220,247,220,196,0,175,165,147,131,0,147,165,196,0,220,196,165,147,0,165,196,0],
+  heaven:[523,659,784,988,1046,988,784,659,587,784,880,1046,1175,1046,880,784,659,784,880,988,880,784,659,587,523,659,784,988,784,659,587,0]
 };
 const MUSCFG={
   field:{wave:'triangle',rest:250,bv:0.018},
@@ -57,9 +58,10 @@ const MUSCFG={
   lake:{wave:'sine',rest:235,bv:0.016},
   abyss:{wave:'sawtooth',rest:300,bv:0.024},
   sky:{wave:'sine',rest:220,bv:0.014},
-  earth:{wave:'triangle',rest:300,bv:0.026}
+  earth:{wave:'triangle',rest:300,bv:0.026},
+  heaven:{wave:'sine',rest:210,bv:0.013}
 };
-function melForBg(bg){return bg==='tower'?'tower':(bg==='lake'||bg==='palace')?'lake':(bg==='abyss'||bg==='hell')?'abyss':(bg==='sky'||bg==='shrine')?'sky':(bg==='cavern'||bg==='core')?'earth':'field';}
+function melForBg(bg){return bg==='tower'?'tower':(bg==='lake'||bg==='palace')?'lake':(bg==='abyss'||bg==='hell')?'abyss':(bg==='sky'||bg==='shrine')?'sky':(bg==='cavern'||bg==='core')?'earth':(bg==='heaven'||bg==='celestial')?'heaven':'field';}
 function startMusicLoop(){
   if(mTimer){clearInterval(mTimer);mTimer=null;}
   const cfg=MUSCFG[melKey],mel=MELS[melKey];
@@ -189,6 +191,25 @@ function drawTile(i,j,sx,sy){
     else if(c==='U'){const gl=flags.sovereign?'#9a8a6a':'#ffd23f';r(sx+6,sy+2,20,28,'#1e1206');r(sx+9,sy+5,14,22,'#3a2410');r(sx+7,sy+3,4,7,gl);r(sx+21,sy+3,4,7,gl);r(sx+13,sy+11,6,12,gl);r(sx+10,sy+25,12,4,'#0e0804');}
     return;
   }
+  if(cur.bg==='heaven'){
+    if(c==='R'){r(sx,sy,T,T,'#cfe0f4');r(sx+4,sy+5,9,3,'rgba(255,255,255,0.85)');r(sx+18,sy+18,9,3,'rgba(255,255,255,0.7)');return;}
+    // 云阶:洁白云海 + 金光浮纹
+    r(sx,sy,T,T,'#eaf2fb');if((i+j)%2)r(sx,sy,T,T,'rgba(180,200,230,0.18)');
+    const o=(frame>>4)%2;r(sx+4+o*6,sy+8,11,2,'#fff');r(sx+16-o*5,sy+22,9,2,'#dce8f6');
+    if(c==='c'){[[5,18],[12,22],[19,16],[23,21],[8,12]].forEach(b=>{r(sx+b[0],sy+b[1],5,2,'#ffe98a');r(sx+b[0]+1,sy+b[1]-2,3,2,'#fff6c8');});}
+    else if(c==='S'){r(sx+4,sy+4,24,24,'#ffe98a');r(sx+8,sy+8,16,16,'#fffce6');const k=(frame>>3)%4;r(sx+10+k*3,sy+6+(k*4)%16,3,3,'#fff');}
+    else if(c==='O'){r(sx+3,sy+3,26,26,'#ffe98a');r(sx+8,sy+8,16,16,'#fffce6');g.fillStyle='#9a7a20';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='D'){r(sx,sy,T,T,'#cfd8e8');r(sx+3,sy+2,26,30,'#fffce6');r(sx+6,sy+5,20,27,'#ffe98a');r(sx+10,sy+8,12,24,'#fff');r(sx+13,sy+3,6,4,'#ffae40');r(sx+8,sy+14,3,3,'#ffd23f');r(sx+21,sy+14,3,3,'#ffd23f');}
+    return;
+  }
+  if(cur.bg==='celestial'){
+    if(c==='X'){r(sx,sy,T,T,'#b9c8e0');r(sx+3,sy+2,26,28,'#e6eef8');r(sx+6,sy+5,20,22,'#d2deef');r(sx+13,sy+2,6,28,'#ffe98a');r(sx+14,sy+6,4,6,'#fff');r(sx+14,sy+18,4,6,'#fff');return;}
+    r(sx,sy,T,T,'#dde7f4');if((i+j)%2)r(sx,sy,T,T,'rgba(255,220,120,0.10)');
+    r(sx,sy,T,1,'#c4d2e6');r(sx,sy,1,T,'#c4d2e6');
+    if(c==='O'){r(sx+3,sy+3,26,26,'#cdd9ec');r(sx+8,sy+8,16,16,'#fffce6');g.fillStyle='#9a7a20';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='k'){const gl=flags.emperor?'#b9c2cc':'#ffae40';r(sx+6,sy+2,20,28,'#cdd9ec');r(sx+9,sy+5,14,22,'#fffce6');r(sx+8,sy+4,4,6,gl);r(sx+20,sy+4,4,6,gl);r(sx+13,sy+12,6,10,gl);r(sx+10,sy+24,12,4,'#ffe98a');}
+    return;
+  }
   if(curName==='tower'){
     if(c==='X'){r(sx,sy,T,T,'#2c2638');r(sx+2,sy+2,12,12,'#241f30');r(sx+18,sy+18,12,12,'#241f30');r(sx+18,sy+2,12,12,'#332b42');r(sx+2,sy+18,12,12,'#332b42');return;}
     r(sx,sy,T,T,'#4a4356');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.07)');
@@ -246,6 +267,13 @@ function drawTile(i,j,sx,sy){
       const o=(frame>>3)%3;r(sx+14,sy+8+o*4,4,4,'#ff6a20');r(sx+15,sy+18-o*3,3,3,'#ffb030');
     }
   }
+  else if(c==='L'){ // 第二部:天梯(开启前如常草地)
+    r(sx,sy,T,T,'#7ab648');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.04)');
+    if(flags.ch6&&!flags.emperor){ // 通天光柱
+      r(sx+11,sy,10,T,'rgba(255,233,138,0.35)');r(sx+13,sy,6,T,'#fffce6');
+      const o=(frame>>2)%4;r(sx+12,sy+2+o*7,8,3,'#ffd23f');
+    }
+  }
 }
 function label(n,sx,sy){
   g.font='13px monospace';
@@ -270,7 +298,7 @@ function drawHUD(){
   g.fillText(S.hp+'/'+S.maxHp,222,56);g.fillText(S.mp+'/'+S.maxMp,222,76);
 }
 function drawWorld(){
-  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':cur.bg==='abyss'?'#1a0c14':cur.bg==='hell'?'#140610':cur.bg==='sky'?'#7fa8d0':cur.bg==='shrine'?'#6a8ab0':cur.bg==='cavern'?'#1a0e06':cur.bg==='core'?'#140a04':'#234d1e');
+  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':cur.bg==='abyss'?'#1a0c14':cur.bg==='hell'?'#140610':cur.bg==='sky'?'#7fa8d0':cur.bg==='shrine'?'#6a8ab0':cur.bg==='cavern'?'#1a0e06':cur.bg==='core'?'#140a04':cur.bg==='heaven'?'#cfe0f4':cur.bg==='celestial'?'#b9c8e0':'#234d1e');
   const mw=cur.w*T,mh=cur.h*T;
   const vw=SW/WZOOM,vh=SH/WZOOM; // 镜头拉近后实际可见的世界范围
   const camX=mw<=vw?(mw-vw)/2:Math.max(0,Math.min(mw-vw,p.x-vw/2+16));
@@ -335,6 +363,7 @@ function onStep(){
   if(c==='V'&&flags.ch2){diveLake();return;}
   if(c==='Y'&&flags.ch4){ascendSky();return;}
   if(c==='q'&&flags.ch5){descendCave();return;}
+  if(c==='L'&&flags.ch6){ascendHeaven();return;}
   if(c==='d'||c==='D'||c==='O'){ // 通用传送门:木门、水府门、各类出口
     const door=DOORS[curName+':'+p.tx+','+p.ty];
     if(door){switchMap(door.map,door.x,door.y);return;}
@@ -369,6 +398,17 @@ function onStep(){
         {n:'混沌魔尊',t:'蝼蚁也敢登我殿堂?连同你这一身五灵,我一并吞了!'}
       ],()=>startBattle('demon',true));
     }else wpop('魔殿一片死寂','#9a9aa8');
+    return;
+  }
+  if(c==='k'){ // 第二部:天帝王座(全剧终 Boss)
+    if(!flags.emperor){
+      showDialog([
+        '灵霄殿顶,金光大盛,一位执掌五灵的天帝自玉座上俯视而下。',
+        {n:'阿萝',t:'师兄……原来纵着这一切的,是天帝。它身随心变,五灵轮转,寻常克制压不住它!'},
+        {n:'玄穹天帝',t:'凡尘蝼蚁,也敢登我灵霄?五灵在我,生杀由我——伏诛吧。'},
+        {n:'阿萝',t:'用五灵归元!万法归一,不分属性,它怎么变都拦不住!我陪你,打到底!'}
+      ],()=>startBattle('emperor',true));
+    }else wpop('灵霄殿万里无云','#fffce6');
     return;
   }
   if(c==='N'){ // 第四章:大鹏王座
@@ -452,6 +492,17 @@ function descendCave(){
     ],()=>switchMap('cavern',14,21));
   }else switchMap('cavern',14,21);
 }
+// 第二部:踏天梯飞升天界云阙(首次有旁白)
+function ascendHeaven(){
+  if(!flags.tianIntro){
+    flags.tianIntro=true;
+    showDialog([
+      '天梯的金光将你与阿萝托起,云海在脚下退去,眼前是金阙玉宇、仙气缭绕的天界。',
+      {n:'阿萝',t:'真的上来了……这里就是天界。守门的天将都不好惹,小心些。'},
+      '(罡气带里会遇上天将,各有属性;仙泉可回满。云阙北端的灵霄门后,便是天帝。)'
+    ],()=>switchMap('heaven',14,21));
+  }else switchMap('heaven',14,21);
+}
 
 // Phase 1:翻找家具。首次有宝物("叮"+金色飘字),重复调查按种类给不同文案
 function investigate(q){
@@ -527,7 +578,27 @@ function talkAluo(){
     save();
   }
   else if(!flags.sovereign)showDialog([{n:'阿萝',t:'地缝在村子西边。地心里土妖成群,紫雷咒最克它们;那只熔岩兽属火,玄冰咒伺候。后土魔君,也属土!'}]);
-  else showDialog([{n:'阿萝',t:'五灵归位,天地重宁,再没有什么乱源了。师兄……这一路,有你真好。'}]);
+  else if(!flags.ch6){ // 第二部开篇:后土只是表象,乱源在天上;阿萝传授五灵归元
+    flags.ch6=true;flags.wuling=true;
+    showDialog([
+      {n:'阿萝',t:'师兄,我夜观星象……后土魔君也只是被人推出来的。真正纵着这一切的,在天上。'},
+      {n:'阿萝',t:'天界的天帝执掌五灵,身随心变。要上去理论,得有一道不分属性的法门。'},
+      {n:'阿萝',t:'我把师门最后一道绝学「五灵归元」传你——万法归一,无视属性,它怎么变都克得住!'},
+      '【习得仙术 · 五灵归元】(无属性大招,灵力耗得多,但稳)',
+      {n:'阿萝',t:'湖畔升起了一道天梯。走,这一回我们上天去!'}
+    ]);
+    save();
+  }
+  else if(!flags.emperor)showDialog([{n:'阿萝',t:'天梯在湖畔。天将属性各异,挨个用克它的咒;天帝会变属性,认准了用五灵归元最稳!'}]);
+  else showDialog([{n:'阿萝',t:'天帝也伏诛了……三界与天界都太平了。师兄,真正的故事,到这儿才算圆满。'}]);
+}
+// 第二部:阿萝随你闯天界
+function talkAluoHeaven(){
+  if(!flags.emperor)showDialog([
+    {n:'阿萝',t:'顺着云阶往北就是灵霄门。天火神兵属火、玄水仙官属水、紫雷天君属雷、金刚神将属土——挨个克。'},
+    {n:'阿萝',t:'天帝身随心变,看准它当下的属性再出手,拿不准就甩五灵归元,无视属性!'}
+  ]);
+  else showDialog([{n:'阿萝',t:'天界也安宁了。师兄,我们回灵山吧——回家。'}]);
 }
 // 第四章:阿萝随你闯云海
 function talkAluoSky(){
@@ -779,6 +850,7 @@ function resetState(){
   flags.ch3=false;flags.abyssIntro=false;flags.demon=false;
   flags.ch4=false;flags.earth=false;flags.skyIntro=false;flags.peng=false;
   flags.ch5=false;flags.caveIntro=false;flags.sovereign=false;
+  flags.ch6=false;flags.wuling=false;flags.tianIntro=false;flags.emperor=false;
   for(const k in looted)delete looted[k];
   switchMap('world',31,44);
 }
@@ -808,8 +880,14 @@ function showEnding4(){
   sWin();
 }
 function showEnding5(){
+  if($('endTitle'))$('endTitle').textContent='第一部 · 完';
+  $('endText').textContent='后土魔君崩解为漫天尘光,五灵归位,人间重归太平。可阿萝抬头望向云端,神色凝重——这五场浩劫,竟像是被一只无形的手推着发生的。她低声道:「师兄,真正纵着这一切的,只怕……在天上。」灵山的故事,还没有真正结束。';
+  $('endov').style.display='flex';
+  sWin();
+}
+function showEnding6(){
   if($('endTitle'))$('endTitle').textContent='全 剧 终';
-  $('endText').textContent='后土魔君在五灵齐鸣中崩解为漫天尘光,地心的轰鸣终于止息,黄泉重归沉寂——乱源之根,断了。云无衣与阿萝一路升回地面,灵山的春风迎面而来。火、水、雷、风、土,五灵归位,天地太平。从锁妖塔到黄泉地心,这一整段传说,在此圆满落幕。多谢你,陪云无衣和阿萝走完了整条路。';
+  $('endText').textContent='玄穹天帝在五灵归元的万道金光中崩散,灵霄殿的金光归于澄澈,天界、三界,尽数归于太平。云无衣与阿萝并肩立于云端,脚下是他们一路走过的山川湖海。从锁妖塔的第一缕妖气,到灵霄殿的最后一道天光——这一整段传说,自此圆满落幕。多谢你,陪云无衣和阿萝走完了整条路。再会。';
   $('endov').style.display='flex';
   sWin();
 }

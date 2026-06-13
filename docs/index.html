@@ -134,7 +134,8 @@ let seed=20260610;const srnd=()=>{seed=(seed*9301+49297)%233280;return seed/2332
 
 // 剧情位:aluo/mini/boss=第一章;ch2/wind/lakeIntro/dragon=第二章;ch3/abyssIntro/demon=第三章
 //        ch4/earth/skyIntro/peng=第四章;ch5/caveIntro/sovereign=第五章
-const flags={aluo:false,mini:false,boss:false,ch2:false,wind:false,lakeIntro:false,dragon:false,ch3:false,abyssIntro:false,demon:false,ch4:false,earth:false,skyIntro:false,peng:false,ch5:false,caveIntro:false,sovereign:false};
+//        第二部 · 天界篇:ch6/wuling(五灵归元)/tianIntro/emperor=第六章
+const flags={aluo:false,mini:false,boss:false,ch2:false,wind:false,lakeIntro:false,dragon:false,ch3:false,abyssIntro:false,demon:false,ch4:false,earth:false,skyIntro:false,peng:false,ch5:false,caveIntro:false,sovereign:false,ch6:false,wuling:false,tianIntro:false,emperor:false};
 const S={hp:70,maxHp:70,mp:36,maxMp:36,lvl:1,exp:0,gold:80};
 const INV={dan:3,dadan:0,qing:1};
 const EQ={wpn:0,arm:0};
@@ -160,7 +161,9 @@ const SKILLS=[
   {n:'玄冰咒',el:'水',mp:26,mult:3.2,lvl:18},
   {n:'罡风咒',el:'风',mp:30,mult:3.6,lvl:20,flag:'wind'},
   {n:'紫雷咒',el:'雷',mp:38,mult:4.0,lvl:22},
-  {n:'厚土咒',el:'土',mp:34,mult:3.8,lvl:26,flag:'earth'}
+  {n:'厚土咒',el:'土',mp:34,mult:3.8,lvl:26,flag:'earth'},
+  // 第二部 · 天界篇:五灵归元(无属性大招,阿萝传授)——打变属性的天帝时永远 1.0 倍,稳
+  {n:'五灵归元',el:'无',mp:50,mult:4.6,lvl:1,flag:'wuling'}
 ];
 // 升级链:基础咒 → 大成咒(状态面板里用「↑」标注已进阶)
 const SKILL_UP={'火灵咒':'烈焰咒','水灵咒':'玄冰咒','风灵咒':'罡风咒','雷灵咒':'紫雷咒','土灵咒':'厚土咒'};
@@ -219,7 +222,13 @@ const ENM={
   shisha:{n:'石煞',el:'土',hp:360,atk:34,exp:360,gold:240,draw:'shisha',s:6},
   rongyan:{n:'熔岩兽',el:'火',hp:290,atk:40,exp:340,gold:225,draw:'rongyan',s:6},
   dilie:{n:'地裂魔',el:'土',hp:340,atk:38,exp:355,gold:235,draw:'dilie',s:6},
-  sovereign:{n:'后土魔君',el:'土',hp:1380,atk:48,exp:3600,gold:5000,draw:'sovereign',s:6,gw:24,caster:true}
+  sovereign:{n:'后土魔君',el:'土',hp:1380,atk:48,exp:3600,gold:5000,draw:'sovereign',s:6,gw:24,caster:true},
+  // 第二部 · 天界篇:天将属性各异(逼玩家轮用整套大成咒);天帝每回合变属性(见 battle.js enemyAct)
+  tianhuo:{n:'天火神兵',el:'火',hp:360,atk:44,exp:420,gold:280,draw:'tianhuo',s:6},
+  xuanshui:{n:'玄水仙官',el:'水',hp:340,atk:46,exp:440,gold:300,draw:'xuanshui',s:6},
+  zilei:{n:'紫雷天君',el:'雷',hp:380,atk:48,exp:460,gold:310,draw:'zilei',s:6},
+  jingang:{n:'金刚神将',el:'土',hp:440,atk:45,exp:520,gold:360,draw:'jingang',s:6},
+  emperor:{n:'玄穹天帝',el:'火',hp:1800,atk:56,exp:6000,gold:9000,draw:'emperor',s:6,gw:24,caster:true,shift:true}
 };
 
 'use strict';
@@ -356,6 +365,20 @@ function drawRongyan(x,y,s){pix('yanmo',x,y,s,RONGPAL);}
 Object.assign(SPR,{dilie:drawDilie,sovereign:drawSovereign,shankui:drawShankui,shisha:drawShisha,rongyan:drawRongyan});
 Object.assign(SPRM,{dilie:{w:20,h:20,s:6},sovereign:{w:24,h:24,s:6},shankui:{w:20,h:20,s:6},shisha:{w:20,h:20,s:7},rongyan:{w:20,h:20,s:6}});
 
+// ===== 第二部 · 天界篇:天将/天帝 像素图(改色复用,金白仙气)=====
+const TIANHUOPAL={K:'#3a2410',F:'#ffce4a',f:'#fff0b0',R:'#f0a836',E:'#ff5a3a',W:'#fff8e6',B:'#c47a20'};        // 借焰魔
+const XUANSHUIPAL={K:'#15303f',P:'#cfeaf6',p:'#9fc8e0',W:'#ffffff',E:'#ffd76a',I:'#6a9ec0'};                    // 借墨鱼
+const ZILEIPAL={K:'#2a2410',D:'#e8d89a',d:'#c0a860',Y:'#fff0a0',y:'#ffd23f',B:'#b89a40',E:'#ff5a3a'};          // 借雷狱卒
+const JINGANGPAL=Object.assign({},PALS.golem,{G:'#d9aa3c',g:'#a8801e',L:'#ffe98a',M:'#fff8e6',R:'#ff6a3a',r:'#c43a2f',E:'#fff0a0'}); // 借石傀
+const EMPERORPAL=Object.assign({},PALS.king,{O:'#ffd76a',o:'#c79a1e',F:'#fff8e6',f:'#e8dcb8',E:'#ff5a3a',e:'#c43a2f',P:'#d9c89a',p:'#b8a060',L:'#fff0b0',G:'#ffe98a',C:'#ffffff',A:'#ffd76a'}); // 借千年妖王
+function drawTianhuo(x,y,s){pix('yanmo',x,y,s,TIANHUOPAL);}
+function drawXuanshui(x,y,s){pix('squid',x,y,s,XUANSHUIPAL);}
+function drawZilei(x,y,s){pix('leiyu',x,y,s,ZILEIPAL);}
+function drawJingang(x,y,s){pix('golem',x,y,s,JINGANGPAL);}
+function drawEmperor(x,y,s){pix('king',x,y,s,EMPERORPAL);}
+Object.assign(SPR,{tianhuo:drawTianhuo,xuanshui:drawXuanshui,zilei:drawZilei,jingang:drawJingang,emperor:drawEmperor});
+Object.assign(SPRM,{tianhuo:{w:20,h:20,s:6},xuanshui:{w:20,h:20,s:6},zilei:{w:20,h:20,s:6},jingang:{w:20,h:20,s:7},emperor:{w:24,h:26,s:6}});
+
 'use strict';
 // ===== 地图层:瓦片地图生成 + MAPS 注册表 + NPC 配置 =====
 // 瓦片字符:G 草 t 深草 T 树 W 水 P 路 b 桥 R 屋顶 H 墙 X 石墙 F 石地
@@ -363,7 +386,8 @@ Object.assign(SPRM,{dilie:{w:20,h:20,s:6},sovereign:{w:24,h:24,s:6},shankui:{w:2
 //          第二章:V 漩涡(湖面入口) a 湖水 c 水草(遇敌) Z 蛟龙王座
 //          第三章:v 魔土 m 魔纹(遇敌) M 魔尊王座(鬼门复用锁妖塔封印 B)
 //          第四章:Y 风口(湖畔入口) sky/shrine 复用 a/c/R/S/D/O,N 大鹏王座
-//          第五章:U 后土王座(地缝入口 G,复用 v/m/R/S/D/O)
+//          第五章:U 后土王座(地缝入口 q,复用 v/m/R/S/D/O)
+//          第二部·天界篇:L 天梯(湖畔入口) heaven/celestial 复用 a/c/R/S/D/O,k 天帝王座
 function blank(w,h,f){const m=[];for(let y=0;y<h;y++)m.push(new Array(w).fill(f));return m;}
 function fillR(m,x,y,w,h,c){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++){if(m[j]&&m[j][i]!==undefined)m[j][i]=c;}}
 function house(m,x,y){fillR(m,x,y,5,2,'R');fillR(m,x,y+2,5,2,'H');}
@@ -388,6 +412,7 @@ function makeWorld(){
   m[14][24]='V'; // 第二章:湖面漩涡(降妖王后由阿萝点醒才显现,见 canWalk/onStep 的 ch2 判定)
   m[16][50]='Y'; // 第四章:湖畔风口(第四章开启后才成旋风,ch4 前如常草地)
   m[40][6]='q';  // 第五章:村西地缝(第五章开启后才裂开,ch5 前如常草地)
+  m[16][16]='L'; // 第二部:湖畔天梯(降后土后才显光柱,ch6 前如常草地)
   fillR(m,0,0,w,1,'T');fillR(m,0,h-1,w,1,'T');fillR(m,0,0,1,h,'T');fillR(m,w-1,0,1,h,'T');
   return m;
 }
@@ -493,6 +518,31 @@ function makeCore(){
   m[13][11]='O';
   return m;
 }
+// 第二部 · 天界篇:天界云阙(28×24,沿用 a/c/R/S/D/O,bg='heaven')
+// a 云阶 c 罡气带(遇敌) R 云隙(阻挡) S 仙泉 D 灵霄门 O 回人间(天梯)
+function makeHeaven(){
+  const w=28,h=24,m=blank(w,h,'a');
+  fillR(m,0,0,w,1,'R');fillR(m,0,h-1,w,1,'R');fillR(m,0,0,1,h,'R');fillR(m,w-1,0,1,h,'R');
+  fillR(m,6,5,4,2,'R');fillR(m,18,5,4,2,'R');
+  fillR(m,12,10,4,2,'R');
+  fillR(m,3,14,3,3,'R');fillR(m,22,14,3,3,'R');
+  fillR(m,3,3,8,3,'c');fillR(m,17,3,8,3,'c');
+  fillR(m,2,17,10,3,'c');fillR(m,16,17,10,3,'c');
+  fillR(m,10,12,8,4,'c');
+  m[15][14]='S';
+  m[1][14]='D';
+  m[22][14]='O';
+  return m;
+}
+// 第二部 · 灵霄宝殿:天帝 Boss 殿堂(22×16),k 天帝王座
+function makeCelestial(){
+  const w=22,h=16,m=blank(w,h,'X');
+  fillR(m,3,3,16,11,'F');
+  [[5,5],[16,5],[5,11],[16,11]].forEach(c=>{m[c[1]][c[0]]='X';});
+  m[3][11]='k';
+  m[13][11]='O';
+  return m;
+}
 // Phase 1:室内小图(12×10),f 木地板、H 墙、O 出口,家具走 POI 层
 function makeHouse(){
   const w=12,h=10,m=blank(w,h,'f');
@@ -524,7 +574,9 @@ const MAPS={
   sky:{m:makeSky(),w:28,h:24,bg:'sky',rate:0.19,pool:()=>['gangfeng','yunpeng','pili','fengli']},
   shrine:{m:makeShrine(),w:22,h:16,bg:'shrine',rate:0,pool:()=>[]},
   cavern:{m:makeCavern(),w:28,h:24,bg:'cavern',rate:0.21,pool:()=>['shankui','shisha','rongyan','dilie']},
-  core:{m:makeCore(),w:22,h:16,bg:'core',rate:0,pool:()=>[]}
+  core:{m:makeCore(),w:22,h:16,bg:'core',rate:0,pool:()=>[]},
+  heaven:{m:makeHeaven(),w:28,h:24,bg:'heaven',rate:0.20,pool:()=>['tianhuo','xuanshui','zilei','jingang']},
+  celestial:{m:makeCelestial(),w:22,h:16,bg:'celestial',rate:0,pool:()=>[]}
 };
 // 双向传送门:'地图:x,y' → 目的地(d 木门进屋,O 出口回村)
 const DOORS={
@@ -551,7 +603,11 @@ const DOORS={
   // 第五章:地心 O 回村西、地心 D 进后土殿、后土殿 O 回地心(地缝入口与后土王座为特判)
   'cavern:14,22':{map:'world',x:6,y:41},
   'cavern:14,1':{map:'core',x:11,y:12},
-  'core:11,13':{map:'cavern',x:14,y:2}
+  'core:11,13':{map:'cavern',x:14,y:2},
+  // 第二部:云阙 O 回人间、云阙 D 进灵霄殿、灵霄殿 O 回云阙(天梯入口与天帝王座为特判)
+  'heaven:14,22':{map:'world',x:16,y:17},
+  'heaven:14,1':{map:'celestial',x:11,y:12},
+  'celestial:11,13':{map:'heaven',x:14,y:2}
 };
 // 可调查点:撞上家具即翻找。loot: gold 银两 / item 物品 / note 纸条 / none 空手
 const POIS={
@@ -597,6 +653,11 @@ const POIS={
     {id:'cv_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:800}},
     {id:'cv_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:3}},
     {id:'cv_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'晶匣里一卷地脉图,末尾朱批:「后土魔君乃乱源之根,性属土。雷克土,紫雷可灭。」'}}
+  ],
+  heaven:[ // 第二部:云阙宝匣
+    {id:'hv_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:1500}},
+    {id:'hv_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:4}},
+    {id:'hv_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'金匣里一道天书:「天帝执掌五灵,其身随心变属性。唯五灵归元、万法归一,可破其变。」'}}
   ]
 };
 // 翻第二件东西时主人的吐槽(致敬经典:进屋翻箱倒柜,主人毫无意见)
@@ -631,7 +692,10 @@ const NPCS={
   shrine:[],
   // 第五章:阿萝随你下黄泉
   cavern:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoCave()}],
-  core:[]
+  core:[],
+  // 第二部:阿萝随你上天界
+  heaven:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoHeaven()}],
+  celestial:[]
 };
 
 'use strict';
@@ -650,7 +714,7 @@ function startBattle(key,boss){
   const d=ENM[key];
   const hp=d.hp+(boss?0:S.lvl*4);
   B={
-    e:{name:d.n,el:d.el,hp:hp,maxHp:hp,atk:d.atk+(boss?0:Math.floor(S.lvl/2)),exp:d.exp,gold:d.gold,draw:d.draw,s:d.s,gw:d.gw||16,caster:d.caster},
+    e:{name:d.n,el:d.el,hp:hp,maxHp:hp,atk:d.atk+(boss?0:Math.floor(S.lvl/2)),exp:d.exp,gold:d.gold,draw:d.draw,s:d.s,gw:d.gw||16,caster:d.caster,shift:d.shift},
     key:key,boss:!!boss,phase:'cmd',hOx:0,eOx:0,fE:0,fH:0,shake:0,pops:[],anim:null,timer:0,turn:0,msg:d.n+' 出现了!'
   };
   mode='battle';grace=2;battleUI(true);
@@ -716,8 +780,13 @@ function useItem(k){
   sHeal();
   B.phase='wait';B.timer=0.55;refreshBtns();
 }
+const SHIFTELS=['火','水','雷','风','土'];
 function enemyAct(){
   B.turn++;
+  if(B.e.shift){ // 天帝:每回合变属性,逼玩家用五灵归元或看准了再克
+    B.e.el=SHIFTELS[B.turn%5];
+    pop(330,150,'化作'+B.e.el+'!',ELC[B.e.el]);
+  }
   if(B.e.caster&&B.turn%2===0){B.anim={k:'espell',t:0};sCast();}
   else B.anim={k:'elunge',t:0};
   B.phase='anim';
@@ -760,6 +829,9 @@ function winB(){
     }else if(key==='sovereign'){
       flags.sovereign=true;
       showEnding5();
+    }else if(key==='emperor'){
+      flags.emperor=true;
+      showEnding6();
     }else if(learned.length){
       showDialog(['你领悟了新仙术:'+learned.join('、')+'!']);
     }
@@ -820,7 +892,17 @@ function drawBattle(){
   const hellBg=cur.bg==='abyss'||cur.bg==='hell'||B.key==='demon';
   const skyBg=cur.bg==='sky'||cur.bg==='shrine'||B.key==='peng';
   const caveBg=cur.bg==='cavern'||cur.bg==='core'||B.key==='sovereign';
-  if(caveBg){
+  const heavenBg=cur.bg==='heaven'||cur.bg==='celestial'||B.key==='emperor';
+  if(heavenBg){
+    // 天界战场:金白云霄 + 金光垂幕 + 流金
+    r(0,0,SW,420,'#dfeaf8');r(0,420,SW,220,'#cfe0f4');
+    g.fillStyle='rgba(255,233,138,0.22)';
+    [120,360,600,840].forEach(x=>{g.beginPath();g.moveTo(x,0);g.lineTo(x+70,0);g.lineTo(x+130,420);g.lineTo(x+50,420);g.closePath();g.fill();});
+    g.fillStyle='#fff';for(let k=0;k<5;k++){const cx=((k*230+frame)%1100)-80,cy=60+((k*61)%150);r(cx,cy,96,18,'rgba(255,255,255,0.9)');r(cx+22,cy-10,62,18,'rgba(255,255,255,0.8)');}
+    g.fillStyle='#ffd23f';for(let k=0;k<14;k++){const ex=(k*139+frame)%960,ey=420-((frame*2+k*70)%440);g.fillRect(ex,ey,3,3);}
+    r(0,470,SW,170,'#eef5ff');
+    if(B.key==='emperor'){g.fillStyle='#ffe98a';g.beginPath();g.moveTo(360,70);g.lineTo(600,70);g.lineTo(540,300);g.lineTo(420,300);g.closePath();g.fill();r(450,110,60,44,'#fffce6');}
+  }else if(caveBg){
     // 地心战场:深褐岩窟 + 矿脉微光 + 地火裂隙
     r(0,0,SW,430,'#241608');r(0,430,SW,210,'#1a0e06');
     g.fillStyle='#3a2410';
@@ -979,7 +1061,8 @@ const MELS={
   lake:[330,392,440,523,440,392,0,440,494,587,494,440,0,392,440,494,392,330,294,330,392,0,440,392,330,294,262,0,294,330,392,0],
   abyss:[247,0,262,233,196,0,233,196,175,0,208,247,262,0,233,208,196,175,165,0,196,208,233,0,220,196,175,165,0,185,208,0],
   sky:[523,587,659,784,659,587,523,0,587,659,784,880,784,659,587,0,659,784,880,784,659,587,523,494,523,587,659,0,784,659,587,0],
-  earth:[196,0,220,196,165,0,147,165,196,0,220,247,220,196,0,175,165,147,131,0,147,165,196,0,220,196,165,147,0,165,196,0]
+  earth:[196,0,220,196,165,0,147,165,196,0,220,247,220,196,0,175,165,147,131,0,147,165,196,0,220,196,165,147,0,165,196,0],
+  heaven:[523,659,784,988,1046,988,784,659,587,784,880,1046,1175,1046,880,784,659,784,880,988,880,784,659,587,523,659,784,988,784,659,587,0]
 };
 const MUSCFG={
   field:{wave:'triangle',rest:250,bv:0.018},
@@ -987,9 +1070,10 @@ const MUSCFG={
   lake:{wave:'sine',rest:235,bv:0.016},
   abyss:{wave:'sawtooth',rest:300,bv:0.024},
   sky:{wave:'sine',rest:220,bv:0.014},
-  earth:{wave:'triangle',rest:300,bv:0.026}
+  earth:{wave:'triangle',rest:300,bv:0.026},
+  heaven:{wave:'sine',rest:210,bv:0.013}
 };
-function melForBg(bg){return bg==='tower'?'tower':(bg==='lake'||bg==='palace')?'lake':(bg==='abyss'||bg==='hell')?'abyss':(bg==='sky'||bg==='shrine')?'sky':(bg==='cavern'||bg==='core')?'earth':'field';}
+function melForBg(bg){return bg==='tower'?'tower':(bg==='lake'||bg==='palace')?'lake':(bg==='abyss'||bg==='hell')?'abyss':(bg==='sky'||bg==='shrine')?'sky':(bg==='cavern'||bg==='core')?'earth':(bg==='heaven'||bg==='celestial')?'heaven':'field';}
 function startMusicLoop(){
   if(mTimer){clearInterval(mTimer);mTimer=null;}
   const cfg=MUSCFG[melKey],mel=MELS[melKey];
@@ -1119,6 +1203,25 @@ function drawTile(i,j,sx,sy){
     else if(c==='U'){const gl=flags.sovereign?'#9a8a6a':'#ffd23f';r(sx+6,sy+2,20,28,'#1e1206');r(sx+9,sy+5,14,22,'#3a2410');r(sx+7,sy+3,4,7,gl);r(sx+21,sy+3,4,7,gl);r(sx+13,sy+11,6,12,gl);r(sx+10,sy+25,12,4,'#0e0804');}
     return;
   }
+  if(cur.bg==='heaven'){
+    if(c==='R'){r(sx,sy,T,T,'#cfe0f4');r(sx+4,sy+5,9,3,'rgba(255,255,255,0.85)');r(sx+18,sy+18,9,3,'rgba(255,255,255,0.7)');return;}
+    // 云阶:洁白云海 + 金光浮纹
+    r(sx,sy,T,T,'#eaf2fb');if((i+j)%2)r(sx,sy,T,T,'rgba(180,200,230,0.18)');
+    const o=(frame>>4)%2;r(sx+4+o*6,sy+8,11,2,'#fff');r(sx+16-o*5,sy+22,9,2,'#dce8f6');
+    if(c==='c'){[[5,18],[12,22],[19,16],[23,21],[8,12]].forEach(b=>{r(sx+b[0],sy+b[1],5,2,'#ffe98a');r(sx+b[0]+1,sy+b[1]-2,3,2,'#fff6c8');});}
+    else if(c==='S'){r(sx+4,sy+4,24,24,'#ffe98a');r(sx+8,sy+8,16,16,'#fffce6');const k=(frame>>3)%4;r(sx+10+k*3,sy+6+(k*4)%16,3,3,'#fff');}
+    else if(c==='O'){r(sx+3,sy+3,26,26,'#ffe98a');r(sx+8,sy+8,16,16,'#fffce6');g.fillStyle='#9a7a20';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='D'){r(sx,sy,T,T,'#cfd8e8');r(sx+3,sy+2,26,30,'#fffce6');r(sx+6,sy+5,20,27,'#ffe98a');r(sx+10,sy+8,12,24,'#fff');r(sx+13,sy+3,6,4,'#ffae40');r(sx+8,sy+14,3,3,'#ffd23f');r(sx+21,sy+14,3,3,'#ffd23f');}
+    return;
+  }
+  if(cur.bg==='celestial'){
+    if(c==='X'){r(sx,sy,T,T,'#b9c8e0');r(sx+3,sy+2,26,28,'#e6eef8');r(sx+6,sy+5,20,22,'#d2deef');r(sx+13,sy+2,6,28,'#ffe98a');r(sx+14,sy+6,4,6,'#fff');r(sx+14,sy+18,4,6,'#fff');return;}
+    r(sx,sy,T,T,'#dde7f4');if((i+j)%2)r(sx,sy,T,T,'rgba(255,220,120,0.10)');
+    r(sx,sy,T,1,'#c4d2e6');r(sx,sy,1,T,'#c4d2e6');
+    if(c==='O'){r(sx+3,sy+3,26,26,'#cdd9ec');r(sx+8,sy+8,16,16,'#fffce6');g.fillStyle='#9a7a20';g.font='12px monospace';g.fillText('↓',sx+13,sy+22);}
+    else if(c==='k'){const gl=flags.emperor?'#b9c2cc':'#ffae40';r(sx+6,sy+2,20,28,'#cdd9ec');r(sx+9,sy+5,14,22,'#fffce6');r(sx+8,sy+4,4,6,gl);r(sx+20,sy+4,4,6,gl);r(sx+13,sy+12,6,10,gl);r(sx+10,sy+24,12,4,'#ffe98a');}
+    return;
+  }
   if(curName==='tower'){
     if(c==='X'){r(sx,sy,T,T,'#2c2638');r(sx+2,sy+2,12,12,'#241f30');r(sx+18,sy+18,12,12,'#241f30');r(sx+18,sy+2,12,12,'#332b42');r(sx+2,sy+18,12,12,'#332b42');return;}
     r(sx,sy,T,T,'#4a4356');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.07)');
@@ -1176,6 +1279,13 @@ function drawTile(i,j,sx,sy){
       const o=(frame>>3)%3;r(sx+14,sy+8+o*4,4,4,'#ff6a20');r(sx+15,sy+18-o*3,3,3,'#ffb030');
     }
   }
+  else if(c==='L'){ // 第二部:天梯(开启前如常草地)
+    r(sx,sy,T,T,'#7ab648');if((i+j)%2)r(sx,sy,T,T,'rgba(0,0,0,0.04)');
+    if(flags.ch6&&!flags.emperor){ // 通天光柱
+      r(sx+11,sy,10,T,'rgba(255,233,138,0.35)');r(sx+13,sy,6,T,'#fffce6');
+      const o=(frame>>2)%4;r(sx+12,sy+2+o*7,8,3,'#ffd23f');
+    }
+  }
 }
 function label(n,sx,sy){
   g.font='13px monospace';
@@ -1200,7 +1310,7 @@ function drawHUD(){
   g.fillText(S.hp+'/'+S.maxHp,222,56);g.fillText(S.mp+'/'+S.maxMp,222,76);
 }
 function drawWorld(){
-  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':cur.bg==='abyss'?'#1a0c14':cur.bg==='hell'?'#140610':cur.bg==='sky'?'#7fa8d0':cur.bg==='shrine'?'#6a8ab0':cur.bg==='cavern'?'#1a0e06':cur.bg==='core'?'#140a04':'#234d1e');
+  r(0,0,SW,SH,cur.bg==='tower'?'#1a1622':cur.bg==='house'?'#16101c':cur.bg==='lake'?'#103642':cur.bg==='palace'?'#081d24':cur.bg==='abyss'?'#1a0c14':cur.bg==='hell'?'#140610':cur.bg==='sky'?'#7fa8d0':cur.bg==='shrine'?'#6a8ab0':cur.bg==='cavern'?'#1a0e06':cur.bg==='core'?'#140a04':cur.bg==='heaven'?'#cfe0f4':cur.bg==='celestial'?'#b9c8e0':'#234d1e');
   const mw=cur.w*T,mh=cur.h*T;
   const vw=SW/WZOOM,vh=SH/WZOOM; // 镜头拉近后实际可见的世界范围
   const camX=mw<=vw?(mw-vw)/2:Math.max(0,Math.min(mw-vw,p.x-vw/2+16));
@@ -1265,6 +1375,7 @@ function onStep(){
   if(c==='V'&&flags.ch2){diveLake();return;}
   if(c==='Y'&&flags.ch4){ascendSky();return;}
   if(c==='q'&&flags.ch5){descendCave();return;}
+  if(c==='L'&&flags.ch6){ascendHeaven();return;}
   if(c==='d'||c==='D'||c==='O'){ // 通用传送门:木门、水府门、各类出口
     const door=DOORS[curName+':'+p.tx+','+p.ty];
     if(door){switchMap(door.map,door.x,door.y);return;}
@@ -1299,6 +1410,17 @@ function onStep(){
         {n:'混沌魔尊',t:'蝼蚁也敢登我殿堂?连同你这一身五灵,我一并吞了!'}
       ],()=>startBattle('demon',true));
     }else wpop('魔殿一片死寂','#9a9aa8');
+    return;
+  }
+  if(c==='k'){ // 第二部:天帝王座(全剧终 Boss)
+    if(!flags.emperor){
+      showDialog([
+        '灵霄殿顶,金光大盛,一位执掌五灵的天帝自玉座上俯视而下。',
+        {n:'阿萝',t:'师兄……原来纵着这一切的,是天帝。它身随心变,五灵轮转,寻常克制压不住它!'},
+        {n:'玄穹天帝',t:'凡尘蝼蚁,也敢登我灵霄?五灵在我,生杀由我——伏诛吧。'},
+        {n:'阿萝',t:'用五灵归元!万法归一,不分属性,它怎么变都拦不住!我陪你,打到底!'}
+      ],()=>startBattle('emperor',true));
+    }else wpop('灵霄殿万里无云','#fffce6');
     return;
   }
   if(c==='N'){ // 第四章:大鹏王座
@@ -1382,6 +1504,17 @@ function descendCave(){
     ],()=>switchMap('cavern',14,21));
   }else switchMap('cavern',14,21);
 }
+// 第二部:踏天梯飞升天界云阙(首次有旁白)
+function ascendHeaven(){
+  if(!flags.tianIntro){
+    flags.tianIntro=true;
+    showDialog([
+      '天梯的金光将你与阿萝托起,云海在脚下退去,眼前是金阙玉宇、仙气缭绕的天界。',
+      {n:'阿萝',t:'真的上来了……这里就是天界。守门的天将都不好惹,小心些。'},
+      '(罡气带里会遇上天将,各有属性;仙泉可回满。云阙北端的灵霄门后,便是天帝。)'
+    ],()=>switchMap('heaven',14,21));
+  }else switchMap('heaven',14,21);
+}
 
 // Phase 1:翻找家具。首次有宝物("叮"+金色飘字),重复调查按种类给不同文案
 function investigate(q){
@@ -1457,7 +1590,27 @@ function talkAluo(){
     save();
   }
   else if(!flags.sovereign)showDialog([{n:'阿萝',t:'地缝在村子西边。地心里土妖成群,紫雷咒最克它们;那只熔岩兽属火,玄冰咒伺候。后土魔君,也属土!'}]);
-  else showDialog([{n:'阿萝',t:'五灵归位,天地重宁,再没有什么乱源了。师兄……这一路,有你真好。'}]);
+  else if(!flags.ch6){ // 第二部开篇:后土只是表象,乱源在天上;阿萝传授五灵归元
+    flags.ch6=true;flags.wuling=true;
+    showDialog([
+      {n:'阿萝',t:'师兄,我夜观星象……后土魔君也只是被人推出来的。真正纵着这一切的,在天上。'},
+      {n:'阿萝',t:'天界的天帝执掌五灵,身随心变。要上去理论,得有一道不分属性的法门。'},
+      {n:'阿萝',t:'我把师门最后一道绝学「五灵归元」传你——万法归一,无视属性,它怎么变都克得住!'},
+      '【习得仙术 · 五灵归元】(无属性大招,灵力耗得多,但稳)',
+      {n:'阿萝',t:'湖畔升起了一道天梯。走,这一回我们上天去!'}
+    ]);
+    save();
+  }
+  else if(!flags.emperor)showDialog([{n:'阿萝',t:'天梯在湖畔。天将属性各异,挨个用克它的咒;天帝会变属性,认准了用五灵归元最稳!'}]);
+  else showDialog([{n:'阿萝',t:'天帝也伏诛了……三界与天界都太平了。师兄,真正的故事,到这儿才算圆满。'}]);
+}
+// 第二部:阿萝随你闯天界
+function talkAluoHeaven(){
+  if(!flags.emperor)showDialog([
+    {n:'阿萝',t:'顺着云阶往北就是灵霄门。天火神兵属火、玄水仙官属水、紫雷天君属雷、金刚神将属土——挨个克。'},
+    {n:'阿萝',t:'天帝身随心变,看准它当下的属性再出手,拿不准就甩五灵归元,无视属性!'}
+  ]);
+  else showDialog([{n:'阿萝',t:'天界也安宁了。师兄,我们回灵山吧——回家。'}]);
 }
 // 第四章:阿萝随你闯云海
 function talkAluoSky(){
@@ -1709,6 +1862,7 @@ function resetState(){
   flags.ch3=false;flags.abyssIntro=false;flags.demon=false;
   flags.ch4=false;flags.earth=false;flags.skyIntro=false;flags.peng=false;
   flags.ch5=false;flags.caveIntro=false;flags.sovereign=false;
+  flags.ch6=false;flags.wuling=false;flags.tianIntro=false;flags.emperor=false;
   for(const k in looted)delete looted[k];
   switchMap('world',31,44);
 }
@@ -1738,8 +1892,14 @@ function showEnding4(){
   sWin();
 }
 function showEnding5(){
+  if($('endTitle'))$('endTitle').textContent='第一部 · 完';
+  $('endText').textContent='后土魔君崩解为漫天尘光,五灵归位,人间重归太平。可阿萝抬头望向云端,神色凝重——这五场浩劫,竟像是被一只无形的手推着发生的。她低声道:「师兄,真正纵着这一切的,只怕……在天上。」灵山的故事,还没有真正结束。';
+  $('endov').style.display='flex';
+  sWin();
+}
+function showEnding6(){
   if($('endTitle'))$('endTitle').textContent='全 剧 终';
-  $('endText').textContent='后土魔君在五灵齐鸣中崩解为漫天尘光,地心的轰鸣终于止息,黄泉重归沉寂——乱源之根,断了。云无衣与阿萝一路升回地面,灵山的春风迎面而来。火、水、雷、风、土,五灵归位,天地太平。从锁妖塔到黄泉地心,这一整段传说,在此圆满落幕。多谢你,陪云无衣和阿萝走完了整条路。';
+  $('endText').textContent='玄穹天帝在五灵归元的万道金光中崩散,灵霄殿的金光归于澄澈,天界、三界,尽数归于太平。云无衣与阿萝并肩立于云端,脚下是他们一路走过的山川湖海。从锁妖塔的第一缕妖气,到灵霄殿的最后一道天光——这一整段传说,自此圆满落幕。多谢你,陪云无衣和阿萝走完了整条路。再会。';
   $('endov').style.display='flex';
   sWin();
 }

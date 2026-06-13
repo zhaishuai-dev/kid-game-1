@@ -131,3 +131,17 @@ function drawShisha(x,y,s){pix('golem',x,y,s,SHISHAPAL);}
 function drawRongyan(x,y,s){pix('yanmo',x,y,s,RONGPAL);}
 Object.assign(SPR,{dilie:drawDilie,sovereign:drawSovereign,shankui:drawShankui,shisha:drawShisha,rongyan:drawRongyan});
 Object.assign(SPRM,{dilie:{w:20,h:20,s:6},sovereign:{w:24,h:24,s:6},shankui:{w:20,h:20,s:6},shisha:{w:20,h:20,s:7},rongyan:{w:20,h:20,s:6}});
+
+// ===== 第二部 · 天界篇:天将/天帝 像素图(改色复用,金白仙气)=====
+const TIANHUOPAL={K:'#3a2410',F:'#ffce4a',f:'#fff0b0',R:'#f0a836',E:'#ff5a3a',W:'#fff8e6',B:'#c47a20'};        // 借焰魔
+const XUANSHUIPAL={K:'#15303f',P:'#cfeaf6',p:'#9fc8e0',W:'#ffffff',E:'#ffd76a',I:'#6a9ec0'};                    // 借墨鱼
+const ZILEIPAL={K:'#2a2410',D:'#e8d89a',d:'#c0a860',Y:'#fff0a0',y:'#ffd23f',B:'#b89a40',E:'#ff5a3a'};          // 借雷狱卒
+const JINGANGPAL=Object.assign({},PALS.golem,{G:'#d9aa3c',g:'#a8801e',L:'#ffe98a',M:'#fff8e6',R:'#ff6a3a',r:'#c43a2f',E:'#fff0a0'}); // 借石傀
+const EMPERORPAL=Object.assign({},PALS.king,{O:'#ffd76a',o:'#c79a1e',F:'#fff8e6',f:'#e8dcb8',E:'#ff5a3a',e:'#c43a2f',P:'#d9c89a',p:'#b8a060',L:'#fff0b0',G:'#ffe98a',C:'#ffffff',A:'#ffd76a'}); // 借千年妖王
+function drawTianhuo(x,y,s){pix('yanmo',x,y,s,TIANHUOPAL);}
+function drawXuanshui(x,y,s){pix('squid',x,y,s,XUANSHUIPAL);}
+function drawZilei(x,y,s){pix('leiyu',x,y,s,ZILEIPAL);}
+function drawJingang(x,y,s){pix('golem',x,y,s,JINGANGPAL);}
+function drawEmperor(x,y,s){pix('king',x,y,s,EMPERORPAL);}
+Object.assign(SPR,{tianhuo:drawTianhuo,xuanshui:drawXuanshui,zilei:drawZilei,jingang:drawJingang,emperor:drawEmperor});
+Object.assign(SPRM,{tianhuo:{w:20,h:20,s:6},xuanshui:{w:20,h:20,s:6},zilei:{w:20,h:20,s:6},jingang:{w:20,h:20,s:7},emperor:{w:24,h:26,s:6}});

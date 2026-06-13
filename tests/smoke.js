@@ -580,7 +580,7 @@ t('后土魔君:紫雷拔群,击败后全剧终',()=>{
   for(let i=0;i<20&&E('B&&B.anim');i++)E('updBattle(0.05)');
   G.flushTimers();
   ok(E('flags.sovereign'),'击败后土应置 flags.sovereign');
-  eq(E(`document.getElementById('endTitle').textContent`),'全 剧 终');
+  eq(E(`document.getElementById('endTitle').textContent`),'第一部 · 完');
   E(`document.getElementById('endov').style.display='none'`);
 });
 t('五灵圆满:火水雷风土,基础咒 + 大成咒各一,全部克制成立',()=>{
@@ -715,6 +715,83 @@ t('商店 / 技能 / 物品菜单带图标',()=>{
   E('openItemMenu()');html=E(`$('panelBody').innerHTML`);
   ok(html.includes('❤️'),'物品菜单应有图标');
   E('closePanel();mode="world";B=null;battleUI(false)');
+});
+
+console.log('— 第二部 · 天界篇(第六章)—');
+t('天将与天帝数据齐备,精灵可绘',()=>{
+  for(const k of ['tianhuo','xuanshui','zilei','jingang','emperor']){
+    ok(E(`ENM['${k}']`),'缺敌人 '+k);
+    const d=E(`ENM['${k}'].draw`);
+    ok(E(`SPR['${d}']`),d+' 缺绘制');ok(E(`SPRM['${d}']`),d+' 缺尺寸');
+  }
+  eq(E('ENM.emperor.shift'),true,'天帝应会变属性');
+  // 天将属性各异(逼玩家轮用整套咒)
+  eq(E('ENM.tianhuo.el'),'火');eq(E('ENM.xuanshui.el'),'水');eq(E('ENM.zilei.el'),'雷');eq(E('ENM.jingang.el'),'土');
+});
+t('五灵归元:无属性大招,对任何属性都 1.0 倍',()=>{
+  E('resetState()');
+  ok(!E(`skillKnown(SKILLS.find(s=>s.n==='五灵归元'))`),'未传授前不会');
+  E('flags.wuling=true');
+  ok(E(`skillKnown(SKILLS.find(s=>s.n==='五灵归元'))`),'传授后会');
+  eq(E(`SKILLS.find(s=>s.n==='五灵归元').el`),'无');
+  ['火','水','雷','风','土'].forEach(e=>eq(E(`advMult('无','${e}')`),1,'无属性对 '+e+' 应 1.0(不被变属性反制)'));
+});
+t('天帝变属性:每回合在五灵间轮转',()=>{
+  E('resetState();S.lvl=30;startBattle("emperor",true)');
+  const els=new Set();
+  for(let i=0;i<6;i++){E('enemyAct()');els.add(E('B.e.el'));E('B.anim=null;B.phase="cmd"');}
+  ok(els.size>=4,'六回合内应变过多种属性,实际 '+els.size);
+  E('mode="world";B=null;battleUI(false)');
+});
+t('天梯瓦片存在、ch6 前如常草地',()=>{
+  E('resetState()');
+  eq(E(`MAPS.world.m[16][16]`),'L');
+  ok(E('canWalk(16,16)'),'天梯处为草地,一直可走');
+});
+t('第二部开篇:降后土后与阿萝对话开启 ch6、传授五灵归元',()=>{
+  E('resetState();Object.assign(flags,{aluo:true,mini:true,boss:true,ch2:true,wind:true,dragon:true,ch3:true,demon:true,ch4:true,earth:true,peng:true,ch5:true,sovereign:true})');
+  E(`switchMap('world',34,44)`);
+  E('K.up=1;updWorld(0.05);K.up=0');
+  ok(E('flags.ch6'),'应开启第二部');ok(E('flags.wuling'),'应传授五灵归元');
+  E('while(dq.length||dcb)nextDlg()');
+});
+t('踏天梯升天界(首次旁白),云阙↔人间↔灵霄殿互通',()=>{
+  E(`switchMap('world',16,17);p.tx=16;p.ty=17`);
+  E('K.up=1');for(let i=0;i<10&&!E('flags.tianIntro');i++)E('updWorld(0.05)');E('K.up=0');
+  ok(E('flags.tianIntro'),'首次升天应有旁白');
+  E('while(dq.length||dcb)nextDlg()');
+  eq(E('curName'),'heaven');
+  E('p.tx=14;p.ty=22;onStep()');eq(E('curName'),'world');eq(E('p.tx'),16);
+  E(`switchMap('heaven',14,2);p.tx=14;p.ty=1;onStep()`);eq(E('curName'),'celestial');
+  E('p.tx=11;p.ty=13;onStep()');eq(E('curName'),'heaven');
+});
+t('天帝 Boss:五灵归元稳定输出,击败后真·全剧终',()=>{
+  E('resetState();Object.assign(flags,{ch6:true,wuling:true,tianIntro:true});S.lvl=34;S.maxMp=400;S.mp=400;S.maxHp=700;S.hp=700;EQ.wpn=2;EQ.arm=2');
+  E(`switchMap('celestial',11,4);p.tx=11;p.ty=3;onStep()`);
+  E('while(dq.length||dcb)nextDlg()');
+  eq(E('mode'),'battle');eq(E('B.key'),'emperor');
+  const wi=E(`SKILLS.findIndex(s=>s.n==='五灵归元')`);
+  E(`castSkill(${wi})`);
+  for(let i=0;i<60&&E('B.anim');i++)E('updBattle(0.02)');
+  ok(E('B.e.hp')<E('B.e.maxHp'),'五灵归元应造成伤害');
+  E('B.e.hp=1;B.phase="cmd"');E(`act('atk')`);
+  for(let i=0;i<20&&E('B&&B.anim');i++)E('updBattle(0.05)');
+  G.flushTimers();
+  ok(E('flags.emperor'),'击败天帝应置 flags.emperor');
+  eq(E(`document.getElementById('endTitle').textContent`),'全 剧 终');
+  E(`document.getElementById('endov').style.display='none'`);
+});
+t('天界存档持久 + BGM 天界主题',()=>{
+  E(`switchMap('heaven',8,8);Object.assign(flags,{ch6:true,wuling:true,emperor:true});save()`);
+  E('resetState()');ok(E('loadSave()'));
+  eq(E('curName'),'heaven');ok(E('flags.ch6&&flags.wuling&&flags.emperor'));
+  eq(E(`melForBg('heaven')`),'heaven');eq(E(`melForBg('celestial')`),'heaven');
+});
+t('天界/灵霄殿/天界战斗各渲染一帧不崩溃',()=>{
+  E(`mode='world';B=null;switchMap('heaven',14,12)`);G.frame();
+  E(`switchMap('celestial',11,8)`);G.frame();
+  E(`switchMap('heaven',14,12);startBattle('emperor',true)`);G.frame();
+  E(`mode='world';B=null;battleUI(false);switchMap('world',31,44)`);
 });
 
 console.log('— 多档案:分开存档(给每个孩子)—');

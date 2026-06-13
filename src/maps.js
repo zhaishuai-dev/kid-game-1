@@ -5,7 +5,8 @@
 //          第二章:V 漩涡(湖面入口) a 湖水 c 水草(遇敌) Z 蛟龙王座
 //          第三章:v 魔土 m 魔纹(遇敌) M 魔尊王座(鬼门复用锁妖塔封印 B)
 //          第四章:Y 风口(湖畔入口) sky/shrine 复用 a/c/R/S/D/O,N 大鹏王座
-//          第五章:U 后土王座(地缝入口 G,复用 v/m/R/S/D/O)
+//          第五章:U 后土王座(地缝入口 q,复用 v/m/R/S/D/O)
+//          第二部·天界篇:L 天梯(湖畔入口) heaven/celestial 复用 a/c/R/S/D/O,k 天帝王座
 function blank(w,h,f){const m=[];for(let y=0;y<h;y++)m.push(new Array(w).fill(f));return m;}
 function fillR(m,x,y,w,h,c){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++){if(m[j]&&m[j][i]!==undefined)m[j][i]=c;}}
 function house(m,x,y){fillR(m,x,y,5,2,'R');fillR(m,x,y+2,5,2,'H');}
@@ -30,6 +31,7 @@ function makeWorld(){
   m[14][24]='V'; // 第二章:湖面漩涡(降妖王后由阿萝点醒才显现,见 canWalk/onStep 的 ch2 判定)
   m[16][50]='Y'; // 第四章:湖畔风口(第四章开启后才成旋风,ch4 前如常草地)
   m[40][6]='q';  // 第五章:村西地缝(第五章开启后才裂开,ch5 前如常草地)
+  m[16][16]='L'; // 第二部:湖畔天梯(降后土后才显光柱,ch6 前如常草地)
   fillR(m,0,0,w,1,'T');fillR(m,0,h-1,w,1,'T');fillR(m,0,0,1,h,'T');fillR(m,w-1,0,1,h,'T');
   return m;
 }
@@ -135,6 +137,31 @@ function makeCore(){
   m[13][11]='O';
   return m;
 }
+// 第二部 · 天界篇:天界云阙(28×24,沿用 a/c/R/S/D/O,bg='heaven')
+// a 云阶 c 罡气带(遇敌) R 云隙(阻挡) S 仙泉 D 灵霄门 O 回人间(天梯)
+function makeHeaven(){
+  const w=28,h=24,m=blank(w,h,'a');
+  fillR(m,0,0,w,1,'R');fillR(m,0,h-1,w,1,'R');fillR(m,0,0,1,h,'R');fillR(m,w-1,0,1,h,'R');
+  fillR(m,6,5,4,2,'R');fillR(m,18,5,4,2,'R');
+  fillR(m,12,10,4,2,'R');
+  fillR(m,3,14,3,3,'R');fillR(m,22,14,3,3,'R');
+  fillR(m,3,3,8,3,'c');fillR(m,17,3,8,3,'c');
+  fillR(m,2,17,10,3,'c');fillR(m,16,17,10,3,'c');
+  fillR(m,10,12,8,4,'c');
+  m[15][14]='S';
+  m[1][14]='D';
+  m[22][14]='O';
+  return m;
+}
+// 第二部 · 灵霄宝殿:天帝 Boss 殿堂(22×16),k 天帝王座
+function makeCelestial(){
+  const w=22,h=16,m=blank(w,h,'X');
+  fillR(m,3,3,16,11,'F');
+  [[5,5],[16,5],[5,11],[16,11]].forEach(c=>{m[c[1]][c[0]]='X';});
+  m[3][11]='k';
+  m[13][11]='O';
+  return m;
+}
 // Phase 1:室内小图(12×10),f 木地板、H 墙、O 出口,家具走 POI 层
 function makeHouse(){
   const w=12,h=10,m=blank(w,h,'f');
@@ -166,7 +193,9 @@ const MAPS={
   sky:{m:makeSky(),w:28,h:24,bg:'sky',rate:0.19,pool:()=>['gangfeng','yunpeng','pili','fengli']},
   shrine:{m:makeShrine(),w:22,h:16,bg:'shrine',rate:0,pool:()=>[]},
   cavern:{m:makeCavern(),w:28,h:24,bg:'cavern',rate:0.21,pool:()=>['shankui','shisha','rongyan','dilie']},
-  core:{m:makeCore(),w:22,h:16,bg:'core',rate:0,pool:()=>[]}
+  core:{m:makeCore(),w:22,h:16,bg:'core',rate:0,pool:()=>[]},
+  heaven:{m:makeHeaven(),w:28,h:24,bg:'heaven',rate:0.20,pool:()=>['tianhuo','xuanshui','zilei','jingang']},
+  celestial:{m:makeCelestial(),w:22,h:16,bg:'celestial',rate:0,pool:()=>[]}
 };
 // 双向传送门:'地图:x,y' → 目的地(d 木门进屋,O 出口回村)
 const DOORS={
@@ -193,7 +222,11 @@ const DOORS={
   // 第五章:地心 O 回村西、地心 D 进后土殿、后土殿 O 回地心(地缝入口与后土王座为特判)
   'cavern:14,22':{map:'world',x:6,y:41},
   'cavern:14,1':{map:'core',x:11,y:12},
-  'core:11,13':{map:'cavern',x:14,y:2}
+  'core:11,13':{map:'cavern',x:14,y:2},
+  // 第二部:云阙 O 回人间、云阙 D 进灵霄殿、灵霄殿 O 回云阙(天梯入口与天帝王座为特判)
+  'heaven:14,22':{map:'world',x:16,y:17},
+  'heaven:14,1':{map:'celestial',x:11,y:12},
+  'celestial:11,13':{map:'heaven',x:14,y:2}
 };
 // 可调查点:撞上家具即翻找。loot: gold 银两 / item 物品 / note 纸条 / none 空手
 const POIS={
@@ -239,6 +272,11 @@ const POIS={
     {id:'cv_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:800}},
     {id:'cv_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:3}},
     {id:'cv_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'晶匣里一卷地脉图,末尾朱批:「后土魔君乃乱源之根,性属土。雷克土,紫雷可灭。」'}}
+  ],
+  heaven:[ // 第二部:云阙宝匣
+    {id:'hv_chest1',x:4,y:8,kind:'chest',loot:{t:'gold',n:1500}},
+    {id:'hv_chest2',x:23,y:8,kind:'chest',loot:{t:'item',k:'dadan',n:4}},
+    {id:'hv_chest3',x:9,y:21,kind:'chest',loot:{t:'note',text:'金匣里一道天书:「天帝执掌五灵,其身随心变属性。唯五灵归元、万法归一,可破其变。」'}}
   ]
 };
 // 翻第二件东西时主人的吐槽(致敬经典:进屋翻箱倒柜,主人毫无意见)
@@ -273,5 +311,8 @@ const NPCS={
   shrine:[],
   // 第五章:阿萝随你下黄泉
   cavern:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoCave()}],
-  core:[]
+  core:[],
+  // 第二部:阿萝随你上天界
+  heaven:[{x:16,y:20,draw:'girl',n:'阿萝',talk:()=>talkAluoHeaven()}],
+  celestial:[]
 };
