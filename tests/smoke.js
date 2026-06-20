@@ -717,6 +717,40 @@ t('商店 / 技能 / 物品菜单带图标',()=>{
   E('closePanel();mode="world";B=null;battleUI(false)');
 });
 
+console.log('— 改进:升级武器店 + 章节指引 —');
+t('铁匠铺按等级解锁:低级只列早期装备 + 锁住提示',()=>{
+  E('resetState();S.lvl=1;S.gold=99999;openShop("gear")');
+  let h=E(`$('panelBody').innerHTML`);
+  ok(h.includes('青锋剑'),'Lv1 应能买青锋剑');
+  ok(!h.includes('七星剑'),'Lv1 不该出现高级武器');
+  ok(h.includes('🔒'),'应有未解锁提示');
+  E('S.lvl=20;openShop("gear")');h=E(`$('panelBody').innerHTML`);
+  ok(h.includes('七星剑')&&h.includes('紫金甲'),'Lv20 应解锁更强装备');
+  E('closePanel()');
+});
+t('买装备:等级不够买不了、够了能买',()=>{
+  E('resetState();S.lvl=1;S.gold=99999;EQ.wpn=0');
+  const i=E(`WPNS.findIndex(w=>w.n==='七星剑')`);
+  E(`buyWpn(${i})`);
+  ok(E('EQ.wpn')!==i,'Lv1 不该买到七星剑');
+  E(`S.lvl=20;buyWpn(${i})`);
+  eq(E('EQ.wpn'),i,'Lv20 应买到并装备七星剑');
+});
+t('章节指引:阿萝有新章节可开时 aluoNews 为真',()=>{
+  E('resetState()');
+  ok(E('aluoNews()'),'开局未找阿萝应有!');
+  E('flags.aluo=true');ok(!E('aluoNews()'),'聊过且无新章节时不该有!');
+  E('flags.boss=true');ok(E('aluoNews()'),'通关第一章后应提示开第二章');
+  E('flags.ch2=true');ok(!E('aluoNews()'),'第二章已开则不再提示');
+  E('flags.dragon=true');ok(E('aluoNews()'),'降蛟龙后应提示开第三章');
+  E('flags.ch3=true;flags.demon=true;flags.ch4=true;flags.peng=true;flags.ch5=true;flags.sovereign=true;flags.ch6=true');
+  ok(!E('aluoNews()'),'全部通关后不再有!');
+});
+t('大地图带指引标记一帧不崩溃',()=>{
+  E('resetState();flags.boss=true;switchMap("world",31,44)');G.frame();
+  E('flags.ch2=true;flags.dragon=true;flags.ch3=true');G.frame();
+});
+
 console.log('— 第二部 · 天界篇(第六章)—');
 t('天将与天帝数据齐备,精灵可绘',()=>{
   for(const k of ['tianhuo','xuanshui','zilei','jingang','emperor']){

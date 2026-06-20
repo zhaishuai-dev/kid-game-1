@@ -96,6 +96,9 @@ const motes=[];for(let i=0;i<18;i++)motes.push({x:mrnd()*SW,y:mrnd()*SH,vx:-6-mr
 function moteColor(){const b=cur.bg;return (b==='abyss'||b==='hell')?'rgba(255,140,60,':(b==='heaven'||b==='celestial')?'rgba(255,233,138,':(b==='lake'||b==='palace')?'rgba(190,240,250,':(b==='cavern'||b==='core')?'rgba(255,170,60,':b==='tower'?'rgba(160,140,210,':(b==='sky'||b==='shrine')?'rgba(255,255,255,':'rgba(255,245,180,';}
 function updMotes(dt){for(const m of motes){m.x+=m.vx*dt;m.ph+=dt;m.y+=(Math.sin(m.ph)*7+m.vy)*dt;if(m.x<-6)m.x=SW+6;if(m.y<-6)m.y=SH+6;if(m.y>SH+6)m.y=-6;}}
 function drawMotes(){if(cur.bg==='house')return;const c=moteColor();for(const m of motes){g.globalAlpha=0.18+0.22*(0.5+0.5*Math.sin(m.ph*2));g.fillStyle=c+'1)';g.fillRect(m.x,m.y,m.sz,m.sz);}g.globalAlpha=1;}
+// 章节指引:阿萝有新剧情(能开下一章)时,头顶冒「!」;入口同理
+function aluoNews(){return !flags.aluo||(flags.boss&&!flags.ch2)||(flags.dragon&&!flags.ch3)||(flags.demon&&!flags.ch4)||(flags.peng&&!flags.ch5)||(flags.sovereign&&!flags.ch6);}
+function drawMarker(wx,wy){const b=Math.abs(Math.sin(frame*0.13))*7,y=wy-b;g.fillStyle='#1a1626';g.beginPath();g.arc(wx,y,11,0,Math.PI*2);g.fill();g.fillStyle='#ffd23f';g.beginPath();g.arc(wx,y,9,0,Math.PI*2);g.fill();g.fillStyle='#1a1626';g.font='bold 15px monospace';g.fillText('!',wx-2.5,y+5.5);}
 
 function tileAt(x,y){if(x<0||y<0||x>=cur.w||y>=cur.h)return 'T';return cur.m[y][x];}
 function npcAt(x,y){return (NPCS[curName]||[]).find(n=>n.x===x&&n.y===y);}
@@ -326,7 +329,15 @@ function drawWorld(){
   (NPCS[curName]||[]).forEach(n=>{
     shadowEllipse(n.x*T+16,n.y*T+27,11);
     SPR[n.draw](n.x*T,n.y*T-8,2,n.c);label(n.n,n.x*T,n.y*T-8);
+    if(n.n==='阿萝'&&aluoNews())drawMarker(n.x*T+16,n.y*T-30); // 头顶!:去找她开下一章
   });
+  if(curName==='world'){ // 当前已开启、尚未通关的章节,在入口冒!指路
+    if(flags.ch2&&!flags.dragon)drawMarker(24*T+16,14*T+2);
+    if(flags.ch3&&!flags.demon)drawMarker(31*T+16,2*T+2);   // 锁妖塔门(鬼门在塔内)
+    if(flags.ch4&&!flags.peng)drawMarker(50*T+16,16*T+2);
+    if(flags.ch5&&!flags.sovereign)drawMarker(6*T+16,40*T+2);
+    if(flags.ch6&&!flags.emperor)drawMarker(16*T+16,16*T+2);
+  }
   if(curName==='world'&&!flags.mini){shadowEllipse(31*T+16,13*T+22,13);drawSnakeK(31*T,13*T-12,2);label('蛇妖王',31*T,13*T-12);}
   shadowEllipse(p.x+16,p.y+27,10);
   drawHero(p.x,p.y-8,2,p.mv?Math.floor(frame/8)%2:0);
@@ -684,8 +695,19 @@ function openShop(kind){
     h+=shopRow('💙','清心散','恢复 '+healAmt('qing')+' 灵力(现有 '+INV.qing+')',30,"buyItem('qing',30)");
     h+=shopRow('💖','大还丹','气血全满(现有 '+INV.dadan+')',90,"buyItem('dadan',90)");
   }else{
-    for(let i=1;i<WPNS.length;i++)h+=shopRow('⚔️',WPNS[i].n,'攻击 +'+WPNS[i].a+(EQ.wpn===i?' · 已装备':EQ.wpn>i?' · 已淘汰':''),WPNS[i].p,'buyWpn('+i+')');
-    for(let i=1;i<ARMS.length;i++)h+=shopRow('🛡️',ARMS[i].n,'防御 +'+ARMS[i].d+(EQ.arm===i?' · 已装备':EQ.arm>i?' · 已淘汰':''),ARMS[i].p,'buyArm('+i+')');
+    // 只列出已按等级解锁的装备;下一档未解锁的给个「🔒 升级解锁」提示,让孩子有奔头
+    let lockW=null;
+    for(let i=1;i<WPNS.length;i++){
+      if(S.lvl>=WPNS[i].lvl)h+=shopRow('⚔️',WPNS[i].n,'攻击 +'+WPNS[i].a+(EQ.wpn===i?' · 已装备':EQ.wpn>i?' · 已淘汰':''),WPNS[i].p,'buyWpn('+i+')');
+      else if(!lockW)lockW=WPNS[i];
+    }
+    if(lockW)h+='<div class="srow"><div><b>🔒 '+lockW.n+'</b><span>升到 Lv'+lockW.lvl+' 解锁(攻击 +'+lockW.a+')</span></div></div>';
+    let lockA=null;
+    for(let i=1;i<ARMS.length;i++){
+      if(S.lvl>=ARMS[i].lvl)h+=shopRow('🛡️',ARMS[i].n,'防御 +'+ARMS[i].d+(EQ.arm===i?' · 已装备':EQ.arm>i?' · 已淘汰':''),ARMS[i].p,'buyArm('+i+')');
+      else if(!lockA)lockA=ARMS[i];
+    }
+    if(lockA)h+='<div class="srow"><div><b>🔒 '+lockA.n+'</b><span>升到 Lv'+lockA.lvl+' 解锁(防御 +'+lockA.d+')</span></div></div>';
   }
   h+='<button class="pbtn" onclick="closePanel()">🚪 离开</button>';
   openPanel(h);
@@ -695,14 +717,16 @@ function buyItem(k,pr){
   S.gold-=pr;INV[k]++;sHeal();openShop('item');
 }
 function buyWpn(i){
+  if(S.lvl<WPNS[i].lvl){toast('等级不够,先升级');return;}
   if(EQ.wpn>=i){toast('已有更好的剑了');return;}
   if(S.gold<WPNS[i].p){toast('银两不够……');return;}
-  S.gold-=WPNS[i].p;EQ.wpn=i;sLvl();toast('已装备 '+WPNS[i].n);openShop('gear');
+  S.gold-=WPNS[i].p;EQ.wpn=i;sLvl();toast('已装备 '+WPNS[i].n);save();openShop('gear');
 }
 function buyArm(i){
+  if(S.lvl<ARMS[i].lvl){toast('等级不够,先升级');return;}
   if(EQ.arm>=i){toast('已有更好的护甲了');return;}
   if(S.gold<ARMS[i].p){toast('银两不够……');return;}
-  S.gold-=ARMS[i].p;EQ.arm=i;sLvl();toast('已装备 '+ARMS[i].n);openShop('gear');
+  S.gold-=ARMS[i].p;EQ.arm=i;sLvl();toast('已装备 '+ARMS[i].n);save();openShop('gear');
 }
 function openStatus(){
   const ups=Object.values(SKILL_UP);
@@ -908,7 +932,7 @@ function showEnding6(){
   $('endov').style.display='flex';
   sWin();
 }
-$('btnRoam').onclick=()=>{$('endov').style.display='none';};
+$('btnRoam').onclick=()=>{$('endov').style.display='none';if(aluoNews())showDialog(['🎉 这一章通关啦!回村口找阿萝(她头上有 ❗),她会带你进下一关!']);};
 $('btnRestart').onclick=()=>{$('endov').style.display='none';resetState();save();};
 
 const petals=[];

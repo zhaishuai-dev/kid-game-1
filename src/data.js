@@ -10,8 +10,11 @@ const flags={aluo:false,mini:false,boss:false,ch2:false,wind:false,lakeIntro:fal
 const S={hp:70,maxHp:70,mp:36,maxMp:36,lvl:1,exp:0,gold:80};
 const INV={dan:3,dadan:0,qing:1};
 const EQ={wpn:0,arm:0};
-const WPNS=[{n:'铁剑',a:0,p:0},{n:'青锋剑',a:8,p:120},{n:'赤霄剑',a:18,p:420}];
-const ARMS=[{n:'布衣',d:0,p:0},{n:'软皮甲',d:4,p:110},{n:'玄铁甲',d:10,p:380}];
+// 武器/护甲分层,按等级解锁(到 5/10/15… 商店自动多出更强的可买,见 openShop)
+const WPNS=[{n:'铁剑',a:0,p:0,lvl:0},{n:'青锋剑',a:8,p:120,lvl:1},{n:'赤霄剑',a:18,p:420,lvl:3},
+  {n:'流光剑',a:30,p:1100,lvl:8},{n:'龙泉剑',a:46,p:2800,lvl:14},{n:'七星剑',a:64,p:6000,lvl:20},{n:'轩辕剑',a:86,p:12000,lvl:28}];
+const ARMS=[{n:'布衣',d:0,p:0,lvl:0},{n:'软皮甲',d:4,p:110,lvl:1},{n:'玄铁甲',d:10,p:380,lvl:3},
+  {n:'锁子甲',d:18,p:1000,lvl:8},{n:'龙鳞甲',d:28,p:2600,lvl:14},{n:'紫金甲',d:40,p:5600,lvl:20},{n:'天蚕甲',d:54,p:11000,lvl:28}];
 const ITEMN={dan:'回灵丹',dadan:'大还丹',qing:'清心散'};
 // 孩童模式(家长锁):伤害减半、丹药翻倍。配置独立持久(见 loadCfg/saveCfg),不随存档或「重新开始」清空
 const CFG={kidMode:false,pwd:''};
